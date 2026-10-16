@@ -237,6 +237,31 @@ body.has-pointer .pointer-aura{opacity:1}
 @media(max-width:700px){.header-cta{display:flex;position:fixed;top:15px;right:60px;z-index:65}.header-cta .btn-outline{display:none}.header-cta .account-btn{min-height:38px;padding:0 10px;font-size:10px}.auth-dialog{padding:23px 19px;border-radius:17px}.auth-title{font-size:22px}.auth-backdrop{padding:12px}}
 @media(max-width:370px){.header-cta{right:54px}.header-cta .account-btn{padding:0 7px}.brand-name{font-size:10px}.brand-tagline{letter-spacing:1.5px}}
 
+
+/* SYSTEM TEXTS — richer system descriptions and accessible detail dialog */
+.system-card{display:flex;flex-direction:column;align-items:flex-start}
+.system-card p{font-size:11.5px;line-height:1.75}
+.system-detail-button{display:inline-flex;align-items:center;gap:8px;margin-top:auto;padding:10px 0 0;border:0;background:transparent;color:#d5a0fa;font-size:10px;font-weight:700;letter-spacing:.35px}
+.system-detail-button:hover{color:#fff}
+.system-detail-button span{transition:transform .2s}
+.system-detail-button:hover span{transform:translateX(3px)}
+.system-detail-backdrop[hidden]{display:none!important}
+.system-detail-backdrop{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:20px;background:#05020cce;backdrop-filter:blur(15px);animation:auth-fade-in .18s ease}
+.system-detail-dialog{position:relative;width:min(100%,680px);max-height:min(88vh,820px);overflow:auto;padding:29px;border:1px solid #624076;border-radius:20px;background:radial-gradient(ellipse at 100% 0%,#46205c65,transparent 48%),linear-gradient(145deg,#1b1025,#0d0713 76%);box-shadow:0 30px 100px #0009,0 0 55px #a33ee814;animation:auth-dialog-in .24s ease}
+.system-detail-close{position:absolute;right:17px;top:17px;display:grid;place-items:center;width:36px;height:36px;border:1px solid #3e2a4a;border-radius:10px;background:#160c20;color:#d9c6e5;font-size:22px}
+.system-detail-number{display:inline-flex;padding:7px 9px;border:1px solid #553068;border-radius:7px;background:#2b1538;color:#d8a0fa;font:700 10px 'Orbitron'}
+.system-detail-kicker{margin-top:18px;color:#bb89dc;font-size:9px;font-weight:700;letter-spacing:2px}
+.system-detail-title{max-width:85%;margin:9px 0 12px;font:700 clamp(21px,3.5vw,30px)/1.22 'Orbitron';letter-spacing:-.8px}
+.system-detail-intro{color:#c0b0cd;font-size:13px;line-height:1.85;margin:0 0 20px}
+.system-detail-section{padding:17px 0;border-top:1px solid #32213c}
+.system-detail-section h4{margin:0 0 10px;color:#f0e1fa;font:700 12px 'Space Grotesk';letter-spacing:.3px}
+.system-detail-section p{margin:0;color:#a999b7;font-size:12px;line-height:1.8}
+.system-detail-list{display:grid;gap:9px;margin:0;padding:0;list-style:none}
+.system-detail-list li{position:relative;padding-left:19px;color:#b9a9c5;font-size:12px;line-height:1.75}
+.system-detail-list li:before{content:"";position:absolute;left:1px;top:.65em;width:6px;height:6px;border-radius:2px;background:#bd6ee9;box-shadow:0 0 9px #a94ce46b}
+.system-note{margin-top:13px;padding:12px 13px;border:1px solid #50335f;border-radius:10px;background:#1c1026;color:#c2a9d2;font-size:11px;line-height:1.75}
+@media(max-width:700px){.system-detail-backdrop{padding:10px}.system-detail-dialog{padding:23px 18px;border-radius:16px;max-height:90vh}.system-detail-title{font-size:21px}.system-detail-intro{font-size:12px}.system-detail-section{padding:14px 0}}
+
 </style>
 </head>
 <body>
@@ -342,6 +367,20 @@ body.has-pointer .pointer-aura{opacity:1}
  </section>
 </div>
 
+
+<div class="system-detail-backdrop" id="system-detail-backdrop" hidden>
+ <section class="system-detail-dialog" role="dialog" aria-modal="true" aria-labelledby="system-detail-title">
+  <button type="button" class="system-detail-close" id="system-detail-close" aria-label="Detay penceresini kapat">×</button>
+  <span class="system-detail-number" id="system-detail-number">01</span>
+  <div class="system-detail-kicker">MORTALLEAGUE / SYSTEM FILE</div>
+  <h2 class="system-detail-title" id="system-detail-title">Sistem adı</h2>
+  <p class="system-detail-intro" id="system-detail-intro"></p>
+  <section class="system-detail-section"><h4>BU SİSTEM NE İŞE YARAR?</h4><p id="system-detail-purpose"></p></section>
+  <section class="system-detail-section"><h4>İÇERİĞİNDE NELER OLACAK?</h4><ul class="system-detail-list" id="system-detail-list"></ul></section>
+  <div class="system-note" id="system-detail-note"></div>
+ </section>
+</div>
+
 <footer class="site-footer"><span>© 2026 MORTALLEAGUE</span><span>THE DARK FOOTBALL ERA · V2 DESIGN PHASE</span></footer>
 </main>
 
@@ -361,26 +400,55 @@ window.MORTA_CONFIG = {
 </script>
 <script>
 const systems=[
-["Yayın Geliri Sistemi","Yayın gelirleri ve dağıtım kuralları.","◉"],
-["Oyuncu Katkı Değerleri","Maç performansından doğan katkı puanları.","↗"],
-["Telefon Satın Alma Sistemi","Telefon seçenekleri ve satın alma akışı.","▣"],
-["Ev Satın Alma Sistemi","Ev sahipliği, fiyatlar ve satın alma işlemleri.","⌂"],
-["Taşıt Alma Sistemi","Taşıt seçenekleri, sahiplik ve fiyatlar.","➤"],
-["Ödül Sistemi","Başarılar ve sezon içi ödül mekanikleri.","✦"],
-["UCL / UEL / UECL Katkıları","Avrupa kupalarında oyuncu katkı değerleri.","♜"],
-["Sponsorluk Sistemi","Sponsor anlaşmaları, şartlar ve gelirler.","◇"],
-["Teknik Direktör Olma Sistemi","Oyuncuların teknik direktörlüğe geçişi.","♟"],
-["Teknik Direktör Değerleri","Teknik direktör performansı ve değeri.","◈"],
-["Maaş Sistemi","Oyuncu sözleşmeleri, maaşlar ve ödeme döngüsü.","₺"],
-["UCL / UEL / UECL Gelirleri","Avrupa kupalarının gelir hesaplaması.","⌁"],
-["Stadyum Sistemi","Stadyum seviyeleri, kapasite ve geliştirmeler.","▤"],
-["Katkı Sınırı Sistemi","Katkı değerlerinin limit ve dengeleme kuralları.","⊙"],
-["Yaş Sistemi","Oyuncu yaşı ve yaşa bağlı mekanikler.","◷"],
-["Antrenman Sahası Sistemi","Antrenman sahaları ve gelişim altyapısı.","⌁"]];
-document.getElementById("systems-grid").innerHTML=systems.map((s,i)=>`<article class="system-card"><span class="system-number">${String(i+1).padStart(2,"0")}</span><span class="system-glyph">${s[2]}</span><h3>${s[0]}</h3><p>${s[1]}</p><div class="system-foot">DESIGN PHASE</div></article>`).join("");
+{title:"Yayın Geliri Sistemi",icon:"◉",short:"Yayın ve yayın etkinliklerinden elde edilen gelirin kaydı ve dağıtımı.",intro:"Yayınlar MortaLeague ekonomisinin bir parçası olacak. Bu bölüm, yayın etkinliklerinin gelirini ve oluşan kayıtları takip etmek için tasarlanıyor.",purpose:"Yayınla ilişkili gelirlerin tek bir yerde kaydedilmesini; gelirin hangi yayın, dönem veya etkinlikten geldiğinin sonradan anlaşılabilmesini sağlar.",items:["Yayın kaydı ve ilgili sezon/etkinlik bilgisi.","Her yayın için oluşan gelirin görüntülenmesi.","Gelir geçmişi ve toplamların raporlanması.","Dağıtım oranlarının yönetim tarafından belirlenebilmesi."],note:"Kesin gelir tutarları ve dağıtım oranları henüz belirlenmedi. Bu değerler uydurulmayacak; kurallar netleşince sisteme eklenecek."},
+{title:"Oyuncu Katkı Değerleri",icon:"↗",short:"Oyuncunun maç ve katkı etkinliklerine ait değerleri ayrı ayrı izlenir.",intro:"Oyuncu katkıları tek bir açıklamasız sayıya sıkıştırılmayacak. Katkının kaynağı, değeri ve hangi etkinlikten geldiği takip edilebilecek.",purpose:"Oyunculara yazılan katkının şeffaf olması ve farklı katkı türlerinin birbirine karışmamasını sağlar.",items:["Maç katkılarının oyuncu profiline kaydedilmesi.","Katkının kaynağının ve değerinin ayrı gösterilmesi.","Antrenman katkısının clean sheet katkısından ayrı tutulması.","Katkı geçmişinin sonradan incelenebilmesi."],note:"Önemli kural: clean sheet, takımın maçı gol yemeden tamamlamasıdır. Bu etkinlik antrenman katkısıyla birleştirilmeyecek. Katkı sınırları ayrıca Katkı Sınırı Sistemi tarafından uygulanacak."},
+{title:"Telefon Satın Alma Sistemi",icon:"▣",short:"Telefon kataloğu, fiyatlar, sahip olunan cihaz ve satın alma geçmişi.",intro:"Oyuncular profilleri üzerinden oyun içi telefon seçeneklerini inceleyebilecek. Katalog, fiyat ve sahiplik durumu aynı arayüzde gösterilecek.",purpose:"Oyuncunun bakiyesine göre bir telefon seçmesini ve satın alma işleminin hesabına doğru biçimde işlenmesini sağlar.",items:["Telefon kataloğu ve her modelin fiyatı.","Satın almadan önce bakiye kontrolü.","Sahip olunan telefonun oyuncu profilinde gösterilmesi.","Satın alma geçmişinin tutulması."],note:"Telefon modelleri, fiyatları ve varsa satın alma limitleri henüz tanımlanmadı. Katalog değerleri yönetim kuralları kesinleştiğinde eklenecek."},
+{title:"Ev Satın Alma Sistemi",icon:"⌂",short:"Ev seçenekleri, fiyatlar, sahiplik durumu ve satın alma kayıtları.",intro:"Evler oyuncunun oyun içi varlıklarından biri olacak. Oyuncu seçenekleri ve sahip olduğu evleri kişisel alanından görebilecek.",purpose:"Ev kataloğunu, satın alma akışını ve oyuncunun sahiplik kayıtlarını düzenli biçimde yönetir.",items:["Ev seçenekleri ve açıklamaları.","Her ev için görüntülenebilir fiyat ve özellikler.","Satın alma öncesi yeterli bakiye kontrolü.","Oyuncunun sahip olduğu evlerin listesi ve işlem geçmişi."],note:"Ev fiyatları, ev sayısı sınırı ve evlerin varsa ek faydaları henüz belirlenmedi; bu aşamada kesinmiş gibi gösterilmeyecek."},
+{title:"Taşıt Alma Sistemi",icon:"➤",short:"Taşıt kataloğu, satın alma, oyuncu sahipliği ve işlem geçmişi.",intro:"Oyuncular oyun içindeki taşıt seçeneklerini inceleyebilecek ve uygun olduklarında satın alma gerçekleştirebilecek.",purpose:"Taşıtların fiyat ve sahiplik bilgilerinin oyuncu profiliyle tutarlı kalmasını sağlar.",items:["Taşıtların katalog hâlinde listelenmesi.","Her taşıt için fiyat ve temel bilgiler.","Satın alma öncesi bakiye kontrolü.","Oyuncunun sahip olduğu taşıt ve geçmiş işlemler."],note:"Taşıtların fiyatları, modelleri ve olası sınırları henüz tanımlanmadı; yönetim tarafından belirlenebilir olacak."},
+{title:"Ödül Sistemi",icon:"✦",short:"Başarı, etkinlik veya sezon şartlarına bağlı ödüllerin takibi.",intro:"Lig içi başarılar ve tanımlanmış etkinlikler ödül kazanılmasını sağlayabilecek. Oyuncu ne kazandığını ve ödülün neden verildiğini görebilecek.",purpose:"Ödülleri gerekçesiyle birlikte kaydetmek ve aynı ödülün yanlışlıkla birden fazla verilmesini önlemek için tasarlanır.",items:["Ödül kataloğu ve ödül açıklamaları.","Ödülün hangi başarı veya etkinlik için verildiği.","Oyuncunun kazandığı ödüllerin geçmişi.","Yönetici tarafından ödül tanımlama ve denetleme."],note:"Ödül miktarları, başarı şartları ve dönemleri henüz kesinleştirilmedi. Sistemin her ödül için gerekçe kaydetmesi hedefleniyor."},
+{title:"UCL / UEL / UECL Oyuncu Katkıları",icon:"♜",short:"Avrupa kupalarında oluşan oyuncu katkılarını yerel lig katkılarından ayırır.",intro:"UEFA Champions League, Europa League ve Conference League etkinlikleri ayrı bağlamda izlenecek. Böylece Avrupa kupası katkıları, normal lig katkılarıyla karışmayacak.",purpose:"Avrupa kupalarından gelen katkıları turnuva türü ve maç bağlamıyla kaydeder.",items:["UCL, UEL ve UECL katkı türlerinin ayrı işaretlenmesi.","Oyuncu ve maç bağlantısının tutulması.","Avrupa katkı geçmişinin görüntülenmesi.","Katkı sınırlarının tanımlanmış kurallara göre kontrolü."],note:"Turnuva başına katkı değerleri henüz belirlenmedi. Kesin rakamlar bu aşamada uydurulmadı."},
+{title:"Sponsorluk Sistemi",icon:"◇",short:"Sponsor anlaşmaları, sözleşme koşulları, süreler ve gelir kayıtları.",intro:"Takım veya lig için oluşturulan sponsorlukların şartları ve mali karşılığı kayıt altına alınacak.",purpose:"Sponsor anlaşmasının kiminle yapıldığını, ne zaman başladığını, hangi koşullara bağlı olduğunu ve ne kadar gelir oluşturduğunu takip etmeyi sağlar.",items:["Sponsor adı ve anlaşma bilgileri.","Anlaşma süresi ve koşulları.","Sponsorluk gelirinin ve ödemelerin kaydı.","Aktif, süresi dolmuş veya tamamlanmış anlaşma durumu."],note:"Sponsor fiyatları, süreleri ve hedef koşulları henüz belirlenmedi. Bunlar yönetim tarafından tanımlanacak."},
+{title:"Teknik Direktör Olma Sistemi",icon:"♟",short:"Oyuncunun teknik direktörlük rolüne geçiş süreci ve yetki durumu.",intro:"Teknik direktörlük oyuncu hesabından ayrı bir sorumluluk ve yetki alanı olarak tasarlanıyor.",purpose:"Teknik direktör rolünün kimde olduğunu ve bu role geçişin nasıl onaylandığını düzenli biçimde yönetir.",items:["Teknik direktörlük başvuru veya atama akışı.","Rolün aktiflik durumunun gösterilmesi.","Takım ve teknik direktör ilişkisinin kaydı.","Yetkilerin yalnızca uygun hesaba verilmesi."],note:"Teknik direktör olma şartları ve onay yetkisi kesinleştirilmedi. Başka oyuncuların veya takımların verilerini değiştiren yetkiler güvenlik politikalarıyla korunmalı."},
+{title:"Teknik Direktör Değerleri",icon:"◈",short:"Teknik direktörlerin performans ve başarı geçmişini düzenler.",intro:"Teknik direktör profillerinde yalnızca isim değil, ligdeki sorumluluk ve performans geçmişi de yer alabilecek.",purpose:"Teknik direktörleri değerlendiren metrikleri ortak ve denetlenebilir bir yerde tutar.",items:["Teknik direktör profil ve takım geçmişi.","Tanımlanacak performans metrikleri ve dönemleri.","Başarı kayıtları ve sezon geçmişi.","Değişikliklerin hangi kaynakla yapıldığının izlenmesi."],note:"Puanlama formülü, katsayılar ve sıralama ölçütleri henüz kararlaştırılmadı. Resmî kurallar netleşmeden değer hesaplanmayacak."},
+{title:"Maaş Sistemi",icon:"₺",short:"Oyuncu maaşı, ödeme dönemi ve maaş hareketlerinin izlenmesi.",intro:"Maaş sistemi oyuncu veya sözleşmeye bağlı ücretin, ödeme durumunun ve geçmiş hareketlerin takip edilmesini sağlar.",purpose:"Maaş borçlarının ve ödemelerin rastgele değişmesini önleyerek ekonomi kayıtlarını tutarlı hâle getirir.",items:["Oyuncu ile ilişkilendirilmiş maaş/sözleşme kaydı.","Maaş tutarı ve geçerli dönem bilgisi.","Ödeme hareketleri ve güncel durum.","Yetkili yöneticiler için kontrollü maaş güncellemesi."],note:"Maaş seviyeleri, ödeme sıklığı ve sözleşme kuralları henüz belirlenmedi. Finans hareketleri sonradan denetlenebilir şekilde kaydedilmelidir."},
+{title:"UCL / UEL / UECL Gelir Sistemi",icon:"⌁",short:"Avrupa kupalarının turnuva ve aşama bazlı gelirlerini kaydeder.",intro:"Avrupa kupalarında oluşan gelirler normal lig gelirlerinden ayrı tutulacak. Turnuva türü ve gelir nedeni kayıt üzerinde anlaşılır olacak.",purpose:"UCL, UEL ve UECL gelirlerinin ayrı izlenmesini ve tanımlanan paylaşım kurallarının uygulanmasını sağlar.",items:["Turnuva türünün ve gelir döneminin kaydı.","Tur veya sonuç bazında gelir kaydı için altyapı.","Oyuncu/takım/lig paylarının kural tabanlı hesaplanabilmesi.","Gelir geçmişi ve raporlama."],note:"Tur gelir tutarları ve paylaşım oranları henüz belirlenmedi. Kesin miktarlar yönetim tarafından tanımlanacak."},
+{title:"Stadyum Sistemi",icon:"▤",short:"Stadyum sahipliği, seviye, kapasite ve geliştirme durumları.",intro:"Stadyum, takımın veya kulübün yönetilebilir varlıklarından biri olacak. Kapasite ve geliştirme bilgileri tek ekranda görülebilecek.",purpose:"Stadyumun mevcut seviyesini, kapasitesini ve geliştirme geçmişini tutarlı biçimde saklar.",items:["Stadyum bilgileri ve sahiplik bağlantısı.","Seviye ve kapasite alanları.","Geliştirme seçenekleri ve maliyetleri.","İşlem geçmişi ve mevcut durum."],note:"Stadyum seviyeleri, fiyatlar ve kapasite artış kuralları henüz kararlaştırılmadı."},
+{title:"Katkı Sınırı Sistemi",icon:"⊙",short:"Katkı türleri için tanımlanmış üst sınırları ve kontrolleri yönetir.",intro:"Katkı değerlerinin ekonomik ve rekabetçi dengeyi bozacak şekilde sınırsız yükselmemesi için sınır kuralları uygulanacak.",purpose:"Her katkı türünün kendi limitine göre kontrol edilmesini ve aşımın engellenmesini sağlar.",items:["Katkı türüne göre limit tanımları.","İşlem öncesi sınır kontrolü.","Limit aşımlarında açıklayıcı hata mesajı.","Yönetim değişikliklerinin kayıt altına alınması."],note:"Sayısal limitler henüz verilmedi. Clean sheet ve antrenman katkısı gibi ayrı türlerin birbirine karıştırılmaması gerekir."},
+{title:"Yaş Sistemi",icon:"◷",short:"Oyuncu yaşı bilgisini ve yaşa bağlı kural kontrollerini yönetir.",intro:"Oyuncu yaşının profil verisi olarak tutulması ve ileride tanımlanacak yaş kurallarında tutarlı kullanılması hedefleniyor.",purpose:"Yaşla ilgili şartların her ekranda farklı yorumlanmasını önler ve oyuncu kayıtlarını standartlaştırır.",items:["Oyuncunun doğum tarihi veya tanımlanmış yaş bilgisi.","Yaşın tutarlı şekilde görüntülenmesi.","Yaşa bağlı kurallar için merkezi kontrol noktası.","Yaş bilgisindeki değişikliklerin denetlenmesi."],note:"Yaş sınırları, yaş ilerleme sıklığı ve yaşın oyuncu değerine etkisi henüz kararlaştırılmadı."},
+{title:"Antrenman Sahası Sistemi",icon:"⌁",short:"Antrenman alanları ve seçilebilir antrenman katkılarının yönetimi.",intro:"Antrenman etkinlikleri, oyuncu katkısına bağlanan ayrı bir sistem olarak takip edilecek; seçilen katkı değerleri görünür ve denetlenebilir olacak.",purpose:"Antrenman sahası kayıtlarını, oyuncunun seçtiği katkı tutarını ve ilgili geçmişi yönetir.",items:["Antrenman sahası ve seviye alanları.","Antrenman katkısı seçenekleri: 50.000, 75.000, 100.000, 125.000, 150.000 ve 200.000.","Seçilen antrenman katkısının oyuncu ve tarih ile kaydedilmesi.","Antrenman katkısının clean sheet etkinliğinden ayrı kaydedilmesi."],note:"Clean sheet, takımın bir maçı sıfır gol yiyerek tamamlamasıdır. Bu katkı, antrenman katkısından ayrı tutulacak. Antrenman maliyetleri ve diğer saha kuralları henüz belirlenmedi."}
+];
+const systemGrid=document.getElementById("systems-grid");
+systemGrid.innerHTML=systems.map((s,i)=>`<article class="system-card"><span class="system-number">${String(i+1).padStart(2,"0")}</span><span class="system-glyph">${s.icon}</span><h3>${s.title}</h3><p>${s.short}</p><button class="system-detail-button" type="button" data-system-detail="${i}">Detayları Gör <span>↗</span></button></article>`).join("");
+const systemBackdrop=document.getElementById("system-detail-backdrop");
+const systemClose=document.getElementById("system-detail-close");
+let systemPreviousFocus=null;
+function openSystemDetail(index){
+  const s=systems[index];
+  if(!s)return;
+  systemPreviousFocus=document.activeElement;
+  document.getElementById("system-detail-number").textContent=String(index+1).padStart(2,"0");
+  document.getElementById("system-detail-title").textContent=s.title;
+  document.getElementById("system-detail-intro").textContent=s.intro;
+  document.getElementById("system-detail-purpose").textContent=s.purpose;
+  document.getElementById("system-detail-list").innerHTML=s.items.map(item=>`<li>${item}</li>`).join("");
+  document.getElementById("system-detail-note").textContent=s.note;
+  systemBackdrop.hidden=false;
+  document.body.style.overflow="hidden";
+  systemClose.focus();
+}
+function closeSystemDetail(){
+  systemBackdrop.hidden=true;
+  document.body.style.overflow="";
+  if(systemPreviousFocus && typeof systemPreviousFocus.focus==="function")systemPreviousFocus.focus();
+}
+systemGrid.addEventListener("click",e=>{const btn=e.target.closest("[data-system-detail]");if(btn)openSystemDetail(Number(btn.dataset.systemDetail));});
+systemClose.addEventListener("click",closeSystemDetail);
+systemBackdrop.addEventListener("click",e=>{if(e.target===systemBackdrop)closeSystemDetail();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape" && !systemBackdrop.hidden)closeSystemDetail();});
 const validPages=["home","league","systems","rules"];
 function showPage(name){if(!validPages.includes(name))return;document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===name));window.scrollTo({top:0,behavior:"smooth"});}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();showPage(b.dataset.page);}});
+
 
 /* Ambient particle field: capped DPR and particle count for smooth everyday devices. */
 (() => {

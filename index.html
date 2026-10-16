@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08040d">
+<title>MORTALLEAGUE — The Dark Football Era | Quality Pass 02</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
+<div class="ambient-sweep" aria-hidden="true"></div>
+<div class="pointer-aura" aria-hidden="true"></div>
+<header class="site-header">
+ <div class="header-inner">
+  <a class="brand" href="#" data-page="home" aria-label="MORTALLEAGUE ana sayfa">
+   <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 21 12l-9 9.2L3 12 12 2.8Z" fill="#D9A5FF" stroke="#F0DAFF" stroke-width="1.1"/><path d="m12 6.5 5.4 5.5-5.4 5.5L6.6 12 12 6.5Z" fill="#9A4BCA"/></svg></span>
+   <span><span class="brand-name">MORTALLEAGUE</span><span class="brand-tagline">THE DARK FOOTBALL ERA</span></span>
+  </a>
+  <nav class="nav" aria-label="Ana gezinme"><button class="active" data-page="home">Ana Sayfa</button><button data-page="league">Lig</button><button data-page="systems">Sistemler</button></nav>
+  <div class="header-cta"><button class="btn btn-outline" data-page="rules">Kuralları Gör <span>→</span></button><button class="btn btn-primary account-btn" id="account-trigger" type="button" data-auth-open><span class="account-glyph">↗</span><span id="account-trigger-label">Giriş Yap</span></button></div>
+ </div>
+</header>
+<main>
+<section class="page active" id="page-home">
+ <div class="hero">
+  <div class="hero-copy">
+   <div class="online-pill"><span class="online-dot"></span> MORTALLEAGUE SEASON 01 - ONLINE</div>
+   <h1 class="hero-title"><span>OYUNUN</span><span class="gradient">KARANLIK</span><span>YÜZÜ.</span></h1>
+   <p class="hero-description">Kuralların, oyuncuların, antrenmanın ve finansın tek bir yerde birleştiği rekabetçi futbol evreni. Takımını kur. Değerini yükselt. Ligde iz bırak.</p>
+   <div class="hero-actions"><button class="btn btn-primary" data-page="league">Ligi Keşfet ↗</button><button class="btn btn-secondary" data-page="systems">Sistemleri İncele</button></div>
+  </div>
+  <div class="hero-art" aria-label="MORTALLEAGUE M arması">
+   <div class="orbit"></div><div class="orbit-glow"></div>
+   <span class="spark spark-1"></span><span class="spark spark-2"></span><span class="spark spark-3"></span><span class="spark spark-4"></span>
+   <div class="floating-stat stat-season"><small>SEZON 153</small><strong>ACTIVE</strong></div><div class="floating-stat stat-players"><small>OYUNCULAR</small><strong>128+</strong></div>
+   <div class="crest"><span class="crest-letter">M</span><span class="crest-word">MORTAL</span></div>
+  </div>
+ </div>
+ <section class="dna">
+  <div class="section-heading"><div><h2>LİGİN DNA'SI</h2><p>Basit kurallar. Derin rekabet. Her kararın bir bedeli var.</p></div><span class="season-tag">SEASON 01</span></div>
+  <div class="dna-grid">
+   <article class="dna-card"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="m5 4 14 16M19 4 5 20M4 8h4M16 16h4M4 16h4M16 8h4"/></svg></div><h3>Rekabet</h3><p>Her maç puan, değer ve sıralama üzerinde gerçek etki yaratır.</p></article>
+   <article class="dna-card"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="m12 3 8 9-8 9-8-9 8-9Z"/><path d="m12 8 4 4-4 4-4-4 4-4Z"/></svg></div><h3>Strateji</h3><p>Antrenman ve oyuncu seçimleri yalnızca güç değil, denge ister.</p></article>
+   <article class="dna-card"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M7 7h10M7 11h10M9 4 7 20M17 4l-2 16M8 16c1.1 1.1 2.2 1.5 4 1.5 2.2 0 4-1 4-2.8 0-3.8-8-1.2-8-5 0-1.6 1.5-2.7 3.7-2.7 1.5 0 2.7.4 3.7 1.3"/></svg></div><h3>Ekonomi</h3><p>Bütçeni doğru kullan, oyuncu değerini yükselt ve kaynaklarını koru.</p></article>
+   <article class="dna-card"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg></div><h3>Şöhret</h3><p>Başarıların lig tarihine yazılır. Sezon sonunda sıralama her şeyi söyler.</p></article>
+  </div>
+ </section>
+</section>
+<section class="page" id="page-league">
+ <div class="page-head"><div class="eyebrow">SEASON 01 / COMPETITIVE DIVISION</div><h1>LİG <span>MERKEZİ.</span></h1><p>Bu ekran ilk tasarım aşamasındaki görsel örnektir. Canlı lig ve takım verileri özellik geliştirme aşamasında bağlanacak.</p></div>
+ <div class="panel"><div class="panel-head"><div><h2>ANA LİG</h2><p>Sezon 01 · Tasarım ön izlemesi</p></div><span class="pill-tag">TASARIM AŞAMASI</span></div>
+  <div class="league-row"><div class="rank">01</div><div class="club"><span class="club-badge">ML</span><div><strong>Lig tablosu hazırlanıyor</strong><small>Takımlar bağlantıdan sonra listelenecek</small></div></div><div class="metric"><small>PUAN</small><strong>—</strong></div><div class="metric"><small>GALİBİYET</small><strong>—</strong></div></div>
+  <div class="league-row"><div class="rank">02</div><div class="club"><span class="club-badge">FC</span><div><strong>Takım verisi bekleniyor</strong><small>Canlı sıralama henüz bağlı değil</small></div></div><div class="metric"><small>PUAN</small><strong>—</strong></div><div class="metric"><small>GALİBİYET</small><strong>—</strong></div></div>
+  <div class="league-row"><div class="rank">03</div><div class="club"><span class="club-badge">⚽</span><div><strong>Takım verisi bekleniyor</strong><small>Canlı sıralama henüz bağlı değil</small></div></div><div class="metric"><small>PUAN</small><strong>—</strong></div><div class="metric"><small>GALİBİYET</small><strong>—</strong></div></div>
+ </div>
+</section>
+<section class="page" id="page-systems">
+ <div class="page-head"><div class="eyebrow">THE GAMEPLAY ENGINE</div><h1>SİSTEM <span>MERKEZİ.</span></h1><p>Şimdilik tüm 16 modülün tasarım kartları gösteriliyor. İşlevler görsel tasarım onaylandıktan sonra aşamalı geliştirilecek.</p></div><div class="systems-grid" id="systems-grid"></div>
+</section>
+<section class="page" id="page-rules">
+ <div class="page-head"><div class="eyebrow">FAIR PLAY / THE CODE</div><h1>OYUN <span>KURALLARI.</span></h1><p>MORTALLEAGUE'in görsel ve ürün prensipleri. Kesin oyun kuralları özellikler geliştirilirken netleştirilecek.</p></div>
+ <div class="rules-grid"><article class="rule-card"><h3>01 / Adil rekabet</h3><p>Katkı ve değer hesaplamaları açık, tutarlı ve denetlenebilir kurallara bağlı olmalı.</p></article><article class="rule-card"><h3>02 / Ekonomik denge</h3><p>Maaş, gelir, sponsorluk ve satın alma sistemleri birbirini dengelemeli.</p></article><article class="rule-card"><h3>03 / Güvenli hesaplar</h3><p>Kullanıcı profilleri ve yönetim işlemleri doğru yetkilendirme ile korunmalı.</p></article><article class="rule-card"><h3>04 / Şeffaf gelişim</h3><p>Antrenman ve oyuncu katkı değerleri anlaşılır seçeneklerle hesaplanmalı.</p></article><article class="rule-card"><h3>05 / Temiz yönetim</h3><p>Yönetici işlemleri kayıt altına alınmalı ve izinsiz değişiklikler engellenmeli.</p></article><article class="rule-card"><h3>06 / Her sistem test edilir</h3><p>Her modül mobil ve masaüstünde kontrol edilmeden sonraki aşamaya geçilmemeli.</p></article></div>
+</section>
+
+<div class="auth-backdrop" id="auth-backdrop" hidden>
+ <section class="auth-dialog" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+  <button class="auth-close" type="button" id="auth-close" aria-label="Pencereyi kapat">×</button>
+  <div class="auth-logo">
+   <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 21 12l-9 9.2L3 12 12 2.8Z" fill="#D9A5FF" stroke="#F0DAFF" stroke-width="1.1"/><path d="m12 6.5 5.4 5.5-5.4 5.5L6.6 12 12 6.5Z" fill="#9A4BCA"/></svg></span>
+   <span><span class="brand-name">MORTALLEAGUE</span><span class="brand-tagline">THE DARK FOOTBALL ERA</span></span>
+  </div>
+  <div id="auth-form-panel">
+   <div class="auth-kicker">PLAYER ACCESS / V2</div>
+   <h2 class="auth-title" id="auth-title">Tekrar hoş geldin.</h2>
+   <p class="auth-subtitle" id="auth-subtitle">Hesabına giriş yap ve MortaLeague dünyasına dön.</p>
+   <div class="auth-tabs" role="tablist" aria-label="Hesap işlemi">
+    <button class="active" type="button" data-auth-mode="login" role="tab" aria-selected="true">Giriş yap</button>
+    <button type="button" data-auth-mode="signup" role="tab" aria-selected="false">Hesap oluştur</button>
+   </div>
+   <form id="auth-form" class="auth-form">
+    <label class="auth-field" id="display-name-wrap" hidden>Görünen ad
+     <input id="auth-display-name" name="display_name" type="text" maxlength="40" autocomplete="nickname" placeholder="Sahada kullanacağın isim">
+    </label>
+    <label class="auth-field" id="username-wrap" hidden>Kullanıcı adı
+     <input id="auth-username" name="username" type="text" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+" autocomplete="username" placeholder="ornek_oyuncu">
+    </label>
+    <label class="auth-field">E-posta adresi
+     <input id="auth-email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="sen@ornek.com">
+    </label>
+    <label class="auth-field">Şifre
+     <input id="auth-password" name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="72" placeholder="En az 8 karakter">
+    </label>
+    <button class="btn btn-primary auth-submit" id="auth-submit" type="submit">Giriş yap <span>↗</span></button>
+    <p class="auth-feedback" id="auth-feedback" role="status" aria-live="polite"></p>
+    <div class="auth-setup-note" id="auth-setup-note">Hesap işlemlerini etkinleştirmek için yeni Supabase projesinin bağlantısı eklenecek. Şu anda gerçek hesap oluşturulmaz.</div>
+    <p class="auth-footnote">Hesabın yalnızca kendi oturumunla kullanılabilir. Şifren MortaLeague koduna kaydedilmez.</p>
+   </form>
+  </div>
+  <div id="profile-panel" hidden>
+   <div class="auth-kicker">PLAYER IDENTITY / ACCOUNT</div>
+   <h2 class="auth-title">Oyuncu kartın.</h2>
+   <p class="auth-subtitle">Hesap oturumun ve temel profil bilgilerin.</p>
+   <div class="profile-summary"><span class="profile-avatar" id="profile-avatar">ML</span><div><strong id="profile-name">MortaLeague oyuncusu</strong><small id="profile-email">—</small></div></div>
+   <div class="profile-details"><div class="profile-detail"><span>Kullanıcı adı</span><span id="profile-username">—</span></div><div class="profile-detail"><span>Hesap durumu</span><span id="profile-status">Bağlantı bekleniyor</span></div></div>
+   <div class="auth-actions"><button class="btn btn-secondary" type="button" id="profile-back">Giriş ekranına dön</button><button class="btn btn-outline" type="button" id="auth-signout">Oturumu kapat</button></div>
+   <p class="auth-feedback" id="profile-feedback" role="status" aria-live="polite"></p>
+  </div>
+ </section>
+</div>
+
+<footer class="site-footer"><span>© 2026 MORTALLEAGUE</span><span>THE DARK FOOTBALL ERA · V2 DESIGN PHASE</span></footer>
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

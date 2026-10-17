@@ -1141,3 +1141,15 @@ img, svg, video, canvas { max-width: 100%; }
 @media(max-width:900px){.hero-install-row{margin-top:17px}.hero-install-button{min-height:48px;font-size:13px}}
 @media(max-width:420px){.hero-install-button{width:100%;justify-content:center}}
 @media(prefers-reduced-motion:reduce){.hero-install-button:before{display:none}.hero-install-button,.hero-install-button:hover{transition:none;transform:none}}
+
+
+/* PWA installation help: branded, accessible fallback instead of a blocking alert. */
+.install-help-dialog{width:min(92vw,430px);max-width:430px;border:1px solid rgba(204,143,255,.42);border-radius:24px;padding:0;color:#f7edff;background:#100819;box-shadow:0 28px 90px rgba(0,0,0,.65)}
+.install-help-dialog::backdrop{background:rgba(4,2,8,.78);backdrop-filter:blur(7px)}
+.install-help-card{padding:28px 24px 24px;background:radial-gradient(ellipse at top,rgba(162,56,226,.2),transparent 62%),#100819}
+.install-help-mark{display:grid;place-items:center;width:48px;height:48px;margin-bottom:18px;border:1px solid rgba(212,158,255,.7);border-radius:15px;color:#e8bdff;background:rgba(164,73,214,.16);font-family:Orbitron,sans-serif;font-size:24px;font-weight:800;box-shadow:0 0 24px rgba(180,74,255,.18)}
+.install-help-eyebrow{margin:0 0 8px;color:#caa0e9;font-size:10px;letter-spacing:.2em;font-weight:700}
+.install-help-dialog h2{margin:0 0 12px;font-family:Orbitron,sans-serif;font-size:clamp(19px,5vw,25px);line-height:1.25}
+.install-help-message{margin:0 0 22px;color:#c7bbd1;font-size:15px;line-height:1.65}
+.install-help-close{width:100%;min-height:48px}
+@media(prefers-reduced-motion:no-preference){.install-help-dialog[open]{animation:install-dialog-in .18s ease-out both}@keyframes install-dialog-in{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}}

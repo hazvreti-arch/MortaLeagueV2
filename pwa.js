@@ -1,8 +1,15 @@
 (() => {
   "use strict";
   let installPrompt = null;
+  let helpDialog = null;
   const installButton = () => document.getElementById("pwa-install-cta");
-  const standalone = () => Boolean(window.matchMedia?.("(display-mode: standalone)").matches || window.navigator.standalone === true);
+  const isStandalone = () => Boolean(
+    window.matchMedia?.("(display-mode: standalone)").matches ||
+    window.matchMedia?.("(display-mode: minimal-ui)").matches ||
+    window.matchMedia?.("(display-mode: fullscreen)").matches ||
+    window.navigator.standalone === true ||
+    document.referrer.startsWith("android-app://")
+  );
   const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
   const isAndroid = () => /android/i.test(navigator.userAgent);
 
@@ -18,56 +25,97 @@
     }
   }
 
-  async function install() {
-    if (standalone()) { showInstallButton(false); return; }
-    if (installPrompt) {
-      const promptEvent = installPrompt;
-      installPrompt = null;
-      try {
-        await promptEvent.prompt();
-        const choice = await promptEvent.userChoice;
-        if (choice?.outcome === "accepted") {
-          showInstallButton(false);
-          return;
-        }
-        showInstallButton(true);
-        showFallbackInstructions("dismissed");
-      } catch (error) {
-        console.warn("MortaLeague yükleme penceresi açılamadı:", error);
-        showFallbackInstructions();
-      }
-      return;
-    }
-    showFallbackInstructions();
+  function ensureHelpDialog() {
+    if (helpDialog) return helpDialog;
+    helpDialog = document.createElement("dialog");
+    helpDialog.className = "install-help-dialog";
+    helpDialog.setAttribute("aria-labelledby", "install-help-title");
+    helpDialog.innerHTML = `
+      <div class="install-help-card">
+        <div class="install-help-mark" aria-hidden="true">M</div>
+        <p class="install-help-eyebrow">MORTALEAGUE APP</p>
+        <h2 id="install-help-title">Uygulamayı yükle</h2>
+        <p id="install-help-message" class="install-help-message"></p>
+        <button class="btn btn-primary install-help-close" type="button">Tamam</button>
+      </div>`;
+    document.body.appendChild(helpDialog);
+    helpDialog.querySelector(".install-help-close")?.addEventListener("click", () => helpDialog.close());
+    helpDialog.addEventListener("click", event => {
+      if (event.target === helpDialog) helpDialog.close();
+    });
+    return helpDialog;
   }
 
-  function showFallbackInstructions(reason) {
+  function showInstallHelp() {
+    const dialog = ensureHelpDialog();
+    const message = dialog.querySelector("#install-help-message");
+    let copy;
     if (isIOS()) {
-      window.alert("MortaLeague'i ana ekrana eklemek için Safari'de Paylaş düğmesine dokun, ardından ‘Ana Ekrana Ekle’ seçeneğini seç.");
+      copy = "Safari'de Paylaş düğmesine dokun, ardından ‘Ana Ekrana Ekle’ seçeneğini seç.";
+    } else if (isAndroid()) {
+      copy = "Bu tarayıcı şu anda kurulum penceresi sunmadı. Chrome menüsünü (⋮) açıp ‘Uygulamayı yükle’ veya ‘Ana ekrana ekle’ seçeneğini kullan. Bu seçenek görünmüyorsa uygulama zaten kurulu olabilir ya da tarayıcı kurulum için uygun değildir.";
+    } else {
+      copy = "Tarayıcı menüsünde ‘Uygulamayı yükle’ veya ‘Sayfayı uygulama olarak yükle’ seçeneğini ara. Seçenek yoksa bu tarayıcı şu anda yüklemeyi desteklemiyor olabilir.";
+    }
+    if (message) message.textContent = copy;
+    if (typeof dialog.showModal === "function" && !dialog.open) dialog.showModal();
+    else if (message) message.textContent = copy;
+  }
+
+  async function install() {
+    if (isStandalone()) {
+      showInstallButton(false);
       return;
     }
-    const browser = isAndroid() ? "Chrome" : "tarayıcın";
-    const suffix = reason === "dismissed" ? " İstersen bu menüden tekrar yüklemeyi seçebilirsin." : "";
-    window.alert(`Yükleme penceresi bu oturumda açılamadı. ${browser} menüsünü açıp ‘Uygulamayı yükle’ veya ‘Ana ekrana ekle’ seçeneğini kullan.${suffix}`);
+    if (!installPrompt) {
+      showInstallHelp();
+      return;
+    }
+    const promptEvent = installPrompt;
+    installPrompt = null;
+    try {
+      await promptEvent.prompt();
+      const choice = await promptEvent.userChoice;
+      if (choice?.outcome === "accepted") {
+        showInstallButton(false);
+        return;
+      }
+      showInstallButton(true);
+      showInstallHelp();
+    } catch (error) {
+      console.warn("MortaLeague yükleme penceresi açılamadı:", error);
+      showInstallHelp();
+    }
   }
 
   function setup() {
     const button = installButton();
     button?.addEventListener("click", install);
-    showInstallButton(!standalone());
+    showInstallButton(!isStandalone());
+    // Android Chrome can sometimes report an already-installed related WebAPK.
+    // If so, do not show a button that cannot open another install prompt.
+    if (!isStandalone() && typeof navigator.getInstalledRelatedApps === "function") {
+      navigator.getInstalledRelatedApps().then(apps => {
+        const alreadyInstalled = Array.isArray(apps) && apps.some(app => app.platform === "webapp");
+        if (alreadyInstalled) showInstallButton(false);
+      }).catch(() => {});
+    }
 
     window.addEventListener("beforeinstallprompt", event => {
       event.preventDefault();
       installPrompt = event;
-      showInstallButton(!standalone());
+      showInstallButton(!isStandalone());
     });
     window.addEventListener("appinstalled", () => {
       installPrompt = null;
       showInstallButton(false);
     });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && isStandalone()) showInstallButton(false);
+    });
 
     if ("serviceWorker" in navigator && location.protocol === "https:") {
-      navigator.serviceWorker.register("/service-worker.js?v=ml-shell-20261018-04", { scope: "/" })
+      navigator.serviceWorker.register("/service-worker.js?v=ml-shell-20261018-05", { scope: "/" })
         .catch(error => console.warn("MortaLeague çevrimdışı desteği kurulamadı:", error));
     }
 
@@ -83,7 +131,6 @@
     }
   }
 
-  // The script sits at the end of the document; initialize immediately when possible.
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setup, { once: true });
   else setup();
 })();

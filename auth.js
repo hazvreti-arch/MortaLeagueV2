@@ -192,8 +192,11 @@
 
   async function listProfiles() {
     if (!client) throw new Error("Supabase bağlantısı kurulamadı.");
+    const fields = currentSession?.user
+      ? "id, username, display_name, bio, avatar_url, created_at"
+      : "username, display_name, bio, avatar_url, created_at";
     const { data, error } = await client.from("profiles")
-      .select("username, display_name, bio, avatar_url, created_at")
+      .select(fields)
       .order("created_at", { ascending: false }).limit(300);
     if (error) throw error;
     return data || [];
@@ -260,6 +263,88 @@
     const { error } = await client.from("announcements").delete().eq("id", id);
     if (error) throw error;
   }
+  async function createDirectConversation(targetUserId) {
+    if (!client || !currentSession?.user) throw new Error("Özel mesaj göndermek için giriş yapmalısın.");
+    const { data, error } = await client.rpc("create_direct_conversation", { target_user_id: targetUserId });
+    if (error) {
+      if (/blocked|engell|42501/i.test(`${error.message || ""} ${error.code || ""}`)) throw new Error("Bu oyuncuyla sohbet başlatılamıyor. Taraflardan biri diğerini engellemiş olabilir.");
+      throw error;
+    }
+    return data;
+  }
+  async function canDirectMessage(targetUserId) {
+    if (!client || !currentSession?.user) return false;
+    const { data, error } = await client.rpc("can_direct_message", { target_user_id: targetUserId });
+    if (error) throw error;
+    return data === true;
+  }
+  async function listDirectConversations() {
+    if (!client || !currentSession?.user) throw new Error("Sohbetlerini görmek için giriş yapmalısın.");
+    const userId = currentSession.user.id;
+    const { data: conversations, error } = await client.from("dm_conversations")
+      .select("id, user_one, user_two, created_at, last_message_at, last_message_preview, last_message_sender_id")
+      .or(`user_one.eq.${userId},user_two.eq.${userId}`)
+      .order("last_message_at", { ascending: false }).limit(100);
+    if (error) throw error;
+    const rows = conversations || [];
+    if (!rows.length) return [];
+    const otherIds = [...new Set(rows.map(c => c.user_one === userId ? c.user_two : c.user_one))];
+    const [{ data: profiles, error: profilesError }, { data: unreadRows, error: unreadError }] = await Promise.all([
+      client.from("profiles").select("id, username, display_name, avatar_url, bio, created_at").in("id", otherIds),
+      client.from("dm_messages").select("id, conversation_id").in("conversation_id", rows.map(c => c.id)).neq("sender_id", userId).is("read_at", null)
+    ]);
+    if (profilesError) throw profilesError;
+    if (unreadError) throw unreadError;
+    const profileMap = new Map((profiles || []).map(p => [p.id, p]));
+    const unreadMap = new Map();
+    (unreadRows || []).forEach(m => unreadMap.set(m.conversation_id, (unreadMap.get(m.conversation_id) || 0) + 1));
+    return rows.map(c => ({ ...c, otherProfile: profileMap.get(c.user_one === userId ? c.user_two : c.user_one) || null, unreadCount: unreadMap.get(c.id) || 0 }))
+      .filter(c => c.otherProfile);
+  }
+  async function listDirectMessages(conversationId) {
+    if (!client || !currentSession?.user) throw new Error("Önce giriş yapmalısın.");
+    const { data, error } = await client.from("dm_messages")
+      .select("id, conversation_id, sender_id, body, created_at, read_at")
+      .eq("conversation_id", conversationId).order("created_at", { ascending: false }).limit(300);
+    if (error) {
+      if (/dm_messages|schema cache|could not find the table/i.test(error.message || "")) throw new Error("Özel mesajlar için ZIP içindeki 02_direct_messages.sql dosyasını Supabase SQL Editor'de çalıştır.");
+      throw error;
+    }
+    return (data || []).reverse();
+  }
+  async function sendDirectMessage(conversationId, body) {
+    if (!client || !currentSession?.user) throw new Error("Mesaj göndermek için giriş yapmalısın.");
+    const text = String(body || "").trim();
+    if (!text) throw new Error("Boş mesaj gönderemezsin.");
+    if (text.length > 2000) throw new Error("Mesaj en fazla 2000 karakter olabilir.");
+    const { error } = await client.from("dm_messages").insert({ conversation_id: conversationId, sender_id: currentSession.user.id, body: text });
+    if (error) {
+      if (/row-level security|42501|blocked|engell/i.test(`${error.message || ""} ${error.code || ""}`)) throw new Error("Mesaj gönderilemedi. Sohbet erişimini veya engelleme durumunu kontrol et.");
+      throw error;
+    }
+  }
+  async function markDirectMessagesRead(conversationId) {
+    if (!client || !currentSession?.user) return;
+    const { error } = await client.from("dm_messages").update({ read_at: new Date().toISOString() })
+      .eq("conversation_id", conversationId).neq("sender_id", currentSession.user.id).is("read_at", null);
+    if (error) throw error;
+  }
+  async function listDirectBlocks() {
+    if (!client || !currentSession?.user) return [];
+    const { data, error } = await client.from("dm_blocks").select("blocked_id").eq("blocker_id", currentSession.user.id);
+    if (error) throw error;
+    return (data || []).map(row => row.blocked_id);
+  }
+  async function blockDirectUser(targetUserId) {
+    if (!client || !currentSession?.user) throw new Error("Oyuncuyu engellemek için giriş yapmalısın.");
+    const { error } = await client.from("dm_blocks").insert({ blocker_id: currentSession.user.id, blocked_id: targetUserId });
+    if (error && error.code !== "23505") throw error;
+  }
+  async function unblockDirectUser(targetUserId) {
+    if (!client || !currentSession?.user) throw new Error("Oyuncu engelini kaldırmak için giriş yapmalısın.");
+    const { error } = await client.from("dm_blocks").delete().eq("blocker_id", currentSession.user.id).eq("blocked_id", targetUserId);
+    if (error) throw error;
+  }
   function isAdmin() { return currentProfile?.role === "admin"; }
 
   window.MortaLeague = {
@@ -277,7 +362,16 @@
     saveOwnProfile,
     saveManagedProfile,
     createAnnouncement,
-    deleteAnnouncement
+    deleteAnnouncement,
+    createDirectConversation,
+    canDirectMessage,
+    listDirectConversations,
+    listDirectMessages,
+    sendDirectMessage,
+    markDirectMessagesRead,
+    listDirectBlocks,
+    blockDirectUser,
+    unblockDirectUser
   };
 
   document.querySelectorAll("[data-auth-open]").forEach(btn => btn.addEventListener("click", showModal));

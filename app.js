@@ -170,7 +170,7 @@ systemGrid.addEventListener("click",e=>{const btn=e.target.closest("[data-system
 systemClose.addEventListener("click",closeSystemDetail);
 systemBackdrop.addEventListener("click",e=>{if(e.target===systemBackdrop)closeSystemDetail();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape" && !systemBackdrop.hidden)closeSystemDetail();});
-const validPages=["home","systems","players","admin","rules"];
+const validPages=["home","systems","players","messages","admin","rules"];
 let cachedPlayers=[];
 let cachedAdminPlayers=[];
 let cachedAnnouncements=[];
@@ -187,6 +187,10 @@ function setInlineStatus(id,message,type=""){const node=document.getElementById(
 function setMessage(id,message,type=""){const node=document.getElementById(id);if(!node)return;node.textContent=message||"";node.className="auth-feedback"+(type?` ${type}`:"");}
 function showPage(name){
   if(!validPages.includes(name))return;
+  if(name==="messages"&&!window.MortaLeague?.session?.user){
+    window.MortaLeague?.openAuth();
+    return;
+  }
   if(name==="admin"&&!(window.MortaLeague?.isAdmin())){
     const note=document.getElementById("admin-access-note");
     if(note){note.textContent="Bu alan yalnızca yönetici yetkisi verilmiş hesaplara açıktır. Önce giriş yap; ilk yöneticiyi SQL dosyasındaki adımla tanımlayabilirsin.";note.className="admin-access-note error";}
@@ -196,12 +200,15 @@ function showPage(name){
   document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+name));
   document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
   if(name==="players")loadPlayers();
+  if(name==="messages")window.dispatchEvent(new CustomEvent("ml:messages-open"));
   if(name==="admin")loadAdminDashboard();
   if(name==="home")loadAnnouncements();
   if(document.getElementById("auth-backdrop")&&!document.getElementById("auth-backdrop").hidden)window.MortaLeague?.closeAuth();
+  window.dispatchEvent(new CustomEvent("ml:page-change",{detail:{page:name}}));
   window.scrollTo({top:0,behavior:"smooth"});
 }
-window.MortaUI={showPage,loadPlayers,loadAdminDashboard,loadAnnouncements};
+let currentPublicProfile=null;
+window.MortaUI={showPage,loadPlayers,loadAdminDashboard,loadAnnouncements,get currentPublicProfile(){return currentPublicProfile;}};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();showPage(b.dataset.page);}});
 
 async function loadPlayers(){
@@ -218,7 +225,8 @@ function renderPlayers(){
   const grid=document.getElementById("players-grid");if(!grid)return;
   const q=(document.getElementById("players-search")?.value||"").trim().toLocaleLowerCase("tr-TR");
   const rows=cachedPlayers.filter(p=>`${p.username||""} ${p.display_name||""} ${p.bio||""}`.toLocaleLowerCase("tr-TR").includes(q));
-  grid.innerHTML=rows.map(p=>`<article class="player-card"><span class="player-card-avatar">${p.avatar_url&&/^https:\/\//i.test(p.avatar_url)?`<img src="${esc(p.avatar_url)}" alt="${esc(p.display_name||p.username)} profil fotoğrafı" loading="lazy" referrerpolicy="no-referrer">`:esc(initials(p.display_name||p.username))}</span><div class="player-card-main"><h3>${esc(p.display_name||p.username)}</h3><p class="player-handle">@${esc(p.username)}</p><p class="player-bio">${esc(p.bio||"Bu oyuncu henüz biyografi eklememiş.")}</p><button class="player-open" type="button" data-player-profile="${esc(p.username)}">Profili görüntüle ↗</button></div></article>`).join("");
+  const viewerId=window.MortaLeague?.session?.user?.id;
+  grid.innerHTML=rows.map(p=>`<article class="player-card"><span class="player-card-avatar">${p.avatar_url&&/^https:\/\//i.test(p.avatar_url)?`<img src="${esc(p.avatar_url)}" alt="${esc(p.display_name||p.username)} profil fotoğrafı" loading="lazy" referrerpolicy="no-referrer">`:esc(initials(p.display_name||p.username))}</span><div class="player-card-main"><h3>${esc(p.display_name||p.username)}</h3><p class="player-handle">@${esc(p.username)}</p><p class="player-bio">${esc(p.bio||"Bu oyuncu henüz biyografi eklememiş.")}</p><div class="player-card-actions"><button class="player-open" type="button" data-player-profile="${esc(p.username)}">Profili görüntüle ↗</button>${viewerId&&p.id&&p.id!==viewerId?`<button class="player-message-button" type="button" data-message-user="${esc(p.id)}">Mesaj gönder</button>`:""}</div></div></article>`).join("");
   setInlineStatus("players-status",rows.length?`${rows.length} oyuncu profili gösteriliyor.`:(q?"Aramana uygun oyuncu bulunamadı.":"Henüz herkese açık oyuncu profili yok. İlk profil seninki olabilir."));
 }
 document.getElementById("players-search")?.addEventListener("input",renderPlayers);
@@ -233,9 +241,12 @@ function openPublicProfile(player){
   document.getElementById("public-profile-username").textContent="@"+(player.username||"oyuncu");
   document.getElementById("public-profile-bio").textContent=player.bio||"Bu oyuncu henüz biyografi eklememiş.";
   document.getElementById("public-profile-created").textContent=formatDate(player.created_at);
+  currentPublicProfile=player;
+  const messageButton=document.getElementById("public-profile-message");
+  if(messageButton){const viewerId=window.MortaLeague?.session?.user?.id;messageButton.hidden=!(viewerId&&player.id&&player.id!==viewerId);}
   modal.hidden=false;document.body.style.overflow="hidden";document.getElementById("public-profile-close")?.focus();
 }
-function closePublicProfile(){const modal=document.getElementById("public-profile-backdrop");if(modal)modal.hidden=true;document.body.style.overflow="";}
+function closePublicProfile(){const modal=document.getElementById("public-profile-backdrop");if(modal)modal.hidden=true;document.body.style.overflow="";currentPublicProfile=null;}
 document.getElementById("public-profile-close")?.addEventListener("click",closePublicProfile);
 document.getElementById("public-profile-backdrop")?.addEventListener("click",e=>{if(e.target===e.currentTarget)closePublicProfile();});
 

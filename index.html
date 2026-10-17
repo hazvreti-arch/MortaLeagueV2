@@ -18,7 +18,7 @@
    <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 21 12l-9 9.2L3 12 12 2.8Z" fill="#D9A5FF" stroke="#F0DAFF" stroke-width="1.1"/><path d="m12 6.5 5.4 5.5-5.4 5.5L6.6 12 12 6.5Z" fill="#9A4BCA"/></svg></span>
    <span><span class="brand-name">MORTALEAGUE</span><span class="brand-tagline">THE DARK FOOTBALL ERA</span></span>
   </a>
-  <nav class="nav" aria-label="Ana gezinme"><button class="active" data-page="home">Ana Sayfa</button><button data-page="systems">Sistemler</button><button data-page="players">Oyuncular</button><button class="mobile-auth-nav" type="button" data-auth-open>Giriş Yap</button></nav>
+  <nav class="nav" aria-label="Ana gezinme"><button class="active" data-page="home">Ana Sayfa</button><button data-page="systems">Sistemler</button><button data-page="players">Oyuncular</button><button data-page="messages">Mesajlar <span class="nav-unread" id="dm-nav-unread" hidden>0</span></button><button class="mobile-auth-nav" type="button" data-auth-open>Giriş Yap</button></nav>
   <div class="header-cta"><button class="btn btn-outline" data-page="rules">Kuralları Gör <span>→</span></button><button class="btn btn-primary account-btn" id="account-trigger" type="button" data-auth-open><span class="account-glyph">↗</span><span id="account-trigger-label">Giriş Yap</span></button></div>
  </div>
 </header>
@@ -60,6 +60,38 @@
  <div class="systems-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input id="players-search" type="search" placeholder="Oyuncu adı veya kullanıcı adı ara…" autocomplete="off"></label><button class="btn btn-secondary" id="players-refresh" type="button">Yenile ↻</button></div>
  <div id="players-status" class="inline-status" role="status" aria-live="polite">Oyuncular yükleniyor…</div>
  <div class="players-grid" id="players-grid"></div>
+</section>
+<section class="page" id="page-messages">
+ <div class="page-head"><div class="eyebrow">PRIVATE / PLAYER CHAT</div><h1>ÖZEL <span>MESAJLAR.</span></h1><p>MortaLeague oyuncularıyla bire bir sohbet et. Sohbetler yalnızca konuşmanın katılımcılarına açıktır.</p></div>
+ <div class="messages-shell">
+  <aside class="messages-sidebar" aria-label="Sohbetler ve oyuncu arama">
+   <div class="messages-section-title"><h2>SOHBETLER</h2><button class="icon-text-button" id="dm-refresh" type="button" aria-label="Sohbetleri yenile">↻ Yenile</button></div>
+   <div id="dm-list-status" class="inline-status" role="status" aria-live="polite">Sohbetler hazırlanıyor…</div>
+   <div class="dm-conversation-list" id="dm-conversation-list"></div>
+   <div class="dm-player-search-block">
+    <div class="messages-section-title"><h2>OYUNCU BUL</h2></div>
+    <label class="search-field dm-search-field"><span aria-hidden="true">⌕</span><input id="dm-user-search" type="search" placeholder="Kullanıcı adı ara…" autocomplete="off"></label>
+    <div id="dm-user-search-results" class="dm-user-search-results"><p class="dm-help-text">Yeni sohbet başlatmak için oyuncu ara.</p></div>
+   </div>
+  </aside>
+  <section class="messages-chat-pane" aria-label="Sohbet penceresi">
+   <div id="dm-chat-empty" class="dm-chat-empty"><span class="dm-empty-icon">✉</span><h2>Bir sohbet seç.</h2><p>Soldaki konuşmalarından birini aç veya kullanıcı adıyla oyuncu ara.</p></div>
+   <div id="dm-chat-view" class="dm-chat-view" hidden>
+    <header class="dm-chat-header">
+     <span class="dm-chat-avatar" id="dm-chat-avatar">ML</span>
+     <div class="dm-chat-identity"><strong id="dm-chat-name">Oyuncu</strong><span id="dm-chat-username">@oyuncu</span></div>
+     <button class="btn btn-outline dm-block-button" id="dm-block-button" type="button">Engelle</button>
+    </header>
+    <div id="dm-chat-status" class="dm-chat-status" role="status" aria-live="polite"></div>
+    <div class="dm-message-list" id="dm-message-list" aria-live="polite" aria-relevant="additions text"></div>
+    <form class="dm-composer" id="dm-send-form">
+     <label class="sr-only" for="dm-message-input">Mesajın</label>
+     <textarea id="dm-message-input" rows="2" maxlength="2000" placeholder="Mesajını yaz…" required></textarea>
+     <div class="dm-composer-footer"><span id="dm-character-count">0 / 2000</span><button class="btn btn-primary" id="dm-send-button" type="submit">Gönder ↗</button></div>
+    </form>
+   </div>
+  </section>
+ </div>
 </section>
 <section class="page" id="page-admin">
  <div class="page-head"><div class="eyebrow">PRIVATE / ADMIN ONLY</div><h1>YÖNETİM <span>PANELİ.</span></h1><p>Üye profillerini incele, profil bilgilerini denetle ve topluluk duyurularını yönet. Finans veya oyuncu değeri otomasyonu bu panele dahil değildir.</p></div>
@@ -143,6 +175,7 @@
   <div class="public-profile-header"><span class="public-profile-avatar" id="public-profile-avatar">ML</span><div><span class="auth-kicker">MORTALEAGUE PLAYER</span><h2 id="public-profile-name">Oyuncu adı</h2><p id="public-profile-username">@oyuncu</p></div></div>
   <div class="system-detail-section"><h4>BİYOGRAFİ</h4><p id="public-profile-bio">Bu oyuncu henüz biyografi eklememiş.</p></div>
   <div class="system-detail-section"><h4>KATILIM TARİHİ</h4><p id="public-profile-created">—</p></div>
+  <div class="public-profile-actions"><button type="button" class="btn btn-primary" id="public-profile-message" hidden>Özel mesaj gönder ↗</button></div>
  </section>
 </div>
 <div class="public-profile-backdrop" id="admin-edit-backdrop" hidden>
@@ -161,5 +194,6 @@
 <script src="config.js"></script>
 <script src="app.js"></script>
 <script src="auth.js"></script>
+<script src="messages.js"></script>
 </body>
 </html>

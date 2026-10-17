@@ -340,25 +340,48 @@ document.getElementById("admin-edit-form")?.addEventListener("submit",async e=>{
   }catch(error){setMessage("admin-edit-feedback",error?.message||"Profil kaydedilemedi.","error");}
   finally{btn.disabled=false;btn.textContent="Değişiklikleri Kaydet ↗";}
 });
-document.getElementById("announcement-form")?.addEventListener("submit",async e=>{
-  e.preventDefault();
-  // Capture the form before the first await. Event.currentTarget is null once
-  // the browser finishes dispatching the event, even inside an async handler.
-  const form=e.currentTarget;
-  if(!window.MortaLeague?.isAdmin()){setMessage("announcement-feedback","Yönetici yetkisi gerekli.","error");return;}
-  const btn=form.querySelector('button[type="submit"]');
-  const title=document.getElementById("announcement-title").value.trim();
-  const content=document.getElementById("announcement-content").value.trim();
-  if(!title||!content){setMessage("announcement-feedback","Başlık ve içerik boş bırakılamaz.","error");return;}
-  btn.disabled=true;btn.textContent="Yayınlanıyor…";
-  try{
-    await window.MortaLeague.createAnnouncement({title,content});
-    form.reset();
-    setMessage("announcement-feedback","Duyuru başarıyla yayınlandı.","success");
+document.getElementById("announcement-form")?.addEventListener("submit", async event => {
+  event.preventDefault();
+  // Resolve the form and fields synchronously. Never read event.currentTarget after await.
+  const form = document.getElementById("announcement-form");
+  const titleInput = document.getElementById("announcement-title");
+  const contentInput = document.getElementById("announcement-content");
+  const button = document.getElementById("announcement-submit");
+  if (!form || !titleInput || !contentInput || !button) {
+    setMessage("announcement-feedback", "Duyuru formu yüklenemedi. Sayfayı yenileyip tekrar dene.", "error");
+    return;
+  }
+  if (!window.MortaLeague?.isAdmin()) {
+    setMessage("announcement-feedback", "Yönetici yetkisi gerekli.", "error");
+    return;
+  }
+  const title = titleInput.value.trim();
+  const content = contentInput.value.trim();
+  if (!title || title.length > 100 || !content || content.length > 3000) {
+    setMessage("announcement-feedback", "Başlık 1–100, içerik 1–3000 karakter olmalı.", "error");
+    return;
+  }
+  button.disabled = true;
+  button.textContent = "Yayınlanıyor…";
+  setMessage("announcement-feedback", "", "");
+  try {
+    await window.MortaLeague.createAnnouncement({ title, content });
+    // Avoid form.reset() entirely here: cached/older handlers produced a null reset error.
+    titleInput.value = "";
+    contentInput.value = "";
+    setMessage("announcement-feedback", "Duyuru başarıyla yayınlandı.", "success");
     await loadAdminDashboard();
     await loadAnnouncements();
-  }catch(error){setMessage("announcement-feedback",error?.message||"Duyuru yayınlanamadı.","error");}
-  finally{btn.disabled=false;btn.textContent="Duyuruyu Yayınla ↗";}
+  } catch (error) {
+    const raw = String(error?.message || "");
+    const message = /row-level security|42501|permission denied|yetki/i.test(raw)
+      ? "Duyuru yayımlanamadı. Yönetici rolünü ve Supabase izinlerini kontrol et."
+      : (raw || "Duyuru yayınlanamadı. Tekrar deneyin.");
+    setMessage("announcement-feedback", message, "error");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Duyuruyu Yayınla ↗";
+  }
 });
 document.getElementById("admin-announcements")?.addEventListener("click",async e=>{
   const b=e.target.closest("[data-delete-announcement]");if(!b)return;
@@ -393,13 +416,13 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePublicProfile(
   function resize() {
     width = window.innerWidth;
     height = window.innerHeight;
-    dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    dpr = Math.min(window.devicePixelRatio || 1, isSmall() ? 1.15 : 1.5);
     canvas.width = Math.floor(width * dpr);
     canvas.height = Math.floor(height * dpr);
     canvas.style.width = width + 'px';
     canvas.style.height = height + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const amount = Math.min(isSmall() ? 34 : 68, Math.max(22, Math.floor(width * height / (isSmall() ? 19000 : 15500))));
+    const amount = Math.min(isSmall() ? 18 : 68, Math.max(isSmall() ? 10 : 22, Math.floor(width * height / (isSmall() ? 30000 : 15500))));
     particles = Array.from({ length: amount }, () => ({
       x: rand(0, width), y: rand(0, height),
       r: rand(.6, 1.65), vx: rand(-.11, .11), vy: rand(-.16, -.035),
@@ -408,7 +431,11 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePublicProfile(
     }));
   }
 
-  function draw() {
+  let lastFrameAt = 0;
+  function draw(now = 0) {
+    // Mobile devices render this decorative canvas at ~30fps to reduce battery and heat.
+    if (isSmall() && now - lastFrameAt < 32) { raf = window.requestAnimationFrame(draw); return; }
+    lastFrameAt = now;
     ctx.clearRect(0, 0, width, height);
     for (const p of particles) {
       p.x += p.vx; p.y += p.vy; p.phase += p.twinkle;

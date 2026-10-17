@@ -13,6 +13,7 @@
   let client = null;
   let currentSession = null;
   let currentProfile = null;
+  let authInitialized = false;
   let lastFocused = null;
   let profileRequest = 0;
   let readyResolve;
@@ -157,10 +158,12 @@
     const heroAuthCta = document.getElementById("hero-auth-cta");
     if (heroAuthCta) {
       const signedIn = Boolean(currentSession?.user);
-      heroAuthCta.hidden = signedIn;
-      // Inline display ensures the signed-in CTA stays hidden even if a stale/strong
-      // button CSS rule attempts to override the HTML hidden attribute.
-      heroAuthCta.style.display = signedIn ? "none" : "";
+      // Keep the account CTA hidden until the stored session has been resolved.
+      // This avoids a guest-state flash for returning members during refresh.
+      const showGuestCta = authInitialized && !signedIn;
+      heroAuthCta.hidden = !showGuestCta;
+      heroAuthCta.style.display = showGuestCta ? "" : "none";
+      heroAuthCta.setAttribute("aria-hidden", String(!showGuestCta));
     }
     const trigger = el("account-trigger");
     if (trigger) trigger.setAttribute("aria-label", currentSession?.user ? "Hesabımı aç" : "Giriş yap");
@@ -176,12 +179,16 @@
   async function initClient() {
     if (!isConfigured()) {
       setupNote.textContent = "Supabase yapılandırması eksik. config.js içindeki proje URL'sini ve publishable key'i kontrol et.";
+      authInitialized = true;
+      updateHeader(null);
       readyResolve(false);
       window.dispatchEvent(new Event("ml:ready"));
       return;
     }
     if (!window.supabase || typeof window.supabase.createClient !== "function") {
       setupNote.textContent = "Supabase istemci kütüphanesi yüklenemedi. İnternet bağlantısını kontrol edip sayfayı yenile.";
+      authInitialized = true;
+      updateHeader(null);
       readyResolve(false);
       window.dispatchEvent(new Event("ml:ready"));
       return;
@@ -203,7 +210,13 @@
     setupNote.textContent = "Kayıtta yalnızca kullanıcı adı ve şifre istenir. Supabase'te Email → Confirm email kapalı olmalı; SQL kurulum dosyasını bir kez çalıştır.";
     client.auth.onAuthStateChange((_event, session) => updateHeader(session));
     const { data, error } = await client.auth.getSession();
-    if (!error) updateHeader(data.session);
+    authInitialized = true;
+    if (error) {
+      console.warn("MortaLeague oturumu okunamadı:", error.message || error);
+      updateHeader(null);
+    } else {
+      updateHeader(data.session);
+    }
     readyResolve(true);
     window.dispatchEvent(new Event("ml:ready"));
     dispatchState();

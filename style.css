@@ -1,5 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 :root{color-scheme:dark;--bg:#08040d;--panel:#110919;--panel2:#170c21;--line:#34203f;--text:#f8f0ff;--muted:#aa9bb8;--purple:#b94bff;--pink:#e34bff;--lav:#d2a5ff;--mint:#81f5d2;--content:1260px}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:100px}
@@ -109,9 +108,9 @@ main{max-width:var(--content);margin:0 auto}
 .mobile-auth-nav{display:none}
 @media(max-width:1328px){.header-inner,main{margin-left:34px;margin-right:34px}}
 @media(max-width:1050px){.header{height:82px}.header-inner{grid-template-columns:1fr auto;margin:0 24px}.nav{gap:3px}.nav button{padding:11px 12px;font-size:13px}.header-cta .btn{padding:0 13px}.hero{min-height:600px;grid-template-columns:1.05fr .95fr}.hero-title{font-size:clamp(51px,6.2vw,68px);letter-spacing:-3.5px}.hero-art{transform:scale(.86);margin:0 -25px}.dna-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.systems-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.page{min-height:calc(100vh - 82px)}}
-@media(max-width:700px){.site-header{height:74px}.header-inner{margin:0 16px;grid-template-columns:1fr auto}.brand{gap:9px}.brand-mark{width:33px;height:33px;border-radius:10px}.brand-name{font-size:12px;letter-spacing:1px}.brand-tagline{font-size:7px;letter-spacing:2.1px}.header-cta{display:none}.nav{position:fixed;z-index:60;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:#0b0614ed;border-top:1px solid #392144;backdrop-filter:blur(20px)}.nav button{padding:11px 5px;border-radius:8px;font-size:12px}.nav .mobile-auth-nav{display:block;width:100%;color:#bdafca;border:1px solid transparent;border-radius:8px;background:transparent;font-size:11px;font-weight:600}.nav .mobile-auth-nav:hover{color:#fff;border-color:#40234f;background:linear-gradient(135deg,#281436,#1b0c25)}
+@media(max-width:700px){.brand{gap:9px}.brand-mark{width:33px;height:33px;border-radius:10px}.brand-name{font-size:12px;letter-spacing:1px}.brand-tagline{font-size:7px;letter-spacing:2.1px}.header-cta{display:none}
 main{margin:0 17px}.hero{display:flex;flex-direction:column;align-items:stretch;gap:8px;min-height:unset;padding:45px 0 32px}.hero-title{font-size:clamp(42px,11.5vw,63px);line-height:1.02;letter-spacing:-2.8px;margin:24px 0 15px}.online-pill{font-size:9px;letter-spacing:.45px;padding:8px 10px}.hero-description{max-width:500px;font-size:13px;line-height:1.8}.hero-actions{gap:8px;margin-top:21px}.btn{min-height:42px;padding:0 13px;font-size:11px}.hero-art{width:100%;height:330px;transform:none;margin:0;order:2}.orbit{width:260px;height:260px}.orbit:before{inset:21px}.orbit:after{inset:43px}.crest{width:158px;height:205px}.crest-letter{font-size:78px}.crest-word{bottom:19px;font-size:8px;letter-spacing:3px}.crest:after{width:125px;height:125px;top:25px}.orbit-glow{width:175px;height:175px}.floating-stat{min-width:81px;padding:10px 11px;border-radius:10px}.floating-stat small{font-size:8px}.floating-stat strong{font-size:12px}.stat-season{top:37px;right:3px}.stat-players{left:1px;top:138px}
-.dna{padding-bottom:44px}.section-heading{align-items:flex-end;gap:10px}.section-heading h2{font-size:19px;letter-spacing:-.7px}.section-heading p{max-width:290px;font-size:10px;line-height:1.6}.season-tag{padding:6px 8px;font-size:8px}.dna-grid{gap:9px}.dna-card{min-height:165px;padding:14px;border-radius:13px}.card-icon{width:35px;height:35px;margin-bottom:14px}.dna-card h3{font-size:12px}.dna-card p{font-size:10px;line-height:1.65}.page{min-height:calc(100vh - 74px);padding:42px 0 84px}.page h1{font-size:35px;letter-spacing:-1.7px}.page-head>p{font-size:12px}.systems-grid{gap:9px}.system-card{min-height:154px;padding:13px}.system-card h3{font-size:12px;line-height:1.4}.system-card p{font-size:10px}.system-glyph{font-size:15px}.panel-head{padding:17px}.panel-head h2{font-size:15px}.panel-head p{font-size:10px}.pill-tag{font-size:8px;padding:7px}.league-row{grid-template-columns:27px minmax(0,1fr) 47px;gap:7px;padding:14px 11px}.league-row .metric:last-child{display:none}.rank{font-size:13px}.club{gap:8px}.club-badge{width:29px;height:29px;font-size:10px}.club strong{font-size:10px}.club small{font-size:9px}.league-row .metric small{font-size:8px}.league-row .metric strong{font-size:11px}.rules-grid{grid-template-columns:1fr}.site-footer{margin-bottom:62px;font-size:7px}}
+.dna{padding-bottom:44px}.section-heading{align-items:flex-end;gap:10px}.section-heading h2{font-size:19px;letter-spacing:-.7px}.section-heading p{max-width:290px;font-size:10px;line-height:1.6}.season-tag{padding:6px 8px;font-size:8px}.dna-grid{gap:9px}.dna-card{min-height:165px;padding:14px;border-radius:13px}.card-icon{width:35px;height:35px;margin-bottom:14px}.dna-card h3{font-size:12px}.dna-card p{font-size:10px;line-height:1.65}.page{min-height:calc(100vh - 74px);padding:42px 0 84px}.page h1{font-size:35px;letter-spacing:-1.7px}.page-head>p{font-size:12px}.systems-grid{gap:9px}.system-card{min-height:154px;padding:13px}.system-card h3{font-size:12px;line-height:1.4}.system-card p{font-size:10px}.system-glyph{font-size:15px}.panel-head{padding:17px}.panel-head h2{font-size:15px}.panel-head p{font-size:10px}.pill-tag{font-size:8px;padding:7px}.league-row{grid-template-columns:27px minmax(0,1fr) 47px;gap:7px;padding:14px 11px}.league-row .metric:last-child{display:none}.rank{font-size:13px}.club{gap:8px}.club-badge{width:29px;height:29px;font-size:10px}.club strong{font-size:10px}.club small{font-size:9px}.league-row .metric small{font-size:8px}.league-row .metric strong{font-size:11px}.rules-grid{grid-template-columns:1fr}.site-footer{margin-bottom:10px;font-size:7px}}
 @media(max-width:370px){main{margin:0 13px}.hero-title{font-size:39px;letter-spacing:-2.5px}.hero-actions{flex-wrap:wrap}.dna-grid{grid-template-columns:1fr}.dna-card{min-height:145px}.season-tag{display:none}.systems-grid{grid-template-columns:1fr}.section-heading h2{font-size:17px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
@@ -229,7 +228,7 @@ body.has-pointer .pointer-aura{opacity:1}
 @keyframes auth-dialog-in{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:1050px){.header-cta{gap:6px}.header-cta .btn{font-size:11px;padding:0 10px}}
 @media(max-width:700px){.header-cta{display:none!important;position:static}.header-cta .btn-outline{display:none}.auth-dialog{padding:23px 19px;border-radius:17px}.auth-title{font-size:22px}.auth-backdrop{padding:12px}}
-@media(max-width:370px){.brand-name{font-size:10px}.brand-tagline{letter-spacing:1.5px}.nav button,.nav .mobile-auth-nav{font-size:10px;padding-left:2px;padding-right:2px}}
+@media(max-width:370px){.brand-name{font-size:10px}.brand-tagline{letter-spacing:1.5px}}
 
 
 /* SYSTEM TEXTS — richer system descriptions and accessible detail dialog */
@@ -324,18 +323,18 @@ body.has-pointer .pointer-aura{opacity:1}
 .public-profile-dialog .system-detail-section{padding-top:17px}
 @media(max-width:1050px){.players-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav button{padding:10px 9px;font-size:12px}}
 @media(max-width:700px){
- .header-inner{grid-template-columns:1fr;margin:0 15px}.header-cta{display:none!important}
- .nav{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:8px 7px calc(8px + env(safe-area-inset-bottom))}
- .nav button{font-size:11px;padding:10px 2px;min-width:0;white-space:nowrap}
- .nav .mobile-auth-nav{font-size:11px;padding:10px 2px}
- main{padding-bottom:70px}.hero{padding-top:30px}.hero-actions{gap:8px}.hero-actions .btn{flex:1 1 auto;min-width:135px}
+ .header-cta{display:none!important}
+ 
+ 
+ 
+ main{padding-bottom:24px}.hero{padding-top:30px}.hero-actions{gap:8px}.hero-actions .btn{flex:1 1 auto;min-width:135px}
  .systems-toolbar{align-items:stretch;flex-wrap:wrap}.systems-toolbar .search-field{max-width:none;flex:1 1 100%}.systems-toolbar>.btn{flex:1}
  .players-grid{grid-template-columns:1fr}.admin-stats{grid-template-columns:1fr 1fr}.admin-stat:last-child{grid-column:1/-1}
  .admin-panel{padding:16px}.admin-user-card{grid-template-columns:1fr}.admin-user-actions{justify-content:flex-start;flex-wrap:wrap}
  .public-profile-dialog{padding:22px 17px;border-radius:16px;max-height:90vh}.public-profile-avatar{width:62px;height:62px;border-radius:17px}
  .home-announcements{padding-bottom:45px}.site-footer{margin-bottom:10px;font-size:8px}
 }
-@media(max-width:370px){.nav button,.nav .mobile-auth-nav{font-size:9px;letter-spacing:-.1px}.hero-actions .btn{min-width:100%}.admin-stats{grid-template-columns:1fr}.admin-stat:last-child{grid-column:auto}}
+@media(max-width:370px){.hero-actions .btn{min-width:100%}.admin-stats{grid-template-columns:1fr}.admin-stat:last-child{grid-column:auto}}
 
 @media(min-width:701px) and (max-width:1050px){
  .header-inner{grid-template-columns:auto minmax(0,1fr) auto;gap:10px;margin:0 18px}
@@ -443,11 +442,11 @@ body.has-pointer .pointer-aura{opacity:1}
  .dm-chat-header{padding:12px}
  .dm-chat-avatar{width:39px;height:39px;border-radius:12px}
  .dm-composer{padding:10px}
- .nav{grid-template-columns:repeat(5,minmax(0,1fr))}
- .nav button{font-size:10px}
+ 
+ 
  .nav-unread{min-width:14px;height:14px;padding:0 3px;margin-left:2px;font-size:8px}
 }
-@media(max-width:370px){.nav button{font-size:8px;letter-spacing:-.2px}.nav-unread{min-width:12px;height:12px;font-size:7px}.dm-chat-header{gap:8px}.dm-block-button{padding:0 7px;font-size:9px}}
+@media(max-width:370px){.nav-unread{min-width:12px;height:12px;font-size:7px}.dm-chat-header{gap:8px}.dm-block-button{padding:0 7px;font-size:9px}}
 
 .dm-chat-avatar-inner{display:grid;width:100%;height:100%;place-items:center;overflow:hidden}.dm-chat-avatar-inner img{width:100%;height:100%;object-fit:cover}
 
@@ -455,11 +454,11 @@ body.has-pointer .pointer-aura{opacity:1}
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 img, svg, video, canvas { max-width: 100%; }
 @media (max-width: 700px) {
-  html { scroll-padding-top: 76px; }
+  html { scroll-padding-top: 16px; }
   body { width: 100%; max-width: 100%; overflow-x: clip; font-size: 16px; }
-  .site-header { height: 68px; }
-  .header-inner { width: auto; max-width: 100%; margin: 0 14px; }
-  main { width: auto; max-width: 100%; margin: 0 15px; padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+  
+  
+  main { width: auto; max-width: 100%; margin: 0 15px; padding-bottom: 24px; }
   .page { min-height: calc(100vh - 68px); min-height: calc(100svh - 68px); padding: 30px 0 42px; }
   .page-head { margin-bottom: 23px; }
   .page-head .eyebrow, .eyebrow { font-size: 11px; letter-spacing: 1.4px; line-height: 1.5; }
@@ -517,8 +516,8 @@ img, svg, video, canvas { max-width: 100%; }
   .public-profile-header { gap: 12px; }
   .public-profile-header h2 { font-size: 21px; }
   .site-footer { gap: 9px; flex-wrap: wrap; justify-content: center; margin: 0 0 15px; padding: 10px 0; font-size: 10px; }
-  .nav { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 3px; padding: 7px 7px calc(7px + env(safe-area-inset-bottom)); }
-  .nav button, .nav .mobile-auth-nav { min-width: 0; min-height: 44px; padding: 9px 1px; font-size: 11px; line-height: 1.25; white-space: nowrap; }
+  
+  
   .nav-unread { min-width: 15px; height: 15px; font-size: 9px; }
   .messages-shell { grid-template-columns: 1fr; gap: 10px; padding-bottom: 10px; }
   .messages-sidebar { padding: 13px; gap: 11px; }
@@ -560,7 +559,7 @@ img, svg, video, canvas { max-width: 100%; }
 @media (max-width: 420px) {
   .dna-grid { grid-template-columns: 1fr; }
   .dna-card { padding: 16px; }
-  .nav button, .nav .mobile-auth-nav { font-size: 10.5px; }
+  
   .hero-actions .btn { flex-basis: 100%; }
   .page h1 { font-size: clamp(26px, 8.5vw, 32px); }
   .dm-chat-header { gap: 7px; }
@@ -678,10 +677,6 @@ img, svg, video, canvas { max-width: 100%; }
 .social-report-actions .btn{min-height:36px;font-size:10px}
 @media(max-width:900px){.community-feed-layout{grid-template-columns:minmax(0,1fr) 230px;gap:12px}.social-discover-list,.social-achievements-grid{grid-template-columns:1fr}}
 @media(max-width:700px){
- .nav{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:3px!important;padding:7px 6px calc(7px + env(safe-area-inset-bottom))!important}
- .nav [data-page="systems"]{display:none!important}
- .nav button{font-size:10px!important;padding:9px 1px!important;min-width:0;overflow:hidden;text-overflow:ellipsis}
- .nav .mobile-auth-nav{font-size:10px!important;padding:9px 1px!important}
  .community-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:6px}
  .community-tabs button{min-height:43px;padding:0 7px;font-size:10px}
  .community-feed-layout{grid-template-columns:1fr;gap:13px}
@@ -745,21 +740,17 @@ img, svg, video, canvas { max-width: 100%; }
    so use a 900px breakpoint and remove the header backdrop containing block. */
 .avatar-fallback{display:grid!important;place-items:center!important;overflow:hidden!important;background:linear-gradient(145deg,#432257,#1b1028)!important;color:#f0d8ff!important;font-family:'Orbitron',sans-serif!important;font-weight:800!important;text-align:center!important;line-height:1!important}
 @media (max-width: 900px) {
-  html { scroll-padding-top: 72px; }
+  html { scroll-padding-top: 16px; }
   body { min-width: 320px; width: 100%; max-width: 100%; overflow-x: hidden; }
-  .site-header { height: 66px; top: 0; position: sticky; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: #0a0610f7; }
-  .header-inner { display: flex; align-items: center; justify-content: space-between; width: auto; max-width: 100%; height: 100%; margin: 0 17px; }
+  
+  
   .brand { min-width: 0; gap: 9px; }
   .brand-mark { width: 32px; height: 32px; }
   .brand-name { font-size: 12px; letter-spacing: 1px; }
   .brand-tagline { font-size: 7px; letter-spacing: 1.8px; }
   .header-cta { display: none !important; }
-  .nav { position: fixed !important; z-index: 150 !important; left: 0; right: 0; bottom: 0; top: auto; width: 100%; display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 3px !important; padding: 7px 7px calc(7px + env(safe-area-inset-bottom)) !important; margin: 0; border: 0; border-top: 1px solid #442751; border-radius: 0; background: rgba(11,6,20,.97); box-shadow: 0 -9px 28px rgba(0,0,0,.28); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
-  .nav [data-page="systems"] { display: none !important; }
-  .nav button, .nav .mobile-auth-nav { display: inline-flex; align-items: center; justify-content: center; min-width: 0; min-height: 46px; width: 100%; margin: 0; padding: 8px 2px !important; border-radius: 9px; font-size: 10.5px !important; line-height: 1.2; letter-spacing: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .nav button.active { border-color: #604070; background: linear-gradient(135deg,#281436,#1b0c25); }
   .nav-unread { min-width: 15px; height: 15px; margin-left: 3px; font-size: 8px; }
-  main { width: auto; max-width: 100%; margin: 0 18px; padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+  main { width: auto; max-width: 100%; margin: 0 18px; padding-bottom: 24px; }
   .page { min-height: calc(100svh - 66px); padding: 30px 0 34px; }
   .page-head { margin-bottom: 23px; }
   .page-head .eyebrow, .eyebrow { font-size: 10px; letter-spacing: 1.35px; line-height: 1.5; }
@@ -850,54 +841,71 @@ img, svg, video, canvas { max-width: 100%; }
   .community-side-column { grid-template-columns: 1fr; }
   .admin-stats { grid-template-columns: 1fr 1fr; }
   .admin-stat:last-child { grid-column: 1 / -1; }
-  .nav button, .nav .mobile-auth-nav { font-size: 9.5px !important; }
   .nav-unread { margin-left: 2px; }
 }
 
 
-/* MOBILE NAV REPAIR: keep navigation in document flow; never cover content. */
-@media (max-width: 900px) {
-  .site-header { height: auto !important; min-height: 66px; position: sticky; top: 0; z-index: 100; }
-  .header-inner { min-height: 66px; }
-  .nav { position: relative !important; inset: auto !important; z-index: 1 !important; display: flex !important; width: 100%; gap: 4px !important; padding: 6px 8px calc(7px + env(safe-area-inset-bottom)) !important; overflow-x: auto; overflow-y: hidden; border-top: 1px solid #442751; border-bottom: 1px solid #2b1934; background: #0b0614; box-shadow: none; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; scrollbar-width: none; }
-  .nav::-webkit-scrollbar { display: none; }
-  .nav [data-page="systems"] { display: inline-flex !important; }
-  .nav button, .nav .mobile-auth-nav { flex: 0 0 auto; width: auto; min-width: max-content; min-height: 40px; padding: 8px 12px !important; font-size: 11px !important; }
-  main { padding-bottom: 24px !important; }
-  .hero-art { overflow: visible; }
-  .site-footer { margin-bottom: 0 !important; }
-}
+/* MORTALEAGUE QUALITY PASS 02
+   Single source of truth for the responsive header/navigation. The mobile nav
+   stays in normal document flow so it can never cover the hero or page content. */
 #hero-auth-cta[hidden] { display: none !important; }
 
-
-/* MOBILE NAV V3 — reliable two-row header; nav never overlays page content. */
 @media (max-width: 900px) {
   .site-header {
-    position: sticky !important;
-    top: 0 !important;
-    bottom: auto !important;
+    position: relative !important;
+    inset: auto !important;
     display: block !important;
+    width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
     overflow: visible !important;
-    z-index: 100 !important;
+    z-index: 50 !important;
+    background: #08050df5 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
-  .header-inner {
+  .site-header > .header-inner {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
     grid-template-areas: "brand" "nav" !important;
     gap: 0 !important;
     width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
     min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
   }
-  .header-inner > .brand { grid-area: brand !important; margin: 0 15px !important; min-height: 64px !important; }
-  .header-inner > .nav {
+  .site-header > .header-inner > .brand {
+    grid-area: brand !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    min-width: 0 !important;
+    min-height: 64px !important;
+    margin: 0 15px !important;
+    padding: 0 !important;
+  }
+  .site-header > .header-inner > .brand .brand-mark {
+    flex: 0 0 auto !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+  .site-header > .header-inner > .brand .brand-name {
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+    letter-spacing: 1px !important;
+  }
+  .site-header > .header-inner > .brand .brand-tagline {
+    font-size: 7px !important;
+    line-height: 1.5 !important;
+    letter-spacing: 1.8px !important;
+  }
+  .site-header > .header-inner > .nav {
     grid-area: nav !important;
     position: static !important;
     inset: auto !important;
-    top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
     transform: none !important;
     display: flex !important;
     flex-flow: row nowrap !important;
@@ -907,41 +915,76 @@ img, svg, video, canvas { max-width: 100%; }
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
+    height: auto !important;
     margin: 0 !important;
-    padding: 6px 12px !important;
+    padding: 6px 12px 8px !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
     border: 0 !important;
     border-top: 1px solid #392144 !important;
     border-bottom: 1px solid #2b1934 !important;
     border-radius: 0 !important;
-    background: rgba(11,6,20,.98) !important;
+    background: #0b0614 !important;
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     scrollbar-width: none !important;
+    overscroll-behavior-x: contain;
   }
-  .header-inner > .nav::-webkit-scrollbar { display: none !important; }
-  .header-inner > .nav button,
-  .header-inner > .nav .mobile-auth-nav {
+  .site-header > .header-inner > .nav::-webkit-scrollbar { display: none !important; }
+  .site-header > .header-inner > .nav > button,
+  .site-header > .header-inner > .nav > .mobile-auth-nav {
     display: inline-flex !important;
     flex: 0 0 auto !important;
     align-items: center !important;
     justify-content: center !important;
     width: auto !important;
     min-width: max-content !important;
-    min-height: 40px !important;
+    min-height: 42px !important;
     margin: 0 !important;
     padding: 8px 12px !important;
+    border-radius: 9px !important;
     font-size: 11px !important;
-    line-height: 1.2 !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0 !important;
     white-space: nowrap !important;
     overflow: visible !important;
+    text-overflow: clip !important;
   }
-  .header-inner > .header-cta { display: none !important; }
+  .site-header > .header-inner > .header-cta { display: none !important; }
   main { padding-bottom: 24px !important; }
   .page { padding-bottom: 38px !important; }
   .hero-art { z-index: 1; }
   .floating-stat { z-index: 2; }
+  .site-footer { margin-bottom: 0 !important; }
   .hero-auth-cta[hidden], #hero-auth-cta[hidden] { display: none !important; }
+}
+
+/* Six links fit in a predictable 3-by-2 touch grid on narrow phones. */
+@media (max-width: 600px) {
+  .site-header > .header-inner > .nav {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-auto-rows: minmax(42px, auto) !important;
+    gap: 5px !important;
+    padding: 8px 12px 10px !important;
+    overflow: visible !important;
+  }
+  .site-header > .header-inner > .nav > button,
+  .site-header > .header-inner > .nav > .mobile-auth-nav {
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 42px !important;
+    padding: 8px 4px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
+@media (max-width: 359px) {
+  .site-header > .header-inner > .brand { margin-inline: 12px !important; }
+  .site-header > .header-inner > .nav { padding-inline: 8px !important; gap: 4px !important; }
+  .site-header > .header-inner > .nav > button { font-size: 10px !important; }
+  main { margin-left: 12px !important; margin-right: 12px !important; }
 }

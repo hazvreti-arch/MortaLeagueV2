@@ -509,16 +509,11 @@ create policy "Users send direct messages when unblocked" on public.dm_messages 
         where recipient.id=case when c.user_one=auth.uid() then c.user_two else c.user_one end
           and not recipient.is_suspended)));
 
--- Make @emir an admin when the account already exists. If it does not exist yet,
--- create/sign into @emir first, then run:
--- update public.profiles set role = 'admin' where lower(username) = 'emir';
-do $$
-begin
-  if exists (select 1 from public.profiles where username='emir') then
-    update public.profiles set role='admin' where username='emir';
-  else
-    raise notice 'Profile @emir was not found yet. Create/sign into @emir then run the admin UPDATE statement shown in this migration.';
-  end if;
-end $$;
+-- SECURITY HARDENING: Never promote an account based only on its username.
+-- Existing admin roles are left unchanged. For a fresh install, verify the profile's
+-- UUID in Supabase Dashboard first, then run a one-time update using that exact UUID:
+-- select id, username, role from public.profiles where lower(username) = 'emir';
+-- update public.profiles set role = 'admin'
+--   where id = 'PASTE_VERIFIED_PROFILE_UUID_HERE'::uuid and lower(username) = 'emir';
 
 commit;

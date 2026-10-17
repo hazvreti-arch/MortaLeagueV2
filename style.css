@@ -1106,8 +1106,6 @@ img, svg, video, canvas { max-width: 100%; }
 .dm-peer-status.is-online:before{background:#72edbd;box-shadow:0 0 9px #72edbd88}
 .dm-typing-status{min-height:18px;padding:0 16px 5px;color:#cc9be9;font-size:10px}
 .dm-typing-status[hidden]{display:none!important}
-.footer-install{padding:7px 11px;border:1px solid #523364;border-radius:9px;background:#170d20;color:#d7a7f4;font:600 10px 'DM Sans',sans-serif;letter-spacing:0}
-.footer-install[hidden],#pwa-install-button[hidden]{display:none!important}
 .site-footer{align-items:center;flex-wrap:wrap}
 @media(max-width:700px){
  .public-profile-cover{height:112px}
@@ -1126,7 +1124,20 @@ img, svg, video, canvas { max-width: 100%; }
  .social-discover-toolbar select{max-width:none;width:100%;min-height:43px}
  .social-discover-toolbar>#social-discover-refresh{min-height:43px}
  .player-card-actions .social-follow-button{min-height:40px;font-size:12px}
- .footer-install{font-size:11px;min-height:36px}
  .skeleton-card{padding:15px;border-radius:13px}
 }
 @media(prefers-reduced-motion:reduce){.skeleton-line{animation:none;background:#2a1b33}}
+
+
+/* PWA install CTA — one clear install entry point on the home hero. */
+.hero-install-row{display:flex;align-items:center;gap:10px;margin-top:22px;min-height:48px}
+.hero-install-button{position:relative;isolation:isolate;overflow:hidden;min-height:47px;padding:0 17px;gap:10px;border-color:#71408b;background:linear-gradient(115deg,#1c1027,#140b1d);box-shadow:inset 0 1px 0 #ffffff0a,0 7px 23px #8b39be16;color:#f0d9ff;font-size:12px;letter-spacing:.1px;white-space:nowrap}
+.hero-install-button:before{position:absolute;z-index:-1;inset:0;content:"";background:linear-gradient(110deg,transparent 10%,#e2a5ff12 45%,transparent 75%);transform:translateX(-110%);transition:transform .55s ease}
+.hero-install-button:hover{border-color:#be79e5;box-shadow:0 0 24px #aa43e22b,inset 0 1px 0 #ffffff12}
+.hero-install-button:hover:before{transform:translateX(110%)}
+.hero-install-button[hidden]{display:none!important}
+.install-app-glyph{display:grid;place-items:center;width:23px;height:23px;border:1px solid #9861b4;border-radius:7px;background:#382044;color:#f1d7ff;font-size:16px;line-height:1}
+.install-app-arrow{color:#c58aee;font-size:15px;margin-left:2px}
+@media(max-width:900px){.hero-install-row{margin-top:17px}.hero-install-button{min-height:48px;font-size:13px}}
+@media(max-width:420px){.hero-install-button{width:100%;justify-content:center}}
+@media(prefers-reduced-motion:reduce){.hero-install-button:before{display:none}.hero-install-button,.hero-install-button:hover{transition:none;transform:none}}

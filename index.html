@@ -7,18 +7,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MortaLeague">
-<link rel="manifest" href="manifest.webmanifest?v=ml-pwa-20261018-03">
-<link rel="apple-touch-icon" href="icon-192.png?v=ml-pwa-20261018-03">
+<link rel="manifest" href="manifest.webmanifest?v=ml-install-20261018-04">
+<link rel="apple-touch-icon" href="icon-192.png?v=ml-install-20261018-04">
 <meta name="description" content="MortaLeague futbol topluluğu: oyuncu profilleri, sistem kuralları, özel mesajlar ve futbol içerikleri.">
 <meta property="og:title" content="MortaLeague — Futbol Evreni">
 <meta property="og:description" content="Oyuncu profilleri, futbol kuralları ve MortaLeague topluluğu tek yerde.">
 <meta property="og:type" content="website">
-<link rel="icon" type="image/svg+xml" href="favicon.svg?v=community-pwa-20261018-03">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=ml-install-20261018-04">
 <title>MortaLeague — Futbol Evreni</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=community-pwa-20261018-03">
+<link rel="stylesheet" href="style.css?v=ml-install-20261018-04">
 </head>
 <body>
 <div class="ambient" aria-hidden="true"></div>
@@ -41,6 +41,7 @@
   <div class="hero-copy">
    <h1 class="hero-title"><span>OYUNUN</span><span class="gradient">KARANLIK</span><span>YÜZÜ.</span></h1>
    <p class="hero-description">Oyuncular, sistemler ve futbol topluluğu. Tek yerde.</p>
+   <div class="hero-install-row"><button class="btn btn-secondary hero-install-button" id="pwa-install-cta" type="button" hidden aria-label="MortaLeague uygulamasını yükle"><span class="install-app-glyph" aria-hidden="true">↓</span><span>Uygulamayı yükle</span><span class="install-app-arrow" aria-hidden="true">↗</span></button></div>
    <div class="hero-actions" id="hero-actions" hidden><button class="btn btn-primary" id="hero-auth-cta" data-auth-open hidden>Hesap Oluştur <span aria-hidden="true">↗</span></button></div>
   </div>
   <div class="hero-art" aria-label="MORTALEAGUE M arması">
@@ -196,7 +197,7 @@
     <button class="btn btn-primary" type="submit" id="profile-save">Profili Kaydet ↗</button>
     <p class="auth-feedback" id="profile-edit-feedback" role="status" aria-live="polite"></p>
    </form>
-   <div class="auth-actions profile-actions"><button class="btn btn-secondary" type="button" id="pwa-install-button" hidden>Ana ekrana ekle</button><button class="btn btn-secondary" type="button" id="profile-view-players">Oyuncu profillerine git</button><button class="btn btn-outline" type="button" id="profile-admin-open" hidden>Yönetim paneli</button><button class="btn btn-secondary" type="button" id="profile-back">Giriş ekranına dön</button><button class="btn btn-outline" type="button" id="auth-signout">Oturumu kapat</button></div>
+   <div class="auth-actions profile-actions"><button class="btn btn-secondary" type="button" id="profile-view-players">Oyuncu profillerine git</button><button class="btn btn-outline" type="button" id="profile-admin-open" hidden>Yönetim paneli</button><button class="btn btn-secondary" type="button" id="profile-back">Giriş ekranına dön</button><button class="btn btn-outline" type="button" id="auth-signout">Oturumu kapat</button></div>
    <p class="auth-feedback" id="profile-feedback" role="status" aria-live="polite"></p>
   </div>
  </section>
@@ -237,17 +238,17 @@
  </section>
 </div>
 
-<footer class="site-footer"><span>© 2026 MORTALEAGUE</span><span>FUTBOL TOPLULUĞU</span><button class="footer-install" id="footer-install-button" type="button" hidden>Uygulamayı yükle ↗</button></footer>
+<footer class="site-footer"><span>© 2026 MORTALEAGUE</span><span>FUTBOL TOPLULUĞU</span></footer>
 </main>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=community-pwa-20261018-03"></script>
-<script src="app.js?v=community-pwa-20261018-03"></script>
-<script src="auth.js?v=community-pwa-20261018-03"></script>
-<script src="messages.js?v=community-pwa-20261018-03"></script>
-<script src="social.js?v=community-pwa-20261018-03"></script>
-<script src="visual-polish.js?v=community-pwa-20261018-03"></script>
-<script src="pwa.js?v=community-pwa-20261018-03" defer></script>
+<script src="config.js?v=ml-install-20261018-04"></script>
+<script src="app.js?v=ml-install-20261018-04"></script>
+<script src="auth.js?v=ml-install-20261018-04"></script>
+<script src="messages.js?v=ml-install-20261018-04"></script>
+<script src="social.js?v=ml-install-20261018-04"></script>
+<script src="visual-polish.js?v=ml-install-20261018-04"></script>
+<script src="pwa.js?v=ml-install-20261018-04" defer></script>
 </body>
 </html>

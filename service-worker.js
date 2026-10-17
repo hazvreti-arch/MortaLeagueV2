@@ -1,17 +1,17 @@
 /* MortaLeague PWA shell cache. Supabase/API responses are deliberately never cached. */
-const CACHE_NAME = "mortaleague-shell-20261018-03";
+const CACHE_NAME = "mortaleague-shell-20261018-04";
 const SHELL_ASSETS = [
   "/", "/index.html", "/offline.html",
-  "/style.css?v=community-pwa-20261018-03",
-  "/config.js?v=community-pwa-20261018-03",
-  "/app.js?v=community-pwa-20261018-03",
-  "/auth.js?v=community-pwa-20261018-03",
-  "/messages.js?v=community-pwa-20261018-03",
-  "/social.js?v=community-pwa-20261018-03",
-  "/visual-polish.js?v=community-pwa-20261018-03",
-  "/pwa.js?v=community-pwa-20261018-03",
-  "/manifest.webmanifest?v=ml-pwa-20261018-03",
-  "/favicon.svg?v=community-pwa-20261018-03",
+  "/style.css?v=ml-install-20261018-04",
+  "/config.js?v=ml-install-20261018-04",
+  "/app.js?v=ml-install-20261018-04",
+  "/auth.js?v=ml-install-20261018-04",
+  "/messages.js?v=ml-install-20261018-04",
+  "/social.js?v=ml-install-20261018-04",
+  "/visual-polish.js?v=ml-install-20261018-04",
+  "/pwa.js?v=ml-install-20261018-04",
+  "/manifest.webmanifest?v=ml-install-20261018-04",
+  "/favicon.svg?v=ml-install-20261018-04",
   "/icon-192.png", "/icon-512.png"
 ];
 self.addEventListener("install", event => {

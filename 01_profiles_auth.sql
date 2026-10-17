@@ -1,8 +1,8 @@
--- MortaLeague — profiles + signup trigger + RLS
--- Run this script in the SQL Editor of the Supabase project.
--- The username-only browser login maps each username to username@accounts.mortaleague.invalid.
--- In Supabase Auth settings, turn OFF email confirmation because this internal address is not deliverable.
--- Safe to rerun for the objects defined here.
+-- MortaLeague: profiles, username-only login support, announcements and secure admin policies.
+-- Run this file in the Supabase SQL Editor.
+-- In Supabase Auth settings, turn OFF Email > Confirm email for username-only accounts.
+-- Never place a service_role/secret key in browser code.
+
 begin;
 
 create table if not exists public.profiles (
@@ -11,20 +11,52 @@ create table if not exists public.profiles (
   display_name text not null default 'MortaLeague Player' check (char_length(display_name) between 1 and 40),
   bio text not null default '' check (char_length(bio) <= 240),
   avatar_url text,
+  role text not null default 'player' check (role in ('player', 'admin')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.profiles add column if not exists role text not null default 'player';
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'profiles_role_check'
+      and conrelid = 'public.profiles'::regclass
+  ) then
+    alter table public.profiles
+      add constraint profiles_role_check check (role in ('player', 'admin'));
+  end if;
+end $$;
 
 create index if not exists profiles_created_at_idx on public.profiles (created_at desc);
 create index if not exists profiles_display_name_idx on public.profiles (lower(display_name));
 
 alter table public.profiles enable row level security;
-
--- Keep the browser-facing roles least-privileged.
 revoke all on table public.profiles from anon, authenticated;
-grant select on table public.profiles to anon, authenticated;
-grant update (username, display_name, bio, avatar_url, updated_at)
-  on table public.profiles to authenticated;
+revoke update (username, role) on public.profiles from anon, authenticated;
+-- Anonymous visitors can read only public profile fields; they cannot inspect account IDs or role flags.
+grant select (username, display_name, bio, avatar_url, created_at) on public.profiles to anon;
+-- Signed-in users can read their own role flag for UI gating; role changes are never granted.
+grant select (id, username, display_name, bio, avatar_url, role, created_at) on public.profiles to authenticated;
+grant update (display_name, bio, avatar_url, updated_at) on public.profiles to authenticated;
+
+create or replace function public.is_mortaleague_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (
+    select 1
+    from public.profiles p
+    where p.id = auth.uid()
+      and p.role = 'admin'
+  );
+$$;
+revoke all on function public.is_mortaleague_admin() from public;
+grant execute on function public.is_mortaleague_admin() to anon, authenticated;
 
 drop policy if exists "Profiles are publicly readable" on public.profiles;
 create policy "Profiles are publicly readable"
@@ -32,12 +64,12 @@ create policy "Profiles are publicly readable"
   to anon, authenticated
   using (true);
 
-drop policy if exists "Players can update their own profile" on public.profiles;
-create policy "Players can update their own profile"
+drop policy if exists "Players update own profile or admins moderate" on public.profiles;
+create policy "Players update own profile or admins moderate"
   on public.profiles for update
   to authenticated
-  using (auth.uid() = id)
-  with check (auth.uid() = id);
+  using (auth.uid() = id or public.is_mortaleague_admin())
+  with check (auth.uid() = id or public.is_mortaleague_admin());
 
 create or replace function public.set_profile_updated_at()
 returns trigger
@@ -49,7 +81,6 @@ begin
   return new;
 end;
 $$;
-
 drop trigger if exists set_profiles_updated_at on public.profiles;
 create trigger set_profiles_updated_at
 before update on public.profiles
@@ -69,36 +100,59 @@ begin
     coalesce(new.raw_user_meta_data ->> 'username', ''),
     '[^a-zA-Z0-9_]', '', 'g'
   ));
-
   if char_length(candidate_username) < 3 then
     candidate_username := 'player_' || substr(replace(new.id::text, '-', ''), 1, 8);
   end if;
   candidate_username := substr(candidate_username, 1, 20);
-
   candidate_display_name := left(
     coalesce(nullif(trim(new.raw_user_meta_data ->> 'display_name'), ''), candidate_username),
     40
   );
-
-  -- Do not silently rename a requested username when it is already taken.
-  -- A duplicate username should make the signup transaction fail.
   insert into public.profiles (id, username, display_name)
   values (new.id, candidate_username, candidate_display_name)
   on conflict (id) do nothing;
-
   return new;
 end;
 $$;
-
 drop trigger if exists on_auth_user_created_mortaleague on auth.users;
 create trigger on_auth_user_created_mortaleague
 after insert on auth.users
 for each row execute function public.handle_new_mortaleague_user();
 
+create table if not exists public.announcements (
+  id bigint generated by default as identity primary key,
+  title text not null check (char_length(trim(title)) between 1 and 100),
+  content text not null check (char_length(trim(content)) between 1 and 3000),
+  created_by uuid references auth.users(id) on delete set null,
+  created_at timestamptz not null default now()
+);
+create index if not exists announcements_created_at_idx on public.announcements (created_at desc);
+alter table public.announcements enable row level security;
+revoke all on table public.announcements from anon, authenticated;
+grant select on table public.announcements to anon, authenticated;
+grant insert (title, content, created_by) on public.announcements to authenticated;
+grant delete on public.announcements to authenticated;
+
+drop policy if exists "Announcements are public" on public.announcements;
+create policy "Announcements are public"
+  on public.announcements for select
+  to anon, authenticated
+  using (true);
+drop policy if exists "Admins can publish announcements" on public.announcements;
+create policy "Admins can publish announcements"
+  on public.announcements for insert
+  to authenticated
+  with check (public.is_mortaleague_admin() and created_by = auth.uid());
+drop policy if exists "Admins can delete announcements" on public.announcements;
+create policy "Admins can delete announcements"
+  on public.announcements for delete
+  to authenticated
+  using (public.is_mortaleague_admin());
+
 commit;
 
--- Security notes:
--- 1. NEVER expose the Supabase service_role/secret key to the browser.
--- 2. Public profile SELECT exposes only columns in this table; never add email or secrets here.
--- 3. RLS keeps profile UPDATE restricted to auth.uid() = id.
--- 4. Admin roles and the 16 gameplay-system tables will be designed in later phases.
+-- FIRST ADMIN SETUP:
+-- 1) Create your MortaLeague account through the website.
+-- 2) Replace your_username below with your exact username and run this command separately:
+--    update public.profiles set role = 'admin' where username = 'your_username';
+-- The `role` column is not writable by regular authenticated users.

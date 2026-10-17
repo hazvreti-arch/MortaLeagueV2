@@ -164,6 +164,8 @@
       heroAuthCta.hidden = !showGuestCta;
       heroAuthCta.style.display = showGuestCta ? "" : "none";
       heroAuthCta.setAttribute("aria-hidden", String(!showGuestCta));
+      const heroActions = heroAuthCta.closest(".hero-actions");
+      if (heroActions) heroActions.hidden = !showGuestCta;
     }
     const trigger = el("account-trigger");
     if (trigger) trigger.setAttribute("aria-label", currentSession?.user ? "Hesabımı aç" : "Giriş yap");

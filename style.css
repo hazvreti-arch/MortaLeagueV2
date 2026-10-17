@@ -845,24 +845,24 @@ img, svg, video, canvas { max-width: 100%; }
 }
 
 
-/* MORTALEAGUE QUALITY PASS 02
-   Single source of truth for the responsive header/navigation. The mobile nav
-   stays in normal document flow so it can never cover the hero or page content. */
-#hero-auth-cta[hidden] { display: none !important; }
+/* MORTALEAGUE QUALITY PASS 03
+   Clear single-row mobile navigation. Avoid duplicated hero destination buttons. */
+#hero-auth-cta[hidden], .hero-actions[hidden] { display: none !important; }
 
 @media (max-width: 900px) {
   .site-header {
-    position: relative !important;
-    inset: auto !important;
+    position: sticky !important;
+    top: 0 !important;
+    inset-inline: auto !important;
     display: block !important;
     width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
     overflow: visible !important;
     z-index: 50 !important;
-    background: #08050df5 !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    background: rgba(8, 5, 13, .96) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
   }
   .site-header > .header-inner {
     display: grid !important;
@@ -883,53 +883,55 @@ img, svg, video, canvas { max-width: 100%; }
     display: inline-flex !important;
     align-items: center !important;
     min-width: 0 !important;
-    min-height: 64px !important;
-    margin: 0 15px !important;
+    min-height: 62px !important;
+    margin: 0 18px !important;
     padding: 0 !important;
   }
   .site-header > .header-inner > .brand .brand-mark {
-    flex: 0 0 auto !important;
+    flex: 0 0 38px !important;
     width: 38px !important;
     height: 38px !important;
   }
   .site-header > .header-inner > .brand .brand-name {
     font-size: 13px !important;
     line-height: 1.35 !important;
-    letter-spacing: 1px !important;
+    letter-spacing: 1.1px !important;
   }
   .site-header > .header-inner > .brand .brand-tagline {
     font-size: 7px !important;
     line-height: 1.5 !important;
-    letter-spacing: 1.8px !important;
+    letter-spacing: 1.7px !important;
   }
   .site-header > .header-inner > .nav {
     grid-area: nav !important;
-    position: static !important;
+    position: relative !important;
     inset: auto !important;
     transform: none !important;
     display: flex !important;
     flex-flow: row nowrap !important;
     justify-content: flex-start !important;
-    align-items: stretch !important;
-    gap: 5px !important;
+    align-items: center !important;
+    gap: 7px !important;
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
     height: auto !important;
     margin: 0 !important;
-    padding: 6px 12px 8px !important;
+    padding: 9px 16px 11px !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
     border: 0 !important;
-    border-top: 1px solid #392144 !important;
-    border-bottom: 1px solid #2b1934 !important;
+    border-top: 1px solid rgba(112, 68, 137, .34) !important;
+    border-bottom: 1px solid rgba(112, 68, 137, .26) !important;
     border-radius: 0 !important;
-    background: #0b0614 !important;
+    background: rgba(12, 7, 19, .96) !important;
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
   }
   .site-header > .header-inner > .nav::-webkit-scrollbar { display: none !important; }
   .site-header > .header-inner > .nav > button,
@@ -940,51 +942,64 @@ img, svg, video, canvas { max-width: 100%; }
     justify-content: center !important;
     width: auto !important;
     min-width: max-content !important;
-    min-height: 42px !important;
+    min-height: 40px !important;
     margin: 0 !important;
-    padding: 8px 12px !important;
-    border-radius: 9px !important;
-    font-size: 11px !important;
-    line-height: 1.25 !important;
+    padding: 0 15px !important;
+    border: 1px solid transparent !important;
+    border-radius: 10px !important;
+    background: transparent !important;
+    color: #bbaec7 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
     letter-spacing: 0 !important;
     white-space: nowrap !important;
     overflow: visible !important;
     text-overflow: clip !important;
+    scroll-snap-align: start;
+    box-shadow: none !important;
+    transition: color .18s ease, background .18s ease, border-color .18s ease;
+  }
+  .site-header > .header-inner > .nav > button:hover {
+    color: #fff !important;
+    background: rgba(153, 73, 194, .1) !important;
+  }
+  .site-header > .header-inner > .nav > button.active {
+    color: #fff !important;
+    border-color: rgba(173, 95, 211, .42) !important;
+    background: linear-gradient(135deg, rgba(86, 40, 111, .56), rgba(38, 17, 51, .8)) !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.035) !important;
+  }
+  .site-header > .header-inner > .nav .nav-unread {
+    min-width: 16px !important;
+    height: 16px !important;
+    margin-left: 5px !important;
+    padding: 0 4px !important;
+    font-size: 9px !important;
   }
   .site-header > .header-inner > .header-cta { display: none !important; }
   main { padding-bottom: 24px !important; }
-  .page { padding-bottom: 38px !important; }
+  .page { padding-bottom: 34px !important; }
   .hero-art { z-index: 1; }
   .floating-stat { z-index: 2; }
   .site-footer { margin-bottom: 0 !important; }
-  .hero-auth-cta[hidden], #hero-auth-cta[hidden] { display: none !important; }
+  .hero-actions:not([hidden]) { display: flex !important; margin-top: 22px !important; }
+  .hero-actions .btn { width: 100%; min-height: 48px; }
 }
 
-/* Six links fit in a predictable 3-by-2 touch grid on narrow phones. */
-@media (max-width: 600px) {
-  .site-header > .header-inner > .nav {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    grid-auto-rows: minmax(42px, auto) !important;
-    gap: 5px !important;
-    padding: 8px 12px 10px !important;
-    overflow: visible !important;
-  }
-  .site-header > .header-inner > .nav > button,
-  .site-header > .header-inner > .nav > .mobile-auth-nav {
-    min-width: 0 !important;
-    width: 100% !important;
-    min-height: 42px !important;
-    padding: 8px 4px !important;
-    font-size: 11px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
+@media (max-width: 420px) {
+  main { margin-left: 16px; margin-right: 16px; }
+  .hero-actions { grid-template-columns: 1fr; }
+  .hero-actions:not([hidden]) { display: flex !important; }
+  .hero-actions .btn { min-height: 46px; }
+  .site-header > .header-inner > .brand { margin-inline: 16px !important; }
+  .site-header > .header-inner > .nav { padding-inline: 13px !important; gap: 5px !important; }
+  .site-header > .header-inner > .nav > button { padding-inline: 13px !important; font-size: 11.5px !important; }
 }
 @media (max-width: 359px) {
   .site-header > .header-inner > .brand { margin-inline: 12px !important; }
-  .site-header > .header-inner > .nav { padding-inline: 8px !important; gap: 4px !important; }
-  .site-header > .header-inner > .nav > button { font-size: 10px !important; }
+  .site-header > .header-inner > .brand .brand-name { font-size: 12px !important; }
+  .site-header > .header-inner > .nav { padding-inline: 10px !important; gap: 4px !important; }
+  .site-header > .header-inner > .nav > button { padding-inline: 11px !important; font-size: 11px !important; }
   main { margin-left: 12px !important; margin-right: 12px !important; }
 }

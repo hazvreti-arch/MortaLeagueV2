@@ -155,7 +155,13 @@
     });
     // Do not invite signed-in visitors to create an account again.
     const heroAuthCta = document.getElementById("hero-auth-cta");
-    if (heroAuthCta) heroAuthCta.hidden = Boolean(currentSession?.user);
+    if (heroAuthCta) {
+      const signedIn = Boolean(currentSession?.user);
+      heroAuthCta.hidden = signedIn;
+      // Inline display ensures the signed-in CTA stays hidden even if a stale/strong
+      // button CSS rule attempts to override the HTML hidden attribute.
+      heroAuthCta.style.display = signedIn ? "none" : "";
+    }
     const trigger = el("account-trigger");
     if (trigger) trigger.setAttribute("aria-label", currentSession?.user ? "Hesabımı aç" : "Giriş yap");
     if (!currentSession) currentProfile = null;

@@ -1003,3 +1003,66 @@ img, svg, video, canvas { max-width: 100%; }
   .site-header > .header-inner > .nav > button { padding-inline: 11px !important; font-size: 11px !important; }
   main { margin-left: 12px !important; margin-right: 12px !important; }
 }
+
+
+/* MORTALEAGUE VISUAL PASS — reduced copy, refined motion, and scroll reveals */
+:root { --motion-fast: 180ms; --motion-medium: 320ms; --motion-slow: 620ms; }
+.ambient:before { transform-origin: center; animation: ambient-drift 30s ease-in-out infinite alternate; }
+@keyframes ambient-drift { from { transform: translate3d(-.6%, -.4%, 0) scale(1.01); opacity: .32; } to { transform: translate3d(.7%, .5%, 0) scale(1.06); opacity: .52; } }
+.hero-title .gradient { background-size: 180% 100%; animation: title-colour-flow 8s ease-in-out infinite alternate; }
+@keyframes title-colour-flow { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+.site-header { transition: border-color .35s ease, background-color .35s ease; }
+.nav button { position: relative; transition: color var(--motion-medium) ease, background var(--motion-medium) ease, border-color var(--motion-medium) ease, transform var(--motion-fast) ease; }
+.nav button:not(.active):hover { transform: translateY(-1px); }
+.nav button.active { box-shadow: inset 0 1px #ffffff0b, 0 0 20px #b544f40c; }
+.btn { transition: transform var(--motion-fast) ease, box-shadow var(--motion-medium) ease, border-color var(--motion-medium) ease, background var(--motion-medium) ease; }
+.btn:active { transform: scale(.985); }
+.dna-card, .system-card, .player-card, .social-post-card, .announcement-card, .social-side-panel, .admin-panel, .achievement-card, .social-notification { transition: transform .28s cubic-bezier(.2,.75,.25,1), border-color .28s ease, box-shadow .28s ease, background .28s ease; }
+.dna-card { min-height: 142px; }
+.dna-card .card-icon { margin-bottom: 13px; }
+.dna-card p { max-width: 25ch; }
+.floating-stat { min-width: 90px; padding: 12px 14px; }
+.floating-stat strong { display: block; font-size: 13px; }
+.stat-season { animation-delay: -.9s; }
+.stat-players { display: none !important; }
+.section-heading { margin-bottom: 17px; }
+.section-heading h2 { letter-spacing: -.55px; }
+.home-announcements { padding-top: 6px; }
+.page-head { margin-bottom: 22px; }
+.page-head > p { max-width: 48ch; }
+.community-feed-layout { grid-template-columns: minmax(0, 1fr) !important; }
+.community-side-column { display: none !important; }
+.social-compose-heading { margin-bottom: 10px; }
+.social-compose-heading h2 { margin: 0; }
+.auth-subtitle { max-width: 34ch; }
+.auth-setup-note[hidden] { display: none !important; }
+
+/* Animate content only once it enters the viewport; no JS means content remains visible. */
+.ml-motion-ready .ml-reveal { opacity: 0; transform: translate3d(0, 18px, 0) scale(.992); }
+.ml-motion-ready .ml-reveal.ml-in-view { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+.ml-motion-ready .dna-card.ml-reveal, .ml-motion-ready .system-card.ml-reveal { animation: none !important; transition: opacity .62s cubic-bezier(.2,.8,.2,1), transform .62s cubic-bezier(.2,.8,.2,1), border-color .28s ease, box-shadow .28s ease; }
+.ml-motion-ready .ml-reveal:nth-child(2) { transition-delay: 55ms; }
+.ml-motion-ready .ml-reveal:nth-child(3) { transition-delay: 95ms; }
+.ml-motion-ready .ml-reveal:nth-child(4) { transition-delay: 135ms; }
+.dna-card { isolation: isolate; }
+.dna-card:after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; transform: translateX(-110%); background: linear-gradient(105deg, transparent 26%, #ffffff08 49%, transparent 72%); }
+.dna-card > * { position: relative; z-index: 1; }
+.dna-card:hover:after { opacity: 1; animation: card-sheen .85s ease-out; }
+@keyframes card-sheen { from { transform: translateX(-110%); } to { transform: translateX(110%); } }
+.crest { animation-duration: 7.2s; }
+.orbit:before { animation-duration: 54s; }
+.orbit:after { animation-duration: 38s; }
+.ambient-sweep { opacity: .7; }
+@media (max-width: 700px) {
+  .ambient:before { animation-duration: 38s; }
+  .hero-title .gradient { animation-duration: 10s; }
+  .dna-card { min-height: 122px; padding: 14px; }
+  .dna-card p { font-size: 11px; line-height: 1.55; }
+  .floating-stat { min-width: 78px; padding: 10px 11px; }
+  .floating-stat strong { font-size: 11px; }
+  .home-announcements { padding-bottom: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient:before, .hero-title .gradient, .dna-card:after { animation: none !important; }
+  .ml-motion-ready .ml-reveal, .ml-motion-ready .ml-reveal.ml-in-view { opacity: 1 !important; transform: none !important; transition: none !important; }
+}

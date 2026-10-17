@@ -170,7 +170,7 @@ systemGrid.addEventListener("click",e=>{const btn=e.target.closest("[data-system
 systemClose.addEventListener("click",closeSystemDetail);
 systemBackdrop.addEventListener("click",e=>{if(e.target===systemBackdrop)closeSystemDetail();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape" && !systemBackdrop.hidden)closeSystemDetail();});
-const validPages=["home","systems","players","community","messages","admin","rules"];
+const validPages=["home","systems","players","community","messages","admin"];
 let cachedPlayers=[];
 let cachedAdminPlayers=[];
 let cachedAnnouncements=[];

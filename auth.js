@@ -180,6 +180,7 @@
   }
   async function initClient() {
     if (!isConfigured()) {
+      setupNote.hidden = false;
       setupNote.textContent = "Supabase yapılandırması eksik. config.js içindeki proje URL'sini ve publishable key'i kontrol et.";
       authInitialized = true;
       updateHeader(null);
@@ -188,6 +189,7 @@
       return;
     }
     if (!window.supabase || typeof window.supabase.createClient !== "function") {
+      setupNote.hidden = false;
       setupNote.textContent = "Supabase istemci kütüphanesi yüklenemedi. İnternet bağlantısını kontrol edip sayfayı yenile.";
       authInitialized = true;
       updateHeader(null);
@@ -209,6 +211,7 @@
         storageKey: "sb-dxznuiqachpggwxmczwn-auth-token"
       }
     });
+    setupNote.hidden = true;
     setupNote.textContent = "Kayıtta yalnızca kullanıcı adı ve şifre istenir. Supabase'te Email → Confirm email kapalı olmalı; SQL kurulum dosyasını bir kez çalıştır.";
     client.auth.onAuthStateChange((_event, session) => updateHeader(session));
     const { data, error } = await client.auth.getSession();

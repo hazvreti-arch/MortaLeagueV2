@@ -113,9 +113,10 @@ main{max-width:var(--content);margin:0 auto}
 .site-footer{display:flex;justify-content:space-between;gap:15px;padding:22px 0 28px;border-top:1px solid #2d1c37;color:#796b86;font-size:9px;letter-spacing:1.3px}
 .site-footer span:last-child{color:#9f82b3}
 .mobile-nav{display:none}
+.mobile-auth-nav{display:none}
 @media(max-width:1328px){.header-inner,main{margin-left:34px;margin-right:34px}}
 @media(max-width:1050px){.header{height:82px}.header-inner{grid-template-columns:1fr auto;margin:0 24px}.nav{gap:3px}.nav button{padding:11px 12px;font-size:13px}.header-cta .btn{padding:0 13px}.hero{min-height:600px;grid-template-columns:1.05fr .95fr}.hero-title{font-size:clamp(51px,6.2vw,68px);letter-spacing:-3.5px}.hero-art{transform:scale(.86);margin:0 -25px}.dna-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.systems-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.page{min-height:calc(100vh - 82px)}}
-@media(max-width:700px){.site-header{height:74px}.header-inner{margin:0 16px;grid-template-columns:1fr auto}.brand{gap:9px}.brand-mark{width:33px;height:33px;border-radius:10px}.brand-name{font-size:12px;letter-spacing:1px}.brand-tagline{font-size:7px;letter-spacing:2.1px}.header-cta{display:none}.nav{position:fixed;z-index:60;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:#0b0614ed;border-top:1px solid #392144;backdrop-filter:blur(20px)}.nav button{padding:11px 5px;border-radius:8px;font-size:12px}
+@media(max-width:700px){.site-header{height:74px}.header-inner{margin:0 16px;grid-template-columns:1fr auto}.brand{gap:9px}.brand-mark{width:33px;height:33px;border-radius:10px}.brand-name{font-size:12px;letter-spacing:1px}.brand-tagline{font-size:7px;letter-spacing:2.1px}.header-cta{display:none}.nav{position:fixed;z-index:60;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:#0b0614ed;border-top:1px solid #392144;backdrop-filter:blur(20px)}.nav button{padding:11px 5px;border-radius:8px;font-size:12px}.nav .mobile-auth-nav{display:block;width:100%;color:#bdafca;border:1px solid transparent;border-radius:8px;background:transparent;font-size:11px;font-weight:600}.nav .mobile-auth-nav:hover{color:#fff;border-color:#40234f;background:linear-gradient(135deg,#281436,#1b0c25)}
 main{margin:0 17px}.hero{display:flex;flex-direction:column;align-items:stretch;gap:8px;min-height:unset;padding:45px 0 32px}.hero-title{font-size:clamp(42px,11.5vw,63px);line-height:1.02;letter-spacing:-2.8px;margin:24px 0 15px}.online-pill{font-size:9px;letter-spacing:.45px;padding:8px 10px}.hero-description{max-width:500px;font-size:13px;line-height:1.8}.hero-actions{gap:8px;margin-top:21px}.btn{min-height:42px;padding:0 13px;font-size:11px}.hero-art{width:100%;height:330px;transform:none;margin:0;order:2}.orbit{width:260px;height:260px}.orbit:before{inset:21px}.orbit:after{inset:43px}.crest{width:158px;height:205px}.crest-letter{font-size:78px}.crest-word{bottom:19px;font-size:8px;letter-spacing:3px}.crest:after{width:125px;height:125px;top:25px}.orbit-glow{width:175px;height:175px}.floating-stat{min-width:81px;padding:10px 11px;border-radius:10px}.floating-stat small{font-size:8px}.floating-stat strong{font-size:12px}.stat-season{top:37px;right:3px}.stat-players{left:1px;top:138px}
 .dna{padding-bottom:44px}.section-heading{align-items:flex-end;gap:10px}.section-heading h2{font-size:19px;letter-spacing:-.7px}.section-heading p{max-width:290px;font-size:10px;line-height:1.6}.season-tag{padding:6px 8px;font-size:8px}.dna-grid{gap:9px}.dna-card{min-height:165px;padding:14px;border-radius:13px}.card-icon{width:35px;height:35px;margin-bottom:14px}.dna-card h3{font-size:12px}.dna-card p{font-size:10px;line-height:1.65}.page{min-height:calc(100vh - 74px);padding:42px 0 84px}.page h1{font-size:35px;letter-spacing:-1.7px}.page-head>p{font-size:12px}.systems-grid{gap:9px}.system-card{min-height:154px;padding:13px}.system-card h3{font-size:12px;line-height:1.4}.system-card p{font-size:10px}.system-glyph{font-size:15px}.panel-head{padding:17px}.panel-head h2{font-size:15px}.panel-head p{font-size:10px}.pill-tag{font-size:8px;padding:7px}.league-row{grid-template-columns:27px minmax(0,1fr) 47px;gap:7px;padding:14px 11px}.league-row .metric:last-child{display:none}.rank{font-size:13px}.club{gap:8px}.club-badge{width:29px;height:29px;font-size:10px}.club strong{font-size:10px}.club small{font-size:9px}.league-row .metric small{font-size:8px}.league-row .metric strong{font-size:11px}.rules-grid{grid-template-columns:1fr}.site-footer{margin-bottom:62px;font-size:7px}}
 @media(max-width:370px){main{margin:0 13px}.hero-title{font-size:39px;letter-spacing:-2.5px}.hero-actions{flex-wrap:wrap}.dna-grid{grid-template-columns:1fr}.dna-card{min-height:145px}.season-tag{display:none}.systems-grid{grid-template-columns:1fr}.section-heading h2{font-size:17px}}
@@ -234,8 +235,8 @@ body.has-pointer .pointer-aura{opacity:1}
 @keyframes auth-fade-in{from{opacity:0}to{opacity:1}}
 @keyframes auth-dialog-in{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:1050px){.header-cta{gap:6px}.header-cta .btn{font-size:11px;padding:0 10px}}
-@media(max-width:700px){.header-cta{display:flex;position:fixed;top:15px;right:60px;z-index:65}.header-cta .btn-outline{display:none}.header-cta .account-btn{min-height:38px;padding:0 10px;font-size:10px}.auth-dialog{padding:23px 19px;border-radius:17px}.auth-title{font-size:22px}.auth-backdrop{padding:12px}}
-@media(max-width:370px){.header-cta{right:54px}.header-cta .account-btn{padding:0 7px}.brand-name{font-size:10px}.brand-tagline{letter-spacing:1.5px}}
+@media(max-width:700px){.header-cta{display:none!important;position:static}.header-cta .btn-outline{display:none}.auth-dialog{padding:23px 19px;border-radius:17px}.auth-title{font-size:22px}.auth-backdrop{padding:12px}}
+@media(max-width:370px){.brand-name{font-size:10px}.brand-tagline{letter-spacing:1.5px}.nav button,.nav .mobile-auth-nav{font-size:10px;padding-left:2px;padding-right:2px}}
 
 
 /* SYSTEM TEXTS — richer system descriptions and accessible detail dialog */
@@ -275,7 +276,7 @@ body.has-pointer .pointer-aura{opacity:1}
    <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 21 12l-9 9.2L3 12 12 2.8Z" fill="#D9A5FF" stroke="#F0DAFF" stroke-width="1.1"/><path d="m12 6.5 5.4 5.5-5.4 5.5L6.6 12 12 6.5Z" fill="#9A4BCA"/></svg></span>
    <span><span class="brand-name">MORTALLEAGUE</span><span class="brand-tagline">THE DARK FOOTBALL ERA</span></span>
   </a>
-  <nav class="nav" aria-label="Ana gezinme"><button class="active" data-page="home">Ana Sayfa</button><button data-page="league">Lig</button><button data-page="systems">Sistemler</button></nav>
+  <nav class="nav" aria-label="Ana gezinme"><button class="active" data-page="home">Ana Sayfa</button><button data-page="league">Lig</button><button data-page="systems">Sistemler</button><button class="mobile-auth-nav" type="button" data-auth-open>Giriş Yap</button></nav>
   <div class="header-cta"><button class="btn btn-outline" data-page="rules">Kuralları Gör <span>→</span></button><button class="btn btn-primary account-btn" id="account-trigger" type="button" data-auth-open><span class="account-glyph">↗</span><span id="account-trigger-label">Giriş Yap</span></button></div>
  </div>
 </header>
@@ -337,21 +338,15 @@ body.has-pointer .pointer-aura{opacity:1}
     <button type="button" data-auth-mode="signup" role="tab" aria-selected="false">Hesap oluştur</button>
    </div>
    <form id="auth-form" class="auth-form">
-    <label class="auth-field" id="display-name-wrap" hidden>Görünen ad
-     <input id="auth-display-name" name="display_name" type="text" maxlength="40" autocomplete="nickname" placeholder="Sahada kullanacağın isim">
-    </label>
-    <label class="auth-field" id="username-wrap" hidden>Kullanıcı adı
-     <input id="auth-username" name="username" type="text" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+" autocomplete="username" placeholder="ornek_oyuncu">
-    </label>
-    <label class="auth-field">E-posta adresi
-     <input id="auth-email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="sen@ornek.com">
+    <label class="auth-field" id="username-wrap">Kullanıcı adı
+     <input id="auth-username" name="username" type="text" minlength="3" maxlength="20" pattern="[A-Za-z0-9_]+" autocomplete="username" autocapitalize="none" spellcheck="false" required placeholder="ornek_oyuncu">
     </label>
     <label class="auth-field">Şifre
      <input id="auth-password" name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="72" placeholder="En az 8 karakter">
     </label>
     <button class="btn btn-primary auth-submit" id="auth-submit" type="submit">Giriş yap <span>↗</span></button>
     <p class="auth-feedback" id="auth-feedback" role="status" aria-live="polite"></p>
-    <div class="auth-setup-note" id="auth-setup-note">Hesap işlemlerini etkinleştirmek için yeni Supabase projesinin bağlantısı eklenecek. Şu anda gerçek hesap oluşturulmaz.</div>
+    <div class="auth-setup-note" id="auth-setup-note">Yalnızca kullanıcı adı ve şifre kullanılır. Çalışması için Supabase → Authentication → Sign In / Providers → Email bölümünde e-posta doğrulamasını kapat.</div>
     <p class="auth-footnote">Hesabın yalnızca kendi oturumunla kullanılabilir. Şifren MortaLeague koduna kaydedilmez.</p>
    </form>
   </div>
@@ -359,7 +354,7 @@ body.has-pointer .pointer-aura{opacity:1}
    <div class="auth-kicker">PLAYER IDENTITY / ACCOUNT</div>
    <h2 class="auth-title">Oyuncu kartın.</h2>
    <p class="auth-subtitle">Hesap oturumun ve temel profil bilgilerin.</p>
-   <div class="profile-summary"><span class="profile-avatar" id="profile-avatar">ML</span><div><strong id="profile-name">MortaLeague oyuncusu</strong><small id="profile-email">—</small></div></div>
+   <div class="profile-summary"><span class="profile-avatar" id="profile-avatar">ML</span><div><strong id="profile-name">MortaLeague oyuncusu</strong><small id="profile-summary-username">@oyuncu</small></div></div>
    <div class="profile-details"><div class="profile-detail"><span>Kullanıcı adı</span><span id="profile-username">—</span></div><div class="profile-detail"><span>Hesap durumu</span><span id="profile-status">Bağlantı bekleniyor</span></div></div>
    <div class="auth-actions"><button class="btn btn-secondary" type="button" id="profile-back">Giriş ekranına dön</button><button class="btn btn-outline" type="button" id="auth-signout">Oturumu kapat</button></div>
    <p class="auth-feedback" id="profile-feedback" role="status" aria-live="polite"></p>
@@ -665,6 +660,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if
   const setupNote = el("auth-setup-note");
   const triggerLabel = el("account-trigger-label");
   const signupMode = { current: "login" };
+  const LOGIN_DOMAIN = "accounts.mortaleague.invalid";
   let client = null;
   let currentSession = null;
   let lastFocused = null;
@@ -679,37 +675,33 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if
       && cfg.supabasePublishableKey.length > 15
       && !cfg.supabasePublishableKey.includes("PASTE_");
   }
-
+  function normalizeUsername(value) { return String(value || "").trim().toLowerCase(); }
+  function validUsername(value) { return /^[a-z0-9_]{3,20}$/.test(value); }
+  function authIdentity(username) { return `${username}@${LOGIN_DOMAIN}`; }
   function setFeedback(message, type = "") {
     feedback.textContent = message || "";
     feedback.className = "auth-feedback" + (type ? " " + type : "");
   }
-
   function showModal() {
     lastFocused = document.activeElement;
     backdrop.hidden = false;
     document.body.style.overflow = "hidden";
     if (currentSession) showProfile();
-    else setTimeout(() => el("auth-email").focus(), 30);
+    else setTimeout(() => el("auth-username").focus(), 30);
   }
-
   function closeModal() {
     backdrop.hidden = true;
     document.body.style.overflow = "";
     if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
   }
-
   function setMode(mode) {
     signupMode.current = mode === "signup" ? "signup" : "login";
     const isSignup = signupMode.current === "signup";
     el("auth-title").textContent = isSignup ? "Kendi hikâyeni başlat." : "Tekrar hoş geldin.";
     el("auth-subtitle").textContent = isSignup
-      ? "Oyuncu hesabını oluştur ve MortaLeague evrenine katıl."
-      : "Hesabına giriş yap ve MortaLeague dünyasına dön.";
-    el("display-name-wrap").hidden = !isSignup;
-    el("username-wrap").hidden = !isSignup;
-    el("auth-display-name").required = isSignup;
-    el("auth-username").required = isSignup;
+      ? "Kullanıcı adını ve şifreni belirleyerek oyuncu hesabını oluştur."
+      : "Kullanıcı adın ve şifrenle MortaLeague dünyasına dön.";
+    el("auth-username").required = true;
     el("auth-password").autocomplete = isSignup ? "new-password" : "current-password";
     el("auth-submit").innerHTML = isSignup ? "Hesap oluştur <span>↗</span>" : "Giriş yap <span>↗</span>";
     document.querySelectorAll("[data-auth-mode]").forEach(btn => {
@@ -719,13 +711,11 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if
     });
     setFeedback("");
   }
-
   function showForm() {
     formPanel.hidden = false;
     profilePanel.hidden = true;
     setMode(signupMode.current);
   }
-
   async function loadProfile(user) {
     const requestId = ++profileRequest;
     let profile = null;
@@ -740,44 +730,42 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if
       profileError = result.error;
     }
     if (requestId !== profileRequest) return;
-    const name = profile?.display_name || user?.user_metadata?.display_name || user?.email?.split("@")[0] || "MortaLeague oyuncusu";
-    const username = profile?.username || user?.user_metadata?.username || "—";
+    const username = profile?.username || user?.user_metadata?.username || "oyuncu";
+    const name = profile?.display_name || user?.user_metadata?.display_name || username || "MortaLeague oyuncusu";
     el("profile-name").textContent = name;
-    el("profile-email").textContent = user?.email || "—";
-    el("profile-username").textContent = username === "—" ? "Hazırlanıyor" : "@" + username;
+    el("profile-summary-username").textContent = "@" + username;
+    el("profile-username").textContent = "@" + username;
     el("profile-avatar").textContent = (name.trim().slice(0, 2) || "ML").toUpperCase();
-    el("profile-status").textContent = profileError
-      ? "Oturum açık · profil okunamadı"
-      : "Oturum açık";
+    el("profile-status").textContent = profileError ? "Oturum açık · profil okunamadı" : "Oturum açık";
     el("profile-feedback").textContent = profileError
-      ? "Oturum açıldı ancak profil tablosu okunamadı. SQL şemasının Supabase'e uygulandığını kontrol et."
+      ? "Oturum açıldı ancak profil okunamadı. SQL şemasının Supabase'e uygulandığını kontrol et."
       : "";
   }
-
   async function showProfile() {
     formPanel.hidden = true;
     profilePanel.hidden = false;
     if (currentSession?.user) await loadProfile(currentSession.user);
     else {
       el("profile-name").textContent = "MortaLeague ziyaretçisi";
-      el("profile-email").textContent = "Henüz oturum açılmadı";
+      el("profile-summary-username").textContent = "—";
       el("profile-username").textContent = "—";
-      el("profile-status").textContent = "Supabase bağlantısı bekleniyor";
-      el("profile-feedback").textContent = "Önce yeni Supabase projesi oluşturulmalı ve yapılandırma eklenmeli.";
+      el("profile-status").textContent = "Bağlantı bekleniyor";
+      el("profile-feedback").textContent = "Supabase bağlantısı kurulamadı.";
     }
   }
-
   function updateHeader(session) {
     currentSession = session || null;
     triggerLabel.textContent = currentSession?.user ? "Hesabım" : "Giriş Yap";
+    document.querySelectorAll(".mobile-auth-nav").forEach(btn => {
+      btn.textContent = currentSession?.user ? "Hesabım" : "Giriş Yap";
+    });
     const trigger = el("account-trigger");
     if (trigger) trigger.setAttribute("aria-label", currentSession?.user ? "Hesabımı aç" : "Giriş yap");
     if (currentSession?.user && !backdrop.hidden) showProfile();
   }
-
   async function initClient() {
     if (!isConfigured()) {
-      setupNote.textContent = "Supabase bağlantısı henüz yapılandırılmadı. Yeni projenin Project URL ve publishable/anon anahtarı js/config.js dosyasına eklenince hesap işlemleri etkinleşecek.";
+      setupNote.textContent = "Supabase bağlantısı ayarlanmamış. Project URL ve publishable key'i index.html içindeki yapılandırmaya ekle.";
       return;
     }
     if (!window.supabase || typeof window.supabase.createClient !== "function") {
@@ -786,31 +774,19 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if
     }
     const cfg = window.MORTA_CONFIG;
     client = window.supabase.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
     });
-    setupNote.textContent = "Supabase bağlantısı yapılandırıldı. Kayıt ve giriş için SQL şemasının projeye uygulanmış olması gerekir.";
+    setupNote.textContent = "Yalnızca kullanıcı adı ve şifre kullanılır. Supabase → Authentication → Sign In / Providers → Email altında e-posta doğrulaması kapalı olmalıdır.";
     const { data, error } = await client.auth.getSession();
     if (!error) updateHeader(data.session);
-    client.auth.onAuthStateChange((_event, session) => {
-      updateHeader(session);
-    });
+    client.auth.onAuthStateChange((_event, session) => updateHeader(session));
   }
 
-  el("account-trigger")?.addEventListener("click", () => {
-    showModal();
-  });
   document.querySelectorAll("[data-auth-open]").forEach(btn => btn.addEventListener("click", showModal));
   el("auth-close")?.addEventListener("click", closeModal);
-  el("auth-backdrop")?.addEventListener("click", event => {
-    if (event.target === backdrop) closeModal();
-  });
-  document.querySelectorAll("[data-auth-mode]").forEach(btn => {
-    btn.addEventListener("click", () => setMode(btn.dataset.authMode));
-  });
-  el("profile-back")?.addEventListener("click", () => {
-    setMode("login");
-    showForm();
-  });
+  backdrop?.addEventListener("click", event => { if (event.target === backdrop) closeModal(); });
+  document.querySelectorAll("[data-auth-mode]").forEach(btn => btn.addEventListener("click", () => setMode(btn.dataset.authMode)));
+  el("profile-back")?.addEventListener("click", () => { setMode("login"); showForm(); });
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && backdrop && !backdrop.hidden) closeModal();
   });
@@ -819,44 +795,67 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if
     event.preventDefault();
     setFeedback("");
     if (!client) {
-      setFeedback("Hesap sistemi henüz bağlı değil. Önce yeni Supabase projesi ve js/config.js ayarı gerekiyor.", "error");
+      setFeedback("Hesap sistemi bağlı değil. Supabase yapılandırmasını kontrol et.", "error");
       return;
     }
     const submit = el("auth-submit");
     const original = submit.innerHTML;
     submit.disabled = true;
     submit.textContent = "İşleniyor…";
-    const email = el("auth-email").value.trim();
+    const username = normalizeUsername(el("auth-username").value);
     const password = el("auth-password").value;
     try {
+      if (!validUsername(username)) {
+        setFeedback("Kullanıcı adı 3–20 karakter olmalı; yalnızca İngilizce harf, rakam ve alt çizgi kullan.", "error");
+        return;
+      }
+      const email = authIdentity(username);
       if (signupMode.current === "signup") {
-        const rawUsername = el("auth-username").value.trim().toLowerCase();
-        const displayName = el("auth-display-name").value.trim();
-        if (!/^[a-z0-9_]{3,20}$/.test(rawUsername)) {
-          setFeedback("Kullanıcı adı 3–20 karakter olmalı; yalnızca İngilizce harf, rakam ve alt çizgi kullan.", "error");
+        if (password.length < 8) {
+          setFeedback("Şifre en az 8 karakter olmalı.", "error");
+          return;
+        }
+        const { data: existing, error: lookupError } = await client.from("profiles")
+          .select("id").eq("username", username).maybeSingle();
+        if (lookupError) throw lookupError;
+        if (existing) {
+          setFeedback("Bu kullanıcı adı alınmış. Başka bir kullanıcı adı seç.", "error");
           return;
         }
         const { data, error } = await client.auth.signUp({
-          email, password,
-          options: { data: { username: rawUsername, display_name: displayName } }
+          email,
+          password,
+          options: { data: { username, display_name: username } }
         });
-        if (error) throw error;
+        if (error) {
+          const message = String(error.message || "");
+          if (/database error saving new user|duplicate key|already registered|already been registered/i.test(message)) {
+            setFeedback("Bu kullanıcı adı kullanılamıyor. Başka bir kullanıcı adı seç.", "error");
+            return;
+          }
+          throw error;
+        }
         if (data.session) {
           updateHeader(data.session);
-          setFeedback("Hesabın oluşturuldu. Profilin hazır.", "success");
           await showProfile();
+          el("profile-feedback").textContent = "Hesabın oluşturuldu. Hoş geldin!";
         } else {
-          setFeedback("Kayıt isteği alındı. E-posta doğrulaması açıksa gelen kutunu kontrol et; doğrulamadan giriş yapamayabilirsin.", "success");
+          setFeedback("Supabase e-posta doğrulaması istedi. Kullanıcı adıyla kayıt için Authentication ayarlarında e-posta doğrulamasını kapatıp yeniden dene.", "error");
         }
       } else {
         const { data, error } = await client.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        if (error) {
+          if (/invalid login credentials/i.test(String(error.message || ""))) {
+            setFeedback("Kullanıcı adı veya şifre hatalı.", "error");
+            return;
+          }
+          throw error;
+        }
         updateHeader(data.session);
         await showProfile();
       }
     } catch (error) {
-      const message = typeof error?.message === "string" ? error.message : "İşlem tamamlanamadı. Tekrar deneyin.";
-      setFeedback(message, "error");
+      setFeedback(typeof error?.message === "string" ? error.message : "İşlem tamamlanamadı. Tekrar deneyin.", "error");
     } finally {
       submit.disabled = false;
       submit.innerHTML = original;
@@ -868,17 +867,12 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if
     btn.disabled = true;
     el("profile-feedback").textContent = "Oturum kapatılıyor…";
     try {
-      if (!client) {
-        updateHeader(null);
-        closeModal();
-        return;
-      }
+      if (!client) { updateHeader(null); closeModal(); return; }
       const { error } = await client.auth.signOut();
       if (error) throw error;
       updateHeader(null);
       setMode("login");
       showForm();
-      setFeedback("Oturum kapatıldı.", "success");
       closeModal();
     } catch (error) {
       el("profile-feedback").textContent = error?.message || "Oturum kapatılamadı.";
@@ -886,11 +880,9 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if
       btn.disabled = false;
     }
   });
-
   setMode("login");
   initClient();
 })();
-
 </script>
 </body>
 </html>

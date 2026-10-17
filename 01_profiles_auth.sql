@@ -1,5 +1,7 @@
 -- MortaLeague V2 — Phase 01: profiles + signup trigger + RLS
--- Run this script in the SQL Editor of the NEW, separate Supabase project.
+-- Run this script in the SQL Editor of the Supabase project.
+-- The username-only browser login maps each username to username@accounts.mortaleague.invalid.
+-- In Supabase Auth settings, turn OFF email confirmation because this internal address is not deliverable.
 -- Safe to rerun for the objects defined here.
 begin;
 
@@ -78,19 +80,11 @@ begin
     40
   );
 
-  begin
-    insert into public.profiles (id, username, display_name)
-    values (new.id, candidate_username, candidate_display_name)
-    on conflict (id) do nothing;
-  exception when unique_violation then
-    insert into public.profiles (id, username, display_name)
-    values (
-      new.id,
-      substr(candidate_username, 1, 11) || '_' || substr(replace(new.id::text, '-', ''), 1, 8),
-      candidate_display_name
-    )
-    on conflict (id) do nothing;
-  end;
+  -- Do not silently rename a requested username when it is already taken.
+  -- A duplicate username should make the signup transaction fail.
+  insert into public.profiles (id, username, display_name)
+  values (new.id, candidate_username, candidate_display_name)
+  on conflict (id) do nothing;
 
   return new;
 end;

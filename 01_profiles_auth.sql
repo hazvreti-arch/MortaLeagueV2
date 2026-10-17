@@ -1,4 +1,4 @@
--- MortaLeague V2 — Phase 01: profiles + signup trigger + RLS
+-- MortaLeague — profiles + signup trigger + RLS
 -- Run this script in the SQL Editor of the Supabase project.
 -- The username-only browser login maps each username to username@accounts.mortaleague.invalid.
 -- In Supabase Auth settings, turn OFF email confirmation because this internal address is not deliverable.

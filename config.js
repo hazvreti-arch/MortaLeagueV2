@@ -1,5 +1,5 @@
 /*
- * MortaLeague V2 — Supabase browser configuration.
+ * MortaLeague — Supabase browser configuration.
  * This file contains only the public project URL and publishable key.
  * Never put a service_role/secret key in browser code.
  */

@@ -4,16 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#08040d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MortaLeague">
+<link rel="manifest" href="manifest.webmanifest?v=ml-pwa-20261018-03">
+<link rel="apple-touch-icon" href="icon-192.png?v=ml-pwa-20261018-03">
 <meta name="description" content="MortaLeague futbol topluluğu: oyuncu profilleri, sistem kuralları, özel mesajlar ve futbol içerikleri.">
 <meta property="og:title" content="MortaLeague — Futbol Evreni">
 <meta property="og:description" content="Oyuncu profilleri, futbol kuralları ve MortaLeague topluluğu tek yerde.">
 <meta property="og:type" content="website">
-<link rel="icon" type="image/svg+xml" href="favicon.svg?v=minimal-motion-20261018-01">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=community-pwa-20261018-03">
 <title>MortaLeague — Futbol Evreni</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=minimal-motion-20261018-01">
+<link rel="stylesheet" href="style.css?v=community-pwa-20261018-03">
 </head>
 <body>
 <div class="ambient" aria-hidden="true"></div>
@@ -85,13 +90,13 @@
      <label class="sr-only" for="social-post-content">Gönderi metni</label><textarea id="social-post-content" rows="4" maxlength="1200" required placeholder="Antrenmanını, maç yorumunu veya futbol gündemini paylaş…"></textarea>
      <div class="social-compose-footer"><label class="social-image-upload"><span>＋ Telefonda fotoğraf seç · en fazla 5 MB</span><input id="social-post-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" aria-label="Gönderiye fotoğraf ekle"></label><label class="social-image-url"><span>Veya görsel bağlantısı</span><input id="social-post-image-url" type="url" maxlength="1000" placeholder="https://… (isteğe bağlı)" autocomplete="url"></label><span class="social-compose-limit">Metin en fazla 1200 karakter</span><button class="btn btn-primary" id="social-post-submit" type="submit">Paylaş ↗</button></div>
     </form>
-    <div class="social-feed-toolbar"><div class="social-filter-tabs"><button type="button" class="active" data-social-feed-filter="all">Tüm akış</button><button type="button" data-social-feed-filter="following">Takip ettiklerim</button></div><button class="btn btn-secondary" id="social-feed-refresh" type="button">Yenile ↻</button></div>
+    <div class="social-feed-toolbar"><div class="social-filter-tabs"><button type="button" class="active" data-social-feed-filter="all">Tüm akış</button><button type="button" data-social-feed-filter="following">Takip ettiklerim</button><button type="button" data-social-feed-filter="popular">Popüler</button></div><button class="btn btn-secondary" id="social-feed-refresh" type="button">Yenile ↻</button></div>
     <div class="inline-status social-status" id="social-feed-status" role="status" aria-live="polite">Akış hazırlanıyor…</div>
     <div id="social-feed-list" class="social-feed-list"></div>
    </div></div>
  </div>
  <div class="community-pane" data-community-pane="discover" hidden>
-  <div class="systems-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input id="social-discover-search" type="search" placeholder="Kullanıcı adı, görünen ad veya biyografi ara…" autocomplete="off"></label><button class="btn btn-secondary" id="social-discover-refresh" type="button">Yenile ↻</button></div>
+  <div class="systems-toolbar social-discover-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input id="social-discover-search" type="search" placeholder="Oyuncu ara…" autocomplete="off"></label><select id="social-discover-sort" aria-label="Oyuncuları sırala"><option value="newest">En yeni üyeler</option><option value="followers">En çok takipçi</option><option value="following">Takip ettiklerim</option><option value="alphabetical">İsme göre</option></select><button class="btn btn-secondary" id="social-discover-refresh" type="button">Yenile ↻</button></div>
   <div class="inline-status social-status" id="social-discover-status" role="status" aria-live="polite">Oyuncular yükleniyor…</div><div id="social-discover-list" class="social-discover-list"></div>
  </div>
  <div class="community-pane" data-community-pane="notifications" hidden>
@@ -122,10 +127,10 @@
     <header class="dm-chat-header">
      <button class="dm-mobile-back" id="dm-mobile-back" type="button" aria-label="Sohbet listesine dön">←</button>
      <span class="dm-chat-avatar" id="dm-chat-avatar">ML</span>
-     <div class="dm-chat-identity"><strong id="dm-chat-name">Oyuncu</strong><span id="dm-chat-username">@oyuncu</span></div>
+     <div class="dm-chat-identity"><strong id="dm-chat-name">Oyuncu</strong><span id="dm-chat-username">@oyuncu</span><small id="dm-peer-status" class="dm-peer-status">Çevrimdışı</small></div>
      <button class="btn btn-outline dm-block-button" id="dm-block-button" type="button">Engelle</button>
     </header>
-    <div id="dm-chat-status" class="dm-chat-status" role="status" aria-live="polite"></div>
+    <div id="dm-chat-status" class="dm-chat-status" role="status" aria-live="polite"></div><div id="dm-typing-status" class="dm-typing-status" role="status" aria-live="polite" hidden></div>
     <div class="dm-message-list" id="dm-message-list" aria-live="polite" aria-relevant="additions text"></div>
     <form class="dm-composer" id="dm-send-form">
      <label class="sr-only" for="dm-message-input">Mesajın</label>
@@ -140,7 +145,7 @@
  <div class="page-head"><h1>YÖNETİM <span>PANELİ.</span></h1><p>Üyeleri, duyuruları ve şikâyetleri yönet.</p></div>
  <div class="admin-access-note" id="admin-access-note">Yönetici yetkisi kontrol ediliyor…</div>
  <div id="admin-content" hidden>
-  <div class="admin-stats"><article class="admin-stat"><span>TOPLAM OYUNCU</span><strong id="admin-player-count">—</strong></article><article class="admin-stat"><span>DUYURU SAYISI</span><strong id="admin-announcement-count">—</strong></article><article class="admin-stat"><span>YETKİ</span><strong>ADMIN</strong></article></div>
+  <div class="admin-stats"><article class="admin-stat"><span>TOPLAM OYUNCU</span><strong id="admin-player-count">—</strong></article><article class="admin-stat"><span>GÖNDERİLER</span><strong id="admin-post-count">—</strong></article><article class="admin-stat"><span>AÇIK ŞİKÂYET</span><strong id="admin-report-count">—</strong></article><article class="admin-stat"><span>DUYURU SAYISI</span><strong id="admin-announcement-count">—</strong></article><article class="admin-stat"><span>YETKİ</span><strong>ADMIN</strong></article></div>
   <section class="admin-panel"><div class="section-heading"><div><h2>YENİ DUYURU</h2></div></div><form id="announcement-form" class="admin-form"><label class="auth-field">Başlık<input id="announcement-title" name="title" type="text" maxlength="100" required placeholder="Duyuru başlığı"></label><label class="auth-field">İçerik<textarea id="announcement-content" name="content" rows="4" maxlength="3000" required placeholder="Topluluğa iletmek istediğin mesaj…"></textarea></label><button class="btn btn-primary" type="submit" id="announcement-submit">Duyuruyu Yayınla ↗</button><p id="announcement-feedback" class="auth-feedback" role="status" aria-live="polite"></p></form></section>
   <section class="admin-panel"><div class="section-heading"><div><h2>OYUNCU YÖNETİMİ</h2></div></div><div class="systems-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input id="admin-users-search" type="search" placeholder="Üye ara…" autocomplete="off"></label><button class="btn btn-secondary" id="admin-refresh" type="button">Yenile ↻</button></div><div id="admin-users-status" class="inline-status" role="status" aria-live="polite"></div><div class="admin-users-list" id="admin-users-list"></div></section>
   <section class="admin-panel"><div class="section-heading"><div><h2>YAYINLANAN DUYURULAR</h2></div></div><div id="admin-announcements" class="announcement-list"></div></section>
@@ -186,11 +191,12 @@
    <form id="profile-edit-form" class="auth-form profile-edit-form">
     <label class="auth-field">Görünen ad<input id="profile-edit-display-name" type="text" maxlength="40" required placeholder="Profilde görünecek adın"></label>
     <label class="auth-field">Profil fotoğrafı bağlantısı<input id="profile-edit-avatar-url" type="url" maxlength="500" placeholder="https://…"></label>
+    <label class="auth-field">Kapak fotoğrafı bağlantısı<input id="profile-edit-cover-url" type="url" maxlength="500" placeholder="https://… (isteğe bağlı)"></label>
     <label class="auth-field">Biyografi<textarea id="profile-edit-bio" rows="3" maxlength="240" placeholder="Kendini kısaca tanıt (240 karakter)"></textarea></label>
     <button class="btn btn-primary" type="submit" id="profile-save">Profili Kaydet ↗</button>
     <p class="auth-feedback" id="profile-edit-feedback" role="status" aria-live="polite"></p>
    </form>
-   <div class="auth-actions profile-actions"><button class="btn btn-secondary" type="button" id="profile-view-players">Oyuncu profillerine git</button><button class="btn btn-outline" type="button" id="profile-admin-open" hidden>Yönetim paneli</button><button class="btn btn-secondary" type="button" id="profile-back">Giriş ekranına dön</button><button class="btn btn-outline" type="button" id="auth-signout">Oturumu kapat</button></div>
+   <div class="auth-actions profile-actions"><button class="btn btn-secondary" type="button" id="pwa-install-button" hidden>Ana ekrana ekle</button><button class="btn btn-secondary" type="button" id="profile-view-players">Oyuncu profillerine git</button><button class="btn btn-outline" type="button" id="profile-admin-open" hidden>Yönetim paneli</button><button class="btn btn-secondary" type="button" id="profile-back">Giriş ekranına dön</button><button class="btn btn-outline" type="button" id="auth-signout">Oturumu kapat</button></div>
    <p class="auth-feedback" id="profile-feedback" role="status" aria-live="polite"></p>
   </div>
  </section>
@@ -211,32 +217,37 @@
 </div>
 
 <div class="public-profile-backdrop" id="public-profile-backdrop" hidden>
- <section class="public-profile-dialog" role="dialog" aria-modal="true" aria-labelledby="public-profile-name">
+ <section class="public-profile-dialog public-player-profile" role="dialog" aria-modal="true" aria-labelledby="public-profile-name">
   <button type="button" class="system-detail-close" id="public-profile-close" aria-label="Profili kapat">×</button>
-  <div class="public-profile-header"><span class="public-profile-avatar" id="public-profile-avatar">ML</span><div><h2 id="public-profile-name">Oyuncu adı</h2><p id="public-profile-username">@oyuncu</p></div></div>
+  <div class="public-profile-cover" id="public-profile-cover" aria-hidden="true"></div>
+  <div class="public-profile-header"><span class="public-profile-avatar" id="public-profile-avatar">ML</span><div class="public-profile-title"><h2 id="public-profile-name">Oyuncu adı</h2><p id="public-profile-username">@oyuncu</p></div></div>
+  <div class="public-profile-stats" aria-label="Oyuncu istatistikleri"><div><strong id="public-profile-followers">—</strong><span>Takipçi</span></div><div><strong id="public-profile-following">—</strong><span>Takip edilen</span></div><div><strong id="public-profile-post-count">—</strong><span>Gönderi</span></div></div>
   <div class="system-detail-section"><h4>BİYOGRAFİ</h4><p id="public-profile-bio">Bu oyuncu henüz biyografi eklememiş.</p></div>
   <div class="system-detail-section"><h4>KATILIM TARİHİ</h4><p id="public-profile-created">—</p></div>
-  <div class="public-profile-actions"><button type="button" class="btn btn-primary" id="public-profile-message" hidden>Özel mesaj gönder ↗</button></div>
+  <div class="public-profile-actions"><button type="button" class="btn btn-primary" id="public-profile-follow" hidden>Takip et</button><button type="button" class="btn btn-secondary" id="public-profile-message" hidden>Özel mesaj gönder ↗</button></div>
+  <section class="public-profile-post-section"><div class="section-heading"><h3>SON GÖNDERİLER</h3></div><div id="public-profile-posts" class="public-profile-posts"><div class="skeleton-card skeleton-profile-post"></div></div></section>
+  <p class="inline-status" id="public-profile-social-status" role="status" aria-live="polite"></p>
  </section>
 </div>
 <div class="public-profile-backdrop" id="admin-edit-backdrop" hidden>
  <section class="public-profile-dialog" role="dialog" aria-modal="true" aria-labelledby="admin-edit-title">
   <button type="button" class="system-detail-close" id="admin-edit-close" aria-label="Düzenlemeyi kapat">×</button>
   <h2 class="auth-title" id="admin-edit-title">Oyuncu profilini düzenle</h2><p class="auth-subtitle" id="admin-edit-username">@oyuncu</p>
-  <form id="admin-edit-form" class="admin-form"><input type="hidden" id="admin-edit-id"><label class="auth-field">Görünen ad<input id="admin-edit-display-name" type="text" maxlength="40" required></label><label class="auth-field">Profil fotoğrafı bağlantısı<input id="admin-edit-avatar-url" type="url" maxlength="500" placeholder="https://…"></label><label class="auth-field">Biyografi<textarea id="admin-edit-bio" rows="4" maxlength="240"></textarea></label><button class="btn btn-primary" type="submit">Değişiklikleri Kaydet ↗</button><p id="admin-edit-feedback" class="auth-feedback" role="status" aria-live="polite"></p></form>
+  <form id="admin-edit-form" class="admin-form"><input type="hidden" id="admin-edit-id"><label class="auth-field">Görünen ad<input id="admin-edit-display-name" type="text" maxlength="40" required></label><label class="auth-field">Profil fotoğrafı bağlantısı<input id="admin-edit-avatar-url" type="url" maxlength="500" placeholder="https://…"></label><label class="auth-field">Kapak fotoğrafı bağlantısı<input id="admin-edit-cover-url" type="url" maxlength="500" placeholder="https://… (isteğe bağlı)"></label><label class="auth-field">Biyografi<textarea id="admin-edit-bio" rows="4" maxlength="240"></textarea></label><button class="btn btn-primary" type="submit">Değişiklikleri Kaydet ↗</button><p id="admin-edit-feedback" class="auth-feedback" role="status" aria-live="polite"></p></form>
  </section>
 </div>
 
-<footer class="site-footer"><span>© 2026 MORTALEAGUE</span><span>FUTBOL TOPLULUĞU</span></footer>
+<footer class="site-footer"><span>© 2026 MORTALEAGUE</span><span>FUTBOL TOPLULUĞU</span><button class="footer-install" id="footer-install-button" type="button" hidden>Uygulamayı yükle ↗</button></footer>
 </main>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=minimal-motion-20261018-01"></script>
-<script src="app.js?v=minimal-motion-20261018-01"></script>
-<script src="auth.js?v=minimal-motion-20261018-01"></script>
-<script src="messages.js?v=minimal-motion-20261018-01"></script>
-<script src="social.js?v=minimal-motion-20261018-01"></script>
-<script src="visual-polish.js?v=minimal-motion-20261018-01"></script>
+<script src="config.js?v=community-pwa-20261018-03"></script>
+<script src="app.js?v=community-pwa-20261018-03"></script>
+<script src="auth.js?v=community-pwa-20261018-03"></script>
+<script src="messages.js?v=community-pwa-20261018-03"></script>
+<script src="social.js?v=community-pwa-20261018-03"></script>
+<script src="visual-polish.js?v=community-pwa-20261018-03"></script>
+<script src="pwa.js?v=community-pwa-20261018-03" defer></script>
 </body>
 </html>

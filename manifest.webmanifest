@@ -1,0 +1,23 @@
+{
+  "id": "/?app=mortaleague",
+  "name": "MortaLeague — Futbol Topluluğu",
+  "short_name": "MortaLeague",
+  "description": "MortaLeague futbol topluluğu: oyuncular, özel mesajlar ve futbol içerikleri.",
+  "lang": "tr-TR",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#08040d",
+  "theme_color": "#08040d",
+  "categories": ["sports", "social"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Oyuncuları keşfet", "short_name": "Oyuncular", "url": "/?page=players", "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Özel mesajlar", "short_name": "Mesajlar", "url": "/?page=messages", "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ]
+}

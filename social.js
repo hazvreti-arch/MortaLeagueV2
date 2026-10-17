@@ -4,7 +4,7 @@
   const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const initials = value => String(value || "ML").trim().split(/\s+/).slice(0,2).map(v => v[0] || "").join("").toUpperCase() || "ML";
   const safeImage = value => /^https:\/\//i.test(String(value || "").trim()) ? String(value).trim() : "";
-  const state = { view:"feed", feedMode:"all", posts:[], comments:[], likes:new Set(), following:new Set(), followCounts:new Map(), profiles:new Map(), badges:new Map(), notifications:[], achievements:[], earned:new Set(), catalogue:[], reports:[], loaded:false, loading:false };
+  const state = { view:"feed", feedMode:"all", discoverSort:"newest", posts:[], comments:[], likes:new Set(), following:new Set(), followCounts:new Map(), followingCounts:new Map(), profiles:new Map(), badges:new Map(), notifications:[], achievements:[], earned:new Set(), catalogue:[], reports:[], loaded:false, loading:false };
   const client = () => window.MortaLeague?.client || null;
   const userId = () => window.MortaLeague?.session?.user?.id || null;
   const profile = () => window.MortaLeague?.profile || null;
@@ -12,6 +12,15 @@
   const suspended = () => profile()?.is_suspended === true;
   const when = value => { const d = new Date(value); if (Number.isNaN(d.getTime())) return "şimdi"; const now = Date.now(), ms = now-d.getTime(); if (ms < 60000) return "az önce"; if(ms < 3600000) return `${Math.floor(ms/60000)} dk önce`; if(ms < 86400000) return `${Math.floor(ms/3600000)} sa önce`; return new Intl.DateTimeFormat("tr-TR",{day:"2-digit",month:"short",year:"numeric"}).format(d); };
   function status(id, text, type="") { const node=$(id); if(!node)return; node.textContent=text||""; node.className="inline-status social-status"+(type?` ${type}`:""); }
+  function friendlyError(error, fallback) {
+    const raw=String(error?.message||"").toLowerCase(), code=String(error?.code||"");
+    if(code==="42501"||/row-level security|permission denied|not allowed/.test(raw))return "Bu işlem için izin yok. Oturumunu ve Supabase erişim politikalarını kontrol et.";
+    if(code==="23505")return "Bu işlem zaten yapılmış; kayıt tekrarlanmadı.";
+    if(/failed to fetch|networkerror|load failed|fetch failed/.test(raw))return "Bağlantı kurulamadı. İnternetini kontrol edip tekrar dene.";
+    if(/schema cache|does not exist|could not find the table|relation .* missing/.test(raw))return "Bu özellik için gereken Supabase tablosu eksik. İlgili SQL kurulum dosyasını çalıştır.";
+    return fallback||"İşlem tamamlanamadı. Biraz sonra tekrar dene.";
+  }
+  function renderSkeletons(host,count=3,kind="wide") { if(!host)return;host.innerHTML=Array.from({length:count},(_,i)=>`<div class="skeleton-card ${esc(kind)}" aria-hidden="true"><span class="skeleton-line skeleton-short"></span><span class="skeleton-line"></span><span class="skeleton-line skeleton-medium"></span></div>`).join(""); }
   function avatar(p, className="social-avatar") { const name=p?.display_name||p?.username||"Oyuncu", img=safeImage(p?.avatar_url); return img ? `<span class="${className}"><img src="${esc(img)}" alt="${esc(name)}" loading="lazy" referrerpolicy="no-referrer"></span>` : `<span class="${className}">${esc(initials(name))}</span>`; }
   function needLogin() { if(!userId()){ window.MortaLeague?.openAuth?.(); return false; } return true; }
   function setView(view) {
@@ -41,7 +50,7 @@
     const unique=[...new Set((ids||[]).filter(Boolean))];
     if(!unique.length)return;
     const missing=unique.filter(id=>!state.profiles.has(id)); if(!missing.length)return;
-    const {data,error}=await client().from("profiles").select("id,username,display_name,bio,avatar_url,created_at,role,is_suspended").in("id",missing);
+    const {data,error}=await client().from("profiles").select("id,username,display_name,bio,avatar_url,cover_url,created_at,role,is_suspended").in("id",missing);
     if(error)throw error; (data||[]).forEach(p=>state.profiles.set(p.id,p));
   }
   function profileLine(p, compact=false) {
@@ -55,7 +64,8 @@
   }
   function renderFeed() {
     const host=$("social-feed-list"); if(!host)return;
-    const rows=state.feedMode==="following"?state.posts.filter(p=>state.following.has(p.author_id)):state.posts;
+    let rows=state.feedMode==="following"?state.posts.filter(p=>state.following.has(p.author_id)):[...state.posts];
+    if(state.feedMode==="popular") rows.sort((a,b)=>((b.likeCount||0)*2+(b.commentCount||0))-((a.likeCount||0)*2+(a.commentCount||0)));
     if(!rows.length){host.innerHTML=`<div class="empty-state">${state.feedMode==="following"?"Takip ettiğin oyuncular henüz gönderi paylaşmamış.":"Henüz gönderi yok. İlk paylaşımı sen yap!"}</div>`;return;}
     host.innerHTML=rows.map(p=>{
       const author=state.profiles.get(p.author_id)||{}; const postComments=state.comments.filter(c=>c.post_id===p.id).slice(-3);
@@ -68,6 +78,7 @@
     const host=$("social-feed-list"); if(!host || state.loading)return;
     if(!needLogin())return;
     state.loading=true; status("social-feed-status","Akış yükleniyor…");
+    if(!state.posts.length)renderSkeletons(host,3,"skeleton-post");
     try {
       await loadFollowState();
       const {data:posts,error}=await client().from("posts").select("id,author_id,content,image_url,created_at").order("created_at",{ascending:false}).limit(50);
@@ -91,7 +102,7 @@
       if(profileIds.length){const {data:badges,error:badgeError}=await client().from("user_achievements").select("user_id,achievement_code").in("user_id",profileIds);if(badgeError)throw badgeError;const codes=[...new Set((badges||[]).map(b=>b.achievement_code))];let catalog=[];if(codes.length){const {data,error:catErr}=await client().from("achievement_catalog").select("code,name,icon").in("code",codes);if(catErr)throw catErr;catalog=data||[];}const catMap=new Map(catalog.map(b=>[b.code,b]));(badges||[]).forEach(b=>{const item=catMap.get(b.achievement_code);if(item){if(!state.badges.has(b.user_id))state.badges.set(b.user_id,[]);state.badges.get(b.user_id).push(item);}});}
       const compose=$("social-post-form"); if(compose){compose.hidden=suspended();const notice=$("social-suspended-note");if(notice)notice.hidden=!suspended();}
       renderFeed(); status("social-feed-status",`${state.posts.length} gönderi`+(suspended()?" · Hesabın kısıtlandığı için etkileşim yapamazsın.":""),suspended()?"error":"");
-    } catch(error) {status("social-feed-status",error?.message||"Akış yüklenemedi. 03_social_community.sql dosyasının Supabase'te çalıştırıldığını kontrol et.","error");host.innerHTML='<div class="empty-state">Topluluk verileri yüklenemedi. Veritabanı güncellemesi gerekebilir.</div>';}
+    } catch(error) {status("social-feed-status",friendlyError(error,"Akış yüklenemedi. 03_social_community.sql dosyasının çalıştırıldığını kontrol et."),"error");host.innerHTML='<div class="empty-state">Topluluk verileri yüklenemedi. Veritabanı güncellemesi gerekebilir.</div>';}
     finally{state.loading=false;}
   }
   async function publishPost(event) {
@@ -142,34 +153,43 @@
     const input=event.currentTarget.querySelector("input"), content=input.value.trim(); if(!content)return;
     const button=event.currentTarget.querySelector("button[type=submit]");button.disabled=true;
     try{const {error}=await client().from("post_comments").insert({post_id:postId,author_id:userId(),content});if(error)throw error;input.value="";await loadFeed();await updateNotificationCount();}
-    catch(error){status("social-feed-status",error?.message||"Yorum eklenemedi.","error");}
+    catch(error){status("social-feed-status",friendlyError(error,"Yorum eklenemedi."),"error");}
     finally{button.disabled=false;}
   }
   async function toggleFollow(targetId) {
-    if(!needLogin()||suspended())return;
-    if(targetId===userId())return;
+    if(!needLogin()||suspended())return false;
+    if(targetId===userId())return false;
     try {
+      await loadFollowState();
       const result=state.following.has(targetId)
         ?await client().from("user_follows").delete().eq("follower_id",userId()).eq("following_id",targetId)
         :await client().from("user_follows").insert({follower_id:userId(),following_id:targetId});
       if(result.error)throw result.error;
       await loadFollowState(); if(state.view==="discover")renderDiscover(); if(state.view==="feed")renderFeed(); await updateNotificationCount();
-    } catch(error){status("social-discover-status",error?.message||"Takip durumu değiştirilemedi.","error");}
+      document.querySelectorAll(`[data-social-follow="${CSS.escape(targetId)}"]`).forEach(button=>{const following=state.following.has(targetId);button.textContent=following?"Takip ediliyor":"Takip et";button.classList.toggle("btn-secondary",following);button.classList.toggle("btn-outline",!following);});
+      window.dispatchEvent(new CustomEvent("ml:follow-change",{detail:{targetId,following:state.following.has(targetId)}}));
+      return true;
+    } catch(error){status("social-discover-status",friendlyError(error,"Takip durumu değiştirilemedi."),"error");return false;}
   }
   async function loadDiscover() {
     const host=$("social-discover-list");if(!host||!needLogin())return;
     status("social-discover-status","Oyuncular yükleniyor…");
+    if(!(state.discoverProfiles||[]).length)renderSkeletons(host,5,"skeleton-player");
     try {
       await loadFollowState();
-      const {data,error}=await client().from("profiles").select("id,username,display_name,bio,avatar_url,created_at,role,is_suspended").order("created_at",{ascending:false}).limit(300);
+      const {data,error}=await client().from("profiles").select("id,username,display_name,bio,avatar_url,cover_url,created_at,role,is_suspended").order("created_at",{ascending:false}).limit(300);
       if(error)throw error; state.discoverProfiles=(data||[]).filter(p=>!p.is_suspended);
       (state.discoverProfiles||[]).forEach(p=>state.profiles.set(p.id,p));renderDiscover();status("social-discover-status",`${state.discoverProfiles.length} oyuncu bulundu.`);
-    } catch(error){status("social-discover-status",error?.message||"Oyuncular bulunamadı.","error");host.innerHTML='<div class="empty-state">Oyuncu keşfet yüklenemedi.</div>';}
+    } catch(error){status("social-discover-status",friendlyError(error,"Oyuncular bulunamadı."),"error");host.innerHTML='<div class="empty-state">Oyuncu keşfet yüklenemedi.</div>';}
   }
   function renderDiscover() {
     const host=$("social-discover-list");if(!host)return;
     const q=($("social-discover-search")?.value||"").trim().toLocaleLowerCase("tr-TR");
-    const rows=(state.discoverProfiles||[]).filter(p=>p.id!==userId()&&`${p.username} ${p.display_name} ${p.bio}`.toLocaleLowerCase("tr-TR").includes(q));
+    let rows=(state.discoverProfiles||[]).filter(p=>p.id!==userId()&&`${p.username} ${p.display_name} ${p.bio}`.toLocaleLowerCase("tr-TR").includes(q));
+    if(state.discoverSort==="followers")rows.sort((a,b)=>(state.followCounts.get(b.id)||0)-(state.followCounts.get(a.id)||0));
+    else if(state.discoverSort==="alphabetical")rows.sort((a,b)=>String(a.display_name||a.username).localeCompare(String(b.display_name||b.username),"tr"));
+    else if(state.discoverSort==="following")rows=rows.filter(p=>state.following.has(p.id));
+    else rows.sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
     host.innerHTML=rows.map(p=>`<article class="social-discover-card">${avatar(p,"social-discover-avatar")}<div class="social-discover-main"><strong>${esc(p.display_name||p.username)}</strong><small>@${esc(p.username)}</small><p>${esc(p.bio||"Henüz biyografi eklenmemiş.")}</p><span class="social-follower-count">${Number(state.followCounts.get(p.id)||0)} takipçi</span></div><div class="social-discover-actions">${followButton(p.id)}<button class="btn btn-secondary" type="button" data-message-user="${esc(p.id)}">Mesaj</button><button class="social-report-button" type="button" data-report-type="profile" data-report-id="${esc(p.id)}" title="Profili şikâyet et">⚑</button></div></article>`).join("");
     if(!rows.length)host.innerHTML='<div class="empty-state">Aramana uygun oyuncu bulunamadı.</div>';
   }
@@ -184,11 +204,11 @@
   }
   async function loadNotifications() {
     const host=$("social-notifications-list");if(!host||!needLogin())return;
-    status("social-notifications-status","Bildirimler yükleniyor…");
+    status("social-notifications-status","Bildirimler yükleniyor…");if(!state.notifications.length)renderSkeletons(host,3,"skeleton-notification");
     try {
       const {data,error}=await client().from("notifications").select("id,recipient_id,actor_id,kind,body,post_id,comment_id,created_at,read_at").eq("recipient_id",userId()).order("created_at",{ascending:false}).limit(100);
       if(error)throw error;state.notifications=data||[];await loadProfilesFor(state.notifications.map(n=>n.actor_id));renderNotifications();status("social-notifications-status",`${state.notifications.filter(n=>!n.read_at).length} okunmamış bildirim`);await updateNotificationCount();
-    } catch(error){status("social-notifications-status",error?.message||"Bildirimler yüklenemedi.","error");host.innerHTML='<div class="empty-state">Bildirim sistemi için veritabanı güncellemesi gerekebilir.</div>';}
+    } catch(error){status("social-notifications-status",friendlyError(error,"Bildirimler yüklenemedi."),"error");host.innerHTML='<div class="empty-state">Bildirim sistemi için veritabanı güncellemesi gerekebilir.</div>';}
   }
   async function markAllNotificationsRead() {
     if(!needLogin())return;try{const {error}=await client().from("notifications").update({read_at:new Date().toISOString()}).eq("recipient_id",userId()).is("read_at",null);if(error)throw error;await loadNotifications();}catch(error){status("social-notifications-status",error?.message||"Bildirimler güncellenemedi.","error");}
@@ -196,6 +216,7 @@
   async function loadAchievements() {
     const host=$("social-achievements-list");if(!host||!needLogin())return;
     status("social-achievements-status","Rozetlerin yükleniyor…");
+    if(!state.catalogue.length)renderSkeletons(host,4,"skeleton-achievement");
     try{const [catalogRes,earnedRes]=await Promise.all([client().from("achievement_catalog").select("code,name,description,icon,sort_order").order("sort_order"),client().from("user_achievements").select("achievement_code,awarded_at").eq("user_id",userId())]);if(catalogRes.error)throw catalogRes.error;if(earnedRes.error)throw earnedRes.error;state.catalogue=catalogRes.data||[];state.earned=new Set((earnedRes.data||[]).map(a=>a.achievement_code));const earnedMap=new Map((earnedRes.data||[]).map(a=>[a.achievement_code,a.awarded_at]));host.innerHTML=state.catalogue.map(a=>{const earned=state.earned.has(a.code);return `<article class="achievement-card ${earned?"earned":"locked"}"><span class="achievement-icon">${esc(a.icon)}</span><div><strong>${esc(a.name)}</strong><p>${esc(a.description)}</p><small>${earned?`Kazanıldı · ${esc(when(earnedMap.get(a.code)))}`:"Henüz kazanılmadı"}</small></div>${earned?"<span class=\"achievement-check\">✓</span>":"<span class=\"achievement-lock\">◇</span>"}</article>`;}).join("");status("social-achievements-status",`${state.earned.size} / ${state.catalogue.length} rozet kazanıldı.`);}
     catch(error){status("social-achievements-status",error?.message||"Rozetler yüklenemedi.","error");host.innerHTML='<div class="empty-state">Rozetler için veritabanı güncellemesi gerekebilir.</div>';}
   }
@@ -209,6 +230,7 @@
   async function loadReports() {
     const host=$("social-reports-list");if(!host||!isAdmin())return;
     status("social-reports-status","Şikâyetler yükleniyor…");
+    if(!state.reports.length)renderSkeletons(host,3,"skeleton-report");
     try{
       const {data,error}=await client().from("content_reports").select("id,reporter_id,target_type,target_id,reason,details,status,created_at").in("status",["open","reviewing"]).order("created_at",{ascending:false}).limit(100);if(error)throw error;state.reports=data||[];
       const reporters=[...new Set(state.reports.map(r=>r.reporter_id))];await loadProfilesFor(reporters);
@@ -250,7 +272,7 @@
   }
   document.addEventListener("click",async event=>{
     const tab=event.target.closest("[data-community-tab]");if(tab){setView(tab.dataset.communityTab);return;}
-    const filter=event.target.closest("[data-social-feed-filter]");if(filter){state.feedMode=filter.dataset.socialFeedFilter;document.querySelectorAll("[data-social-feed-filter]").forEach(b=>b.classList.toggle("active",b===filter));loadFeed();return;}
+    const filter=event.target.closest("[data-social-feed-filter]");if(filter){state.feedMode=filter.dataset.socialFeedFilter;document.querySelectorAll("[data-social-feed-filter]").forEach(b=>b.classList.toggle("active",b===filter));renderFeed();return;}
     const like=event.target.closest("[data-social-like]");if(like){toggleLike(like.dataset.socialLike);return;}
     const follow=event.target.closest("[data-social-follow]");if(follow){toggleFollow(follow.dataset.socialFollow);return;}
     const dmReport=event.target.closest("[data-report-dm-message]");if(dmReport){submitReport("message",dmReport.dataset.reportDmMessage);return;}
@@ -263,6 +285,7 @@
   $("social-post-form")?.addEventListener("submit",publishPost);
   $("social-feed-refresh")?.addEventListener("click",loadFeed);
   $("social-discover-search")?.addEventListener("input",renderDiscover);
+  $("social-discover-sort")?.addEventListener("change",event=>{state.discoverSort=event.target.value;renderDiscover();});
   $("social-discover-refresh")?.addEventListener("click",loadDiscover);
   $("social-notifications-refresh")?.addEventListener("click",loadNotifications);
   $("social-reports-refresh")?.addEventListener("click",loadReports);
@@ -272,5 +295,12 @@
   window.addEventListener("ml:ready",()=>{if(userId())updateNotificationCount();});
   window.setInterval(()=>{if(!userId())return;updateNotificationCount();if($("page-community")?.classList.contains("active")&&state.view==="notifications")loadNotifications();},30000);
   window.addEventListener("ml:auth-state",()=>{if(userId()){state.loaded=true;updateNotificationCount();if($("page-community")?.classList.contains("active"))setView(state.view);if($("page-admin")?.classList.contains("active")&&isAdmin()){loadReports();loadAuditLog();}}else{syncUnreadBadge(0);state.posts=[];state.notifications=[];state.following.clear();}});
-  window.MortaSocial={loadFeed,loadDiscover,loadNotifications,loadAchievements,loadReports,loadAuditLog,setView,updateNotificationCount,refresh:()=>{loadFeed();loadNotifications();}};
+  window.MortaSocial={
+    loadFeed,loadDiscover,loadNotifications,loadAchievements,loadReports,loadAuditLog,setView,updateNotificationCount,
+    refresh:()=>{loadFeed();loadNotifications();},
+    primeFollowing:async()=>{if(userId())await loadFollowState();return true;},
+    isFollowingNow:id=>state.following.has(id),
+    getFollowCount:id=>Number(state.followCounts.get(id)||0),
+    toggleFollowById:toggleFollow
+  };
 })();

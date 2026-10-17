@@ -11,10 +11,16 @@ create table if not exists public.profiles (
   display_name text not null default 'MortaLeague Player' check (char_length(display_name) between 1 and 40),
   bio text not null default '' check (char_length(bio) <= 240),
   avatar_url text,
+  cover_url text,
   role text not null default 'player' check (role in ('player', 'admin')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.profiles add column if not exists cover_url text;
+alter table public.profiles drop constraint if exists profiles_cover_url_https_check;
+alter table public.profiles add constraint profiles_cover_url_https_check
+  check (cover_url is null or cover_url ~* '^https://');
 
 alter table public.profiles add column if not exists role text not null default 'player';
 do $$
@@ -36,10 +42,10 @@ alter table public.profiles enable row level security;
 revoke all on table public.profiles from anon, authenticated;
 revoke update (username, role) on public.profiles from anon, authenticated;
 -- Anonymous visitors can read only public profile fields; they cannot inspect account IDs or role flags.
-grant select (username, display_name, bio, avatar_url, created_at) on public.profiles to anon;
+grant select (username, display_name, bio, avatar_url, cover_url, created_at) on public.profiles to anon;
 -- Signed-in users can read their own role flag for UI gating; role changes are never granted.
-grant select (id, username, display_name, bio, avatar_url, role, created_at) on public.profiles to authenticated;
-grant update (display_name, bio, avatar_url, updated_at) on public.profiles to authenticated;
+grant select (id, username, display_name, bio, avatar_url, cover_url, role, created_at) on public.profiles to authenticated;
+grant update (display_name, bio, avatar_url, cover_url, updated_at) on public.profiles to authenticated;
 
 create or replace function public.is_mortaleague_admin()
 returns boolean

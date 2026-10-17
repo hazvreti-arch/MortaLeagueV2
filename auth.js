@@ -35,6 +35,16 @@
     feedback.textContent = message || "";
     feedback.className = "auth-feedback" + (type ? " " + type : "");
   }
+  function friendlyAuthError(error) {
+    const raw = String(error?.message || "").toLowerCase();
+    const code = String(error?.code || "");
+    if (/invalid login credentials|invalid credentials/.test(raw)) return "Kullanıcı adı veya şifre hatalı.";
+    if (/already registered|already been registered|duplicate key|database error saving new user/.test(raw) || code === "23505") return "Bu kullanıcı adı kullanılamıyor. Başka bir kullanıcı adı seç.";
+    if (code === "42501" || /row-level security|permission denied|not allowed/.test(raw)) return "Bu işlem için yetki yok. Hesabını ve erişim izinlerini kontrol et.";
+    if (/failed to fetch|networkerror|load failed|fetch failed/.test(raw)) return "Sunucuya ulaşılamadı. İnternet bağlantını kontrol edip tekrar dene.";
+    if (/email not confirmed|confirm your email/.test(raw)) return "Supabase e-posta doğrulaması bekliyor. Email → Confirm email ayarını kapatıp yeniden dene.";
+    return error?.message || "İşlem tamamlanamadı. Biraz sonra tekrar dene.";
+  }
   function setProfileFeedback(message, type = "") {
     const node = el("profile-edit-feedback");
     if (!node) return;
@@ -86,6 +96,7 @@
     if (!profile) return;
     el("profile-edit-display-name").value = profile.display_name || profile.username || "";
     el("profile-edit-avatar-url").value = profile.avatar_url || "";
+    if (el("profile-edit-cover-url")) el("profile-edit-cover-url").value = profile.cover_url || "";
     el("profile-edit-bio").value = profile.bio || "";
   }
   async function refreshProfile() {
@@ -97,7 +108,7 @@
     }
     try {
       const { data, error } = await client.from("profiles")
-        .select("id, username, display_name, bio, avatar_url, role, is_suspended, created_at")
+        .select("id, username, display_name, bio, avatar_url, cover_url, role, is_suspended, created_at")
         .eq("id", currentSession.user.id)
         .maybeSingle();
       if (requestId !== profileRequest) return currentProfile;
@@ -230,8 +241,8 @@
   async function listProfiles() {
     if (!client) throw new Error("Supabase bağlantısı kurulamadı.");
     const fields = currentSession?.user
-      ? "id, username, display_name, bio, avatar_url, created_at"
-      : "username, display_name, bio, avatar_url, created_at";
+      ? "id, username, display_name, bio, avatar_url, cover_url, created_at"
+      : "username, display_name, bio, avatar_url, cover_url, created_at";
     const { data, error } = await client.from("profiles")
       .select(fields)
       .order("created_at", { ascending: false }).limit(300);
@@ -241,7 +252,7 @@
   async function listAdminProfiles() {
     if (!isAdmin()) throw new Error("Bu işlem için yönetici yetkisi gerekli.");
     const { data, error } = await client.from("profiles")
-      .select("id, username, display_name, bio, avatar_url, role, is_suspended, created_at")
+      .select("id, username, display_name, bio, avatar_url, cover_url, role, is_suspended, created_at")
       .order("created_at", { ascending: false }).limit(500);
     if (error) throw error;
     return data || [];
@@ -264,11 +275,13 @@
     const payload = {
       display_name: String(changes.display_name || "").trim(),
       bio: String(changes.bio || "").trim(),
-      avatar_url: changes.avatar_url ? String(changes.avatar_url).trim() : null
+      avatar_url: changes.avatar_url ? String(changes.avatar_url).trim() : null,
+      cover_url: changes.cover_url ? String(changes.cover_url).trim() : null
     };
     if (!payload.display_name || payload.display_name.length > 40) throw new Error("Görünen ad 1–40 karakter olmalı.");
     if (payload.bio.length > 240) throw new Error("Biyografi en fazla 240 karakter olabilir.");
     if (payload.avatar_url && !/^https:\/\//i.test(payload.avatar_url)) throw new Error("Profil fotoğrafı bağlantısı https:// ile başlamalı.");
+    if (payload.cover_url && !/^https:\/\//i.test(payload.cover_url)) throw new Error("Kapak fotoğrafı bağlantısı https:// ile başlamalı.");
     const { error } = await client.from("profiles").update(payload).eq("id", currentSession.user.id);
     if (error) throw error;
     await refreshProfile();
@@ -279,11 +292,13 @@
     const payload = {
       display_name: String(changes.display_name || "").trim(),
       bio: String(changes.bio || "").trim(),
-      avatar_url: changes.avatar_url ? String(changes.avatar_url).trim() : null
+      avatar_url: changes.avatar_url ? String(changes.avatar_url).trim() : null,
+      cover_url: changes.cover_url ? String(changes.cover_url).trim() : null
     };
     if (!payload.display_name || payload.display_name.length > 40) throw new Error("Görünen ad 1–40 karakter olmalı.");
     if (payload.bio.length > 240) throw new Error("Biyografi en fazla 240 karakter olabilir.");
     if (payload.avatar_url && !/^https:\/\//i.test(payload.avatar_url)) throw new Error("Profil fotoğrafı bağlantısı https:// ile başlamalı.");
+    if (payload.cover_url && !/^https:\/\//i.test(payload.cover_url)) throw new Error("Kapak fotoğrafı bağlantısı https:// ile başlamalı.");
     const { error } = await client.from("profiles").update(payload).eq("id", id);
     if (error) throw error;
   }
@@ -327,7 +342,7 @@
     if (!rows.length) return [];
     const otherIds = [...new Set(rows.map(c => c.user_one === userId ? c.user_two : c.user_one))];
     const [{ data: profiles, error: profilesError }, { data: unreadRows, error: unreadError }] = await Promise.all([
-      client.from("profiles").select("id, username, display_name, avatar_url, bio, created_at").in("id", otherIds),
+      client.from("profiles").select("id, username, display_name, avatar_url, cover_url, bio, created_at").in("id", otherIds),
       client.from("dm_messages").select("id, conversation_id").in("conversation_id", rows.map(c => c.id)).neq("sender_id", userId).is("read_at", null)
     ]);
     if (profilesError) throw profilesError;
@@ -466,7 +481,7 @@
         await showProfile();
       }
     } catch (error) {
-      setFeedback(typeof error?.message === "string" ? error.message : "İşlem tamamlanamadı. Tekrar deneyin.", "error");
+      setFeedback(friendlyAuthError(error), "error");
     } finally {
       submit.disabled = false;
       submit.innerHTML = original;
@@ -482,11 +497,12 @@
       await saveOwnProfile({
         display_name: el("profile-edit-display-name").value,
         avatar_url: el("profile-edit-avatar-url").value,
+        cover_url: el("profile-edit-cover-url")?.value || "",
         bio: el("profile-edit-bio").value
       });
       setProfileFeedback("Profilin güncellendi.", "success");
     } catch (error) {
-      setProfileFeedback(error?.message || "Profil kaydedilemedi.", "error");
+      setProfileFeedback(friendlyAuthError(error) || "Profil kaydedilemedi.", "error");
     } finally {
       button.disabled = false; button.textContent = "Profili Kaydet ↗";
     }

@@ -14,12 +14,22 @@
   let loadingConversations = false;
   let loadingMessages = false;
   let pollTimer = null;
+  let typingStopTimer = null;
+  let peerTypingTimer = null;
+  let localTypingActive = false;
 
   function say(id, message, type = "") {
     const node = $(id);
     if (!node) return;
     node.textContent = message || "";
     node.className = id === "dm-list-status" ? "inline-status" + (type ? ` ${type}` : "") : "dm-chat-status" + (type ? ` ${type}` : "");
+  }
+  function friendlyError(error, fallback = "İşlem tamamlanamadı. Biraz sonra tekrar dene.") {
+    const raw = String(error?.message || "").toLowerCase(), code = String(error?.code || "");
+    if (code === "42501" || /row-level security|permission denied|not allowed/.test(raw)) return "Bu işlem için erişim izni yok. Oturumunu ve Supabase politikalarını kontrol et.";
+    if (/failed to fetch|networkerror|load failed|fetch failed/.test(raw)) return "Bağlantı kurulamadı. İnternetini kontrol edip tekrar dene.";
+    if (/schema cache|could not find the table|relation .* does not exist/.test(raw)) return "Mesajlaşma tabloları eksik. 02_direct_messages.sql ve 06_profiles_pwa_realtime.sql kurulumlarını kontrol et.";
+    return fallback;
   }
   function nowTime(value) {
     if (!value) return "";
@@ -38,6 +48,27 @@
   }
   function currentUserId() { return window.MortaLeague?.session?.user?.id || null; }
   function currentClient() { return window.MortaLeague?.client || null; }
+  function setPeerStatus(online, label) {
+    const node=$("dm-peer-status");if(!node)return;
+    node.textContent=label|| (online?"Çevrimiçi":"Çevrimdışı");
+    node.classList.toggle("is-online",Boolean(online));
+  }
+  function showPeerTyping(typing) {
+    const node=$("dm-typing-status");if(!node)return;
+    node.hidden=!typing;node.textContent=typing?`${activePeer?.display_name||activePeer?.username||"Oyuncu"} yazıyor…`:"";
+  }
+  function broadcastTyping(typing) {
+    if(!activeChannel||!currentUserId())return;
+    if(typing===localTypingActive&&!typing)return;
+    localTypingActive=Boolean(typing);
+    try{Promise.resolve(activeChannel.send({type:"broadcast",event:"typing",payload:{user_id:currentUserId(),typing:localTypingActive}})).catch(()=>{});}catch(_){}
+  }
+  function noteTypingInput() {
+    if(!currentCanSend||!activeChannel)return;
+    if(!localTypingActive)broadcastTyping(true);
+    clearTimeout(typingStopTimer);
+    typingStopTimer=setTimeout(()=>broadcastTyping(false),1100);
+  }
   function setNavUnread(count) {
     const badge = $("dm-nav-unread");
     if (!badge) return;
@@ -75,6 +106,8 @@
       return;
     }
     loadingConversations = true;
+    const listHost = $("dm-conversation-list");
+    if(listHost && !conversations.length) listHost.innerHTML = '<div class="skeleton-card skeleton-player" aria-hidden="true"><span class="skeleton-line skeleton-short"></span><span class="skeleton-line"></span><span class="skeleton-line skeleton-medium"></span></div><div class="skeleton-card skeleton-player" aria-hidden="true"><span class="skeleton-line skeleton-short"></span><span class="skeleton-line"></span></div>';
     try {
       const result = await window.MortaLeague.listDirectConversations();
       conversations = Array.isArray(result) ? result : [];
@@ -87,7 +120,8 @@
         if (active?.otherProfile) activePeer = active.otherProfile;
       }
     } catch (error) {
-      say("dm-list-status", error?.message || "Sohbet listesi yüklenemedi. 02_direct_messages.sql dosyasını Supabase'te çalıştırdığını kontrol et.", "error");
+      say("dm-list-status", friendlyError(error,"Sohbet listesi yüklenemedi. 02_direct_messages.sql dosyasının Supabase'te kurulu olduğunu kontrol et."), "error");
+      if(listHost)listHost.innerHTML='<div class="dm-sidebar-empty">Sohbetler yüklenemedi. İnternet bağlantını ve SQL kurulumunu kontrol et.</div>';
     } finally {
       loadingConversations = false;
     }
@@ -162,7 +196,7 @@
         await window.MortaLeague.markDirectMessagesRead(activeConversationId);
       }
     } catch (error) {
-      say("dm-chat-status", error?.message || "Mesajlar yüklenemedi. SQL kurulumunu kontrol et.", "error");
+      say("dm-chat-status", friendlyError(error,"Mesajlar yüklenemedi. Sohbet SQL kurulumunu ve bağlantını kontrol et."), "error");
     } finally {
       loadingMessages = false;
     }
@@ -184,6 +218,7 @@
   }
   async function openConversation(conversationId, peer) {
     if (!conversationId || !peer) return;
+    clearTimeout(typingStopTimer);clearTimeout(peerTypingTimer);localTypingActive=false;showPeerTyping(false);
     if (activeChannel && currentClient()) {
       try { await currentClient().removeChannel(activeChannel); } catch (_) {}
       activeChannel = null;
@@ -200,19 +235,40 @@
     avatar.innerHTML = avatarHTML(peer, "dm-chat-avatar-inner");
     $("dm-chat-name").textContent = name;
     $("dm-chat-username").textContent = "@" + (peer.username || "oyuncu");
-    $("dm-message-list").innerHTML = '<div class="dm-sidebar-empty">Mesajlar yükleniyor…</div>';
+    setPeerStatus(false,"Bağlanıyor…");
+    $("dm-message-list").innerHTML = '<div class="skeleton-card skeleton-message" aria-hidden="true"><span class="skeleton-line skeleton-short"></span><span class="skeleton-line"></span><span class="skeleton-line skeleton-medium"></span></div><div class="skeleton-card skeleton-message skeleton-message-right" aria-hidden="true"><span class="skeleton-line skeleton-short"></span><span class="skeleton-line"></span></div>';
     say("dm-chat-status", "Sohbet yükleniyor…");
     await updateCurrentBlockState();
     await refreshActiveMessages(true);
     await loadConversations();
     const client = currentClient();
     if (client) {
-      activeChannel = client.channel(`mortaleague-dm-${conversationId}`)
+      activeChannel = client.channel(`mortaleague-dm-${conversationId}`, {
+        config: { private: true, presence: { key: currentUserId() }, broadcast: { ack: true } }
+      })
         .on("postgres_changes", { event: "*", schema: "public", table: "dm_messages", filter: `conversation_id=eq.${conversationId}` }, async () => {
           await refreshActiveMessages(true);
           await loadConversations();
         })
-        .subscribe();
+        .on("presence", { event: "sync" }, () => {
+          if (!activeChannel || !activePeer) return;
+          const presence = activeChannel.presenceState() || {};
+          setPeerStatus(Boolean(presence[activePeer.id]?.length));
+        })
+        .on("broadcast", { event: "typing" }, ({ payload }) => {
+          if (!payload || payload.user_id === currentUserId()) return;
+          showPeerTyping(payload.typing === true);
+          clearTimeout(peerTypingTimer);
+          if (payload.typing === true) peerTypingTimer=setTimeout(()=>showPeerTyping(false),2200);
+        })
+        .subscribe(async status => {
+          if (status === "SUBSCRIBED" && activeChannel) {
+            try { await activeChannel.track({ user_id: currentUserId(), online_at: new Date().toISOString() }); }
+            catch (_) { setPeerStatus(false,"Durum alınamadı"); }
+          } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+            setPeerStatus(false,"Canlı durum kullanılamıyor");
+          }
+        });
     }
     const input = $("dm-message-input");
     if (input && currentCanSend) input.focus({ preventScroll: true });
@@ -287,6 +343,7 @@
   $("dm-message-input")?.addEventListener("input", event => {
     const count = $("dm-character-count");
     if (count) count.textContent = `${event.target.value.length} / 2000`;
+    noteTypingInput();
   });
   $("dm-send-form")?.addEventListener("submit", async event => {
     event.preventDefault();
@@ -297,6 +354,7 @@
     if (!body || !currentCanSend) return;
     button.disabled = true;
     button.textContent = "Gönderiliyor…";
+    clearTimeout(typingStopTimer);broadcastTyping(false);
     try {
       await window.MortaLeague.sendDirectMessage(activeConversationId, body);
       input.value = "";
@@ -329,7 +387,7 @@
       await updateCurrentBlockState();
       await loadConversations();
     } catch (error) {
-      say("dm-chat-status", error?.message || "Engelleme işlemi tamamlanamadı.", "error");
+      say("dm-chat-status", friendlyError(error,"Engelleme işlemi tamamlanamadı."), "error");
     } finally {
       button.disabled = false;
     }
@@ -355,6 +413,7 @@
       activeConversationId = null;
       activePeer = null;
       currentCanSend = false;
+      clearTimeout(typingStopTimer);clearTimeout(peerTypingTimer);localTypingActive=false;showPeerTyping(false);setPeerStatus(false);
       document.querySelector(".messages-shell")?.classList.remove("dm-mobile-chat-open");
       setNavUnread(0);
       if (activeChannel && currentClient()) {
@@ -372,8 +431,9 @@
   });
   window.addEventListener("ml:page-change", event => {
     if (event.detail?.page !== "messages" && activeChannel && currentClient()) {
+      clearTimeout(typingStopTimer);clearTimeout(peerTypingTimer);localTypingActive=false;
       currentClient().removeChannel(activeChannel).catch(() => {});
-      activeChannel = null;
+      activeChannel = null;showPeerTyping(false);setPeerStatus(false);
     }
   });
   $("dm-chat-empty").hidden = false;

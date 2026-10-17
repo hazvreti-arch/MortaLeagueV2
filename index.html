@@ -18,7 +18,7 @@
    <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 21 12l-9 9.2L3 12 12 2.8Z" fill="#D9A5FF" stroke="#F0DAFF" stroke-width="1.1"/><path d="m12 6.5 5.4 5.5-5.4 5.5L6.6 12 12 6.5Z" fill="#9A4BCA"/></svg></span>
    <span><span class="brand-name">MORTALEAGUE</span><span class="brand-tagline">THE DARK FOOTBALL ERA</span></span>
   </a>
-  <nav class="nav" aria-label="Ana gezinme"><button class="active" data-page="home">Ana Sayfa</button><button data-page="systems">Sistemler</button><button data-page="players">Oyuncular</button><button data-page="messages">Mesajlar <span class="nav-unread" id="dm-nav-unread" hidden>0</span></button><button class="mobile-auth-nav" type="button" data-auth-open>Giriş Yap</button></nav>
+  <nav class="nav" aria-label="Ana gezinme"><button class="active" data-page="home">Ana Sayfa</button><button data-page="systems">Sistemler</button><button data-page="players">Oyuncular</button><button data-page="community">Topluluk <span class="nav-unread" id="social-nav-unread" hidden>0</span></button><button data-page="messages">Mesajlar <span class="nav-unread" id="dm-nav-unread" hidden>0</span></button><button class="mobile-auth-nav" type="button" data-auth-open>Giriş Yap</button></nav>
   <div class="header-cta"><button class="btn btn-outline" data-page="rules">Kuralları Gör <span>→</span></button><button class="btn btn-primary account-btn" id="account-trigger" type="button" data-auth-open><span class="account-glyph">↗</span><span id="account-trigger-label">Giriş Yap</span></button></div>
  </div>
 </header>
@@ -29,7 +29,7 @@
    <div class="online-pill"><span class="online-dot"></span> MORTALEAGUE / FUTBOL EVRENİ</div>
    <h1 class="hero-title"><span>OYUNUN</span><span class="gradient">KARANLIK</span><span>YÜZÜ.</span></h1>
    <p class="hero-description">Oyuncu profilleri, turnuva kuralları ve MortaLeague sistemleri tek yerde. Profilini oluştur, topluluğa katıl ve kuralları keşfet.</p>
-   <div class="hero-actions"><button class="btn btn-primary" data-auth-open>Hesap Oluştur <span>↗</span></button><button class="btn btn-secondary" data-page="systems">Sistemleri İncele</button><button class="btn btn-outline" data-page="players">Oyuncuları Gör</button></div>
+   <div class="hero-actions"><button class="btn btn-primary" data-auth-open>Hesap Oluştur <span>↗</span></button><button class="btn btn-secondary" data-page="systems">Sistemleri İncele</button><button class="btn btn-outline" data-page="players">Oyuncuları Gör</button><button class="btn btn-secondary" data-page="community">Topluluğa Katıl ↗</button></div>
   </div>
   <div class="hero-art" aria-label="MORTALEAGUE M arması">
    <div class="orbit"></div><div class="orbit-glow"></div>
@@ -60,6 +60,46 @@
  <div class="systems-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input id="players-search" type="search" placeholder="Oyuncu adı veya kullanıcı adı ara…" autocomplete="off"></label><button class="btn btn-secondary" id="players-refresh" type="button">Yenile ↻</button></div>
  <div id="players-status" class="inline-status" role="status" aria-live="polite">Oyuncular yükleniyor…</div>
  <div class="players-grid" id="players-grid"></div>
+</section>
+<section class="page" id="page-community">
+ <div class="page-head"><div class="eyebrow">MORTALEAGUE / COMMUNITY</div><h1>OYUNCU <span>TOPLULUĞU.</span></h1><p>Gönderilerini paylaş, oyuncuları takip et, bildirimlerini gör ve başarı rozetlerini topla.</p></div>
+ <div class="community-tabs" role="tablist" aria-label="Topluluk bölümleri">
+  <button type="button" class="active" data-community-tab="feed" role="tab" aria-selected="true">Akış</button>
+  <button type="button" data-community-tab="discover" role="tab" aria-selected="false">Oyuncu keşfet</button>
+  <button type="button" data-community-tab="notifications" role="tab" aria-selected="false">Bildirimler <span class="nav-unread" id="social-tab-unread" hidden>0</span></button>
+  <button type="button" data-community-tab="achievements" role="tab" aria-selected="false">Başarımlar</button>
+ </div>
+ <div class="community-pane" data-community-pane="feed">
+  <div class="community-feed-layout">
+   <div class="community-main-column">
+    <div class="social-suspended-note" id="social-suspended-note" hidden>Hesabın geçici olarak kısıtlandı. Gönderi paylaşma, yorum, beğeni ve takip işlemleri kapalı.</div>
+    <form class="social-compose" id="social-post-form">
+     <div class="social-compose-heading"><div><span class="auth-kicker">YENİ PAYLAŞIM</span><h2>Maçın ne durumda?</h2></div><span class="season-tag">TOPLULUK AKIŞI</span></div>
+     <label class="sr-only" for="social-post-content">Gönderi metni</label><textarea id="social-post-content" rows="4" maxlength="1200" required placeholder="Antrenmanını, maç yorumunu veya futbol gündemini paylaş…"></textarea>
+     <div class="social-compose-footer"><label class="social-image-upload"><span>＋ Telefonda fotoğraf seç · en fazla 5 MB</span><input id="social-post-image-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" aria-label="Gönderiye fotoğraf ekle"></label><label class="social-image-url"><span>Veya görsel bağlantısı</span><input id="social-post-image-url" type="url" maxlength="1000" placeholder="https://… (isteğe bağlı)" autocomplete="url"></label><span class="social-compose-limit">Metin en fazla 1200 karakter</span><button class="btn btn-primary" id="social-post-submit" type="submit">Paylaş ↗</button></div>
+    </form>
+    <div class="social-feed-toolbar"><div class="social-filter-tabs"><button type="button" class="active" data-social-feed-filter="all">Tüm akış</button><button type="button" data-social-feed-filter="following">Takip ettiklerim</button></div><button class="btn btn-secondary" id="social-feed-refresh" type="button">Yenile ↻</button></div>
+    <div class="inline-status social-status" id="social-feed-status" role="status" aria-live="polite">Akış hazırlanıyor…</div>
+    <div id="social-feed-list" class="social-feed-list"></div>
+   </div>
+   <aside class="community-side-column">
+    <section class="social-side-panel"><div class="social-side-title"><div><span class="auth-kicker">SENİN TOPLULUĞUN</span><h2>Oyuncuları keşfet</h2></div></div><p>Yeni oyuncular bul, onları takip et ve paylaşımlarını akışında gör.</p><button class="btn btn-outline" type="button" data-community-tab="discover">Oyuncu keşfet ↗</button></section>
+    <section class="social-side-panel"><div class="social-side-title"><div><span class="auth-kicker">BİR SONRAKİ HEDEF</span><h2>Başarımlar</h2></div><span class="social-side-glyph">✦</span></div><p>Gönderi paylaş, etkileşim kur ve profilinde rozetler biriktir.</p><button class="btn btn-outline" type="button" data-community-tab="achievements">Rozetlerini gör ↗</button></section>
+   </aside>
+  </div>
+ </div>
+ <div class="community-pane" data-community-pane="discover" hidden>
+  <div class="systems-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input id="social-discover-search" type="search" placeholder="Kullanıcı adı, görünen ad veya biyografi ara…" autocomplete="off"></label><button class="btn btn-secondary" id="social-discover-refresh" type="button">Yenile ↻</button></div>
+  <div class="inline-status social-status" id="social-discover-status" role="status" aria-live="polite">Oyuncular yükleniyor…</div><div id="social-discover-list" class="social-discover-list"></div>
+ </div>
+ <div class="community-pane" data-community-pane="notifications" hidden>
+  <div class="social-section-toolbar"><div><h2>Bildirim merkezi</h2><p>Yeni mesajlar, duyurular, takipler, beğeniler, yorumlar ve rozet bildirimleri.</p></div><div><button class="btn btn-secondary" type="button" id="social-notifications-refresh">Yenile ↻</button> <button class="btn btn-outline" type="button" data-social-mark-all>Hepsini okundu yap</button></div></div>
+  <div class="inline-status social-status" id="social-notifications-status" role="status" aria-live="polite"></div><div id="social-notifications-list" class="social-notifications-list"></div>
+ </div>
+ <div class="community-pane" data-community-pane="achievements" hidden>
+  <div class="social-section-toolbar"><div><h2>Başarım koleksiyonu</h2><p>Topluluğa katıldıkça otomatik kazanılan rozetler.</p></div></div>
+  <div class="inline-status social-status" id="social-achievements-status" role="status" aria-live="polite"></div><div id="social-achievements-list" class="social-achievements-grid"></div>
+ </div>
 </section>
 <section class="page" id="page-messages">
  <div class="page-head"><div class="eyebrow">PRIVATE / PLAYER CHAT</div><h1>ÖZEL <span>MESAJLAR.</span></h1><p>MortaLeague oyuncularıyla bire bir sohbet et. Sohbetler yalnızca konuşmanın katılımcılarına açıktır.</p></div>
@@ -102,6 +142,8 @@
   <section class="admin-panel"><div class="section-heading"><div><h2>YENİ DUYURU</h2><p>Yayınlanan duyurular ana sayfada görünür.</p></div></div><form id="announcement-form" class="admin-form"><label class="auth-field">Başlık<input id="announcement-title" name="title" type="text" maxlength="100" required placeholder="Duyuru başlığı"></label><label class="auth-field">İçerik<textarea id="announcement-content" name="content" rows="4" maxlength="3000" required placeholder="Topluluğa iletmek istediğin mesaj…"></textarea></label><button class="btn btn-primary" type="submit" id="announcement-submit">Duyuruyu Yayınla ↗</button><p id="announcement-feedback" class="auth-feedback" role="status" aria-live="polite"></p></form></section>
   <section class="admin-panel"><div class="section-heading"><div><h2>OYUNCU YÖNETİMİ</h2><p>Hesapları ve herkese açık profil alanlarını görüntüle; profil bilgilerini düzenleyebilirsin.</p></div></div><div class="systems-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input id="admin-users-search" type="search" placeholder="Üye ara…" autocomplete="off"></label><button class="btn btn-secondary" id="admin-refresh" type="button">Yenile ↻</button></div><div id="admin-users-status" class="inline-status" role="status" aria-live="polite"></div><div class="admin-users-list" id="admin-users-list"></div></section>
   <section class="admin-panel"><div class="section-heading"><div><h2>YAYINLANAN DUYURULAR</h2><p>Gerektiğinde duyuruları kaldırabilirsin.</p></div></div><div id="admin-announcements" class="announcement-list"></div></section>
+  <section class="admin-panel"><div class="section-heading"><div><h2>TOPLULUK MODERASYONU</h2><p>Şikâyet edilen gönderi, yorum, profil ve özel mesajları incele. Gerekirse içeriği kaldır veya hesabı askıya al.</p></div><button class="btn btn-secondary" type="button" id="social-reports-refresh">Yenile ↻</button></div><div id="social-reports-status" class="inline-status social-status" role="status" aria-live="polite"></div><div id="social-reports-list" class="social-reports-list"></div></section>
+  <section class="admin-panel"><div class="section-heading"><div><h2>YÖNETİCİ İŞLEM GEÇMİŞİ</h2><p>İçerik kaldırma, rapor çözme ve hesap kısıtlama işlemleri burada kaydedilir.</p></div><button class="btn btn-secondary" type="button" id="social-audit-refresh">Yenile ↻</button></div><div id="social-audit-status" class="inline-status social-status" role="status" aria-live="polite"></div><div id="social-audit-list" class="social-audit-list"></div></section>
  </div>
 </section>
 <section class="page" id="page-rules">
@@ -196,5 +238,6 @@
 <script src="app.js"></script>
 <script src="auth.js"></script>
 <script src="messages.js"></script>
+<script src="social.js"></script>
 </body>
 </html>

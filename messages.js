@@ -139,7 +139,7 @@
     host.innerHTML = rows.map(message => {
       const own = message.sender_id === viewerId;
       const receipt = own ? (message.read_at ? "Okundu" : "Gönderildi") : "";
-      return `<article class="dm-message-row ${own ? "mine" : "theirs"}" data-message-id="${esc(message.id)}"><div class="dm-message-bubble"><p>${esc(message.body)}</p><footer><time>${esc(nowTime(message.created_at))}</time>${receipt ? `<span>${receipt}</span>` : ""}</footer></div></article>`;
+      return `<article class="dm-message-row ${own ? "mine" : "theirs"}" data-message-id="${esc(message.id)}"><div class="dm-message-bubble"><p>${esc(message.body)}</p><footer><time>${esc(nowTime(message.created_at))}</time>${receipt ? `<span>${receipt}</span>` : ""}${!own?`<button type="button" class="dm-report-message" data-report-dm-message="${esc(message.id)}" title="Mesajı şikâyet et">Şikâyet</button>`:""}</footer></div></article>`;
     }).join("");
     host.scrollTop = host.scrollHeight;
   }

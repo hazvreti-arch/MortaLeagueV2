@@ -96,7 +96,7 @@
     }
     try {
       const { data, error } = await client.from("profiles")
-        .select("id, username, display_name, bio, avatar_url, role, created_at")
+        .select("id, username, display_name, bio, avatar_url, role, is_suspended, created_at")
         .eq("id", currentSession.user.id)
         .maybeSingle();
       if (requestId !== profileRequest) return currentProfile;
@@ -116,7 +116,7 @@
           img.style.width = "100%"; img.style.height = "100%"; img.style.objectFit = "cover";
           avatarNode.replaceChildren(img);
         }
-        el("profile-status").textContent = currentProfile.role === "admin" ? "Yönetici hesabı" : "Oturum açık";
+        el("profile-status").textContent = currentProfile.role === "admin" ? "Yönetici hesabı" : (currentProfile.is_suspended ? "Hesap kısıtlandı" : "Oturum açık");
         fillProfileEditor(currentProfile);
         el("profile-admin-open").hidden = currentProfile.role !== "admin";
         el("profile-feedback").textContent = "";
@@ -214,7 +214,7 @@
   async function listAdminProfiles() {
     if (!isAdmin()) throw new Error("Bu işlem için yönetici yetkisi gerekli.");
     const { data, error } = await client.from("profiles")
-      .select("id, username, display_name, bio, avatar_url, role, created_at")
+      .select("id, username, display_name, bio, avatar_url, role, is_suspended, created_at")
       .order("created_at", { ascending: false }).limit(500);
     if (error) throw error;
     return data || [];

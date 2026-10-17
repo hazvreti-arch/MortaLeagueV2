@@ -170,7 +170,7 @@ systemGrid.addEventListener("click",e=>{const btn=e.target.closest("[data-system
 systemClose.addEventListener("click",closeSystemDetail);
 systemBackdrop.addEventListener("click",e=>{if(e.target===systemBackdrop)closeSystemDetail();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape" && !systemBackdrop.hidden)closeSystemDetail();});
-const validPages=["home","systems","players","messages","admin","rules"];
+const validPages=["home","systems","players","community","messages","admin","rules"];
 let cachedPlayers=[];
 let cachedAdminPlayers=[];
 let cachedAnnouncements=[];
@@ -187,7 +187,7 @@ function setInlineStatus(id,message,type=""){const node=document.getElementById(
 function setMessage(id,message,type=""){const node=document.getElementById(id);if(!node)return;node.textContent=message||"";node.className="auth-feedback"+(type?` ${type}`:"");}
 function showPage(name){
   if(!validPages.includes(name))return;
-  if(name==="messages"&&!window.MortaLeague?.session?.user){
+  if((name==="messages"||name==="community")&&!window.MortaLeague?.session?.user){
     window.MortaLeague?.openAuth();
     return;
   }
@@ -286,12 +286,24 @@ function renderAdminPlayers(){
   const host=document.getElementById("admin-users-list");if(!host)return;
   const q=(document.getElementById("admin-users-search")?.value||"").trim().toLocaleLowerCase("tr-TR");
   const rows=cachedAdminPlayers.filter(p=>`${p.username||""} ${p.display_name||""} ${p.bio||""}`.toLocaleLowerCase("tr-TR").includes(q));
-  host.innerHTML=rows.map(p=>`<article class="admin-user-card"><div class="admin-user-main">${avatarMarkup(p.avatar_url,p.display_name||p.username)}<div><strong>${esc(p.display_name||p.username)}</strong><small>@${esc(p.username)} · Katılım: ${esc(formatDate(p.created_at))}</small>${p.role==="admin"?'<span class="admin-badge">YÖNETİCİ</span>':""}</div></div><div class="admin-user-actions"><button class="btn btn-secondary" type="button" data-admin-edit-profile="${esc(p.id)}">Profili düzenle</button></div></article>`).join("");
+  host.innerHTML=rows.map(p=>`<article class="admin-user-card"><div class="admin-user-main">${avatarMarkup(p.avatar_url,p.display_name||p.username)}<div><strong>${esc(p.display_name||p.username)}</strong><small>@${esc(p.username)} · Katılım: ${esc(formatDate(p.created_at))}</small>${p.role==="admin"?'<span class="admin-badge">YÖNETİCİ</span>':p.is_suspended?'<span class="social-suspended-badge">ASKIYA ALINDI</span>':""}</div></div><div class="admin-user-actions"><button class="btn btn-secondary" type="button" data-admin-edit-profile="${esc(p.id)}">Profili düzenle</button>${p.role!=="admin"?`<button class="btn ${p.is_suspended?"btn-outline":"btn-secondary"}" type="button" data-admin-toggle-suspension="${esc(p.id)}" data-next-suspended="${p.is_suspended?"false":"true"}">${p.is_suspended?"Askıyı kaldır":"Hesabı askıya al"}</button>`:""}</div></article>`).join("");
   if(!rows.length)host.innerHTML='<div class="empty-state">Eşleşen üye bulunamadı.</div>';
 }
 document.getElementById("admin-users-search")?.addEventListener("input",renderAdminPlayers);
 document.getElementById("admin-refresh")?.addEventListener("click",loadAdminDashboard);
-document.getElementById("admin-users-list")?.addEventListener("click",e=>{
+document.getElementById("admin-users-list")?.addEventListener("click",async e=>{
+  const suspendButton=e.target.closest("[data-admin-toggle-suspension]");
+  if(suspendButton){
+    if(!window.MortaLeague?.isAdmin())return;
+    const targetId=suspendButton.dataset.adminToggleSuspension;
+    const shouldSuspend=suspendButton.dataset.nextSuspended==="true";
+    const confirmed=window.confirm(shouldSuspend?"Bu hesabı askıya almak istiyor musun? Kullanıcı gönderi, yorum, beğeni, takip ve mesaj işlemi yapamaz.":"Bu hesabın kısıtlamasını kaldırmak istiyor musun?");
+    if(!confirmed)return;
+    suspendButton.disabled=true;
+    try{const {error}=await window.MortaLeague.client.rpc("admin_set_profile_suspension",{target_profile_id:targetId,should_suspend:shouldSuspend});if(error)throw error;await loadAdminDashboard();}
+    catch(error){setInlineStatus("admin-users-status",error?.message||"Hesap durumu değiştirilemedi.","error");suspendButton.disabled=false;}
+    return;
+  }
   const b=e.target.closest("[data-admin-edit-profile]");if(!b)return;
   if(!window.MortaLeague?.isAdmin())return;
   const p=cachedAdminPlayers.find(x=>x.id===b.dataset.adminEditProfile);if(!p)return;

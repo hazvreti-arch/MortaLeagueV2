@@ -153,6 +153,9 @@
     document.querySelectorAll(".mobile-auth-nav").forEach(btn => {
       btn.textContent = currentSession?.user ? "Hesabım" : "Giriş Yap";
     });
+    // Do not invite signed-in visitors to create an account again.
+    const heroAuthCta = document.getElementById("hero-auth-cta");
+    if (heroAuthCta) heroAuthCta.hidden = Boolean(currentSession?.user);
     const trigger = el("account-trigger");
     if (trigger) trigger.setAttribute("aria-label", currentSession?.user ? "Hesabımı aç" : "Giriş yap");
     if (!currentSession) currentProfile = null;

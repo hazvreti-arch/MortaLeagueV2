@@ -853,3 +853,18 @@ img, svg, video, canvas { max-width: 100%; }
   .nav button, .nav .mobile-auth-nav { font-size: 9.5px !important; }
   .nav-unread { margin-left: 2px; }
 }
+
+
+/* MOBILE NAV REPAIR: keep navigation in document flow; never cover content. */
+@media (max-width: 900px) {
+  .site-header { height: auto !important; min-height: 66px; position: sticky; top: 0; z-index: 100; }
+  .header-inner { min-height: 66px; }
+  .nav { position: relative !important; inset: auto !important; z-index: 1 !important; display: flex !important; width: 100%; gap: 4px !important; padding: 6px 8px calc(7px + env(safe-area-inset-bottom)) !important; overflow-x: auto; overflow-y: hidden; border-top: 1px solid #442751; border-bottom: 1px solid #2b1934; background: #0b0614; box-shadow: none; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav [data-page="systems"] { display: inline-flex !important; }
+  .nav button, .nav .mobile-auth-nav { flex: 0 0 auto; width: auto; min-width: max-content; min-height: 40px; padding: 8px 12px !important; font-size: 11px !important; }
+  main { padding-bottom: 24px !important; }
+  .hero-art { overflow: visible; }
+  .site-footer { margin-bottom: 0 !important; }
+}
+#hero-auth-cta[hidden] { display: none !important; }

@@ -739,3 +739,117 @@ img, svg, video, canvas { max-width: 100%; }
 .social-image-upload input{display:block;width:100%;min-width:0;min-height:38px;padding:6px 9px;border:1px solid #3a2846;border-radius:9px;background:#0c0611;color:#d4c0e0;font:500 11px 'DM Sans',sans-serif}
 .social-image-upload input::file-selector-button{min-height:28px;margin-right:8px;padding:0 9px;border:1px solid #684281;border-radius:7px;background:#281436;color:#f0dcfa;font:600 10px 'DM Sans',sans-serif}
 @media(max-width:700px){.social-image-upload{flex:1 1 100%}.social-image-upload input{min-height:44px;font-size:12px}.social-image-upload input::file-selector-button{min-height:32px;font-size:11px}}
+
+/* FINAL MOBILE POLISH — make narrow embedded browsers behave like a phone.
+   The Instagram in-app browser can report a wider CSS viewport than expected,
+   so use a 900px breakpoint and remove the header backdrop containing block. */
+.avatar-fallback{display:grid!important;place-items:center!important;overflow:hidden!important;background:linear-gradient(145deg,#432257,#1b1028)!important;color:#f0d8ff!important;font-family:'Orbitron',sans-serif!important;font-weight:800!important;text-align:center!important;line-height:1!important}
+@media (max-width: 900px) {
+  html { scroll-padding-top: 72px; }
+  body { min-width: 320px; width: 100%; max-width: 100%; overflow-x: hidden; }
+  .site-header { height: 66px; top: 0; position: sticky; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: #0a0610f7; }
+  .header-inner { display: flex; align-items: center; justify-content: space-between; width: auto; max-width: 100%; height: 100%; margin: 0 17px; }
+  .brand { min-width: 0; gap: 9px; }
+  .brand-mark { width: 32px; height: 32px; }
+  .brand-name { font-size: 12px; letter-spacing: 1px; }
+  .brand-tagline { font-size: 7px; letter-spacing: 1.8px; }
+  .header-cta { display: none !important; }
+  .nav { position: fixed !important; z-index: 150 !important; left: 0; right: 0; bottom: 0; top: auto; width: 100%; display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 3px !important; padding: 7px 7px calc(7px + env(safe-area-inset-bottom)) !important; margin: 0; border: 0; border-top: 1px solid #442751; border-radius: 0; background: rgba(11,6,20,.97); box-shadow: 0 -9px 28px rgba(0,0,0,.28); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+  .nav [data-page="systems"] { display: none !important; }
+  .nav button, .nav .mobile-auth-nav { display: inline-flex; align-items: center; justify-content: center; min-width: 0; min-height: 46px; width: 100%; margin: 0; padding: 8px 2px !important; border-radius: 9px; font-size: 10.5px !important; line-height: 1.2; letter-spacing: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav button.active { border-color: #604070; background: linear-gradient(135deg,#281436,#1b0c25); }
+  .nav-unread { min-width: 15px; height: 15px; margin-left: 3px; font-size: 8px; }
+  main { width: auto; max-width: 100%; margin: 0 18px; padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .page { min-height: calc(100svh - 66px); padding: 30px 0 34px; }
+  .page-head { margin-bottom: 23px; }
+  .page-head .eyebrow, .eyebrow { font-size: 10px; letter-spacing: 1.35px; line-height: 1.5; }
+  .page h1 { margin: 12px 0 10px; font-size: clamp(28px, 6vw, 42px); line-height: 1.12; letter-spacing: -1.2px; overflow-wrap: anywhere; }
+  .page-head > p { max-width: 70ch; font-size: 14px; line-height: 1.72; }
+  .hero { display: flex; flex-direction: column; align-items: stretch; gap: 10px; min-height: unset; padding: 31px 0 25px; }
+  .hero-copy { padding: 0; }
+  .online-pill { width: fit-content; max-width: 100%; padding: 8px 11px; font-size: 10px; letter-spacing: .4px; }
+  .hero-title { max-width: 100%; margin: 21px 0 14px; font-size: clamp(42px, 7.2vw, 60px); line-height: 1.04; letter-spacing: -2.5px; }
+  .hero-description { max-width: 60ch; font-size: 15px; line-height: 1.72; }
+  .hero-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 9px; margin-top: 20px; }
+  .hero-actions .btn { width: 100%; min-width: 0; min-height: 48px; padding: 0 10px; font-size: 12px; }
+  .hero-art { width: 100%; height: clamp(270px, 38vw, 330px); margin: 3px 0 0; transform: none !important; order: 2; }
+  .orbit { width: min(280px, 70vw); height: min(280px, 70vw); }
+  .crest { width: 158px; height: 205px; }
+  .crest-letter { font-size: 78px; }
+  .floating-stat { min-width: 84px; padding: 10px 11px; }
+  .stat-season { top: 23px; right: 2px; }
+  .stat-players { top: 126px; left: 0; }
+  .dna { padding-bottom: 36px; }
+  .section-heading { align-items: flex-start; gap: 10px; margin-bottom: 15px; }
+  .section-heading h2 { font-size: clamp(16px, 3vw, 21px); line-height: 1.35; letter-spacing: -.4px; }
+  .section-heading p { max-width: none; font-size: 13px; line-height: 1.65; }
+  .season-tag { flex-shrink: 0; padding: 6px 8px; font-size: 8px; }
+  .dna-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .dna-card { min-width: 0; min-height: 0; padding: 14px; border-radius: 13px; }
+  .dna-card h3 { font-size: 14px; line-height: 1.4; }
+  .dna-card p { font-size: 12px; line-height: 1.68; }
+  .systems-grid { grid-template-columns: 1fr; gap: 10px; }
+  .system-card { min-height: 0; padding: 16px; }
+  .system-card h3 { font-size: 15px; line-height: 1.45; }
+  .system-card p { font-size: 13px; line-height: 1.72; }
+  .systems-toolbar { align-items: stretch; gap: 9px; flex-wrap: wrap; }
+  .systems-toolbar .search-field { flex: 1 1 100%; max-width: 100%; min-width: 0; }
+  .search-field { min-height: 48px; }
+  .search-field input, .dm-search-field input { min-width: 0; font-size: 16px; }
+  .players-grid { grid-template-columns: 1fr; gap: 10px; }
+  .player-card { grid-template-columns: 60px minmax(0,1fr); gap: 12px; padding: 14px; }
+  .player-card-main { min-width: 0; }
+  .player-card h3 { font-size: 16px; overflow-wrap: anywhere; }
+  .player-card .player-bio { font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+  .admin-stats { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; }
+  .admin-stat { min-width: 0; padding: 13px; }
+  .admin-stat:last-child { grid-column: 1 / -1; }
+  .admin-panel { min-width: 0; padding: 15px; border-radius: 14px; }
+  .admin-panel .section-heading { align-items: flex-start; flex-wrap: wrap; }
+  .admin-panel .section-heading h2 { font-size: 16px; }
+  .admin-panel .section-heading p { font-size: 13px; line-height: 1.65; }
+  .admin-form { gap: 12px; }
+  .admin-form .auth-field { font-size: 13px; }
+  .auth-field input, .auth-field textarea, .admin-form input, .admin-form textarea { width: 100%; min-width: 0; min-height: 46px; font-size: 16px; }
+  .admin-form textarea { min-height: 120px; padding: 12px; line-height: 1.65; }
+  .admin-form .btn { width: 100%; min-height: 48px; }
+  .announcement-card { padding: 15px; }
+  .announcement-card p { font-size: 13px; line-height: 1.75; }
+  .community-tabs { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px; padding: 6px; }
+  .community-tabs button { min-height: 44px; padding: 0 7px; font-size: 11px; }
+  .community-feed-layout { grid-template-columns: 1fr; gap: 12px; }
+  .community-side-column { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; }
+  .community-side-column > * { min-width: 0; }
+  .social-compose { padding: 14px; }
+  .social-compose textarea, .social-image-url input { font-size: 16px; }
+  .social-compose-footer { align-items: stretch; }
+  .social-image-url, .social-image-upload { flex: 1 1 100%; min-width: 0; }
+  .social-image-url input { min-height: 44px; }
+  .social-compose-footer > .btn { width: 100%; min-height: 48px; }
+  .social-post-card, .social-side-panel, .social-notification, .achievement-card { min-width: 0; }
+  .social-discover-list, .social-achievements-grid { grid-template-columns: 1fr; }
+  .social-report-actions .btn { flex: 1 1 100%; min-height: 42px; }
+  .messages-shell { grid-template-columns: minmax(0,1fr); gap: 12px; min-height: 0; padding-bottom: 30px; }
+  .messages-sidebar, .messages-chat-pane { min-width: 0; border-radius: 14px; }
+  .messages-shell:not(.dm-mobile-chat-open) .messages-chat-pane { display: none; }
+  .messages-shell.dm-mobile-chat-open .messages-sidebar { display: none; }
+  .messages-shell.dm-mobile-chat-open .messages-chat-pane { display: flex; min-height: calc(100svh - 170px); }
+  .messages-shell.dm-mobile-chat-open .dm-message-list { flex: 1; max-height: none; min-height: 0; }
+  .dm-composer textarea, .social-comment-form input { min-height: 46px; font-size: 16px; }
+  .rules-grid { grid-template-columns: 1fr; gap: 10px; }
+  .site-footer { flex-direction: column; gap: 7px; margin: 0; padding-bottom: 10px; font-size: 9px; }
+  .ambient:before { opacity: .28; }
+  #particle-canvas { opacity: .24; }
+  .ambient-sweep, .pointer-aura { display: none !important; }
+}
+@media (max-width: 420px) {
+  main { margin-left: 14px; margin-right: 14px; }
+  .hero-title { font-size: clamp(38px, 10vw, 46px); letter-spacing: -2px; }
+  .hero-actions { grid-template-columns: 1fr; }
+  .hero-actions .btn { min-height: 45px; }
+  .community-side-column { grid-template-columns: 1fr; }
+  .admin-stats { grid-template-columns: 1fr 1fr; }
+  .admin-stat:last-child { grid-column: 1 / -1; }
+  .nav button, .nav .mobile-auth-nav { font-size: 9.5px !important; }
+  .nav-unread { margin-left: 2px; }
+}

@@ -176,6 +176,17 @@ let cachedAdminPlayers=[];
 let cachedAnnouncements=[];
 const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const initials=value=>String(value||"ML").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"ML";
+// Broken third-party avatar URLs should fall back to initials instead of showing
+// the browser's broken-image icon and wrapped alt text.
+document.addEventListener("error",event=>{
+  const img=event.target;
+  if(!(img instanceof HTMLImageElement)||! /profil fotoğrafı$/i.test(img.alt||""))return;
+  const wrapper=img.parentElement;
+  if(!wrapper||wrapper.dataset.avatarFallbackDone==="true")return;
+  wrapper.dataset.avatarFallbackDone="true";
+  wrapper.textContent=initials((img.alt||"").replace(/\s+profil fotoğrafı$/i,""));
+  wrapper.classList.add("avatar-fallback");
+},true);
 const avatarMarkup=(url,name,extra="")=>{
   const safe=String(url||"").trim();
   return safe && /^https:\/\//i.test(safe)
@@ -331,10 +342,22 @@ document.getElementById("admin-edit-form")?.addEventListener("submit",async e=>{
 });
 document.getElementById("announcement-form")?.addEventListener("submit",async e=>{
   e.preventDefault();
+  // Capture the form before the first await. Event.currentTarget is null once
+  // the browser finishes dispatching the event, even inside an async handler.
+  const form=e.currentTarget;
   if(!window.MortaLeague?.isAdmin()){setMessage("announcement-feedback","Yönetici yetkisi gerekli.","error");return;}
-  const btn=document.getElementById("announcement-submit");btn.disabled=true;btn.textContent="Yayınlanıyor…";
-  try{await window.MortaLeague.createAnnouncement({title:document.getElementById("announcement-title").value.trim(),content:document.getElementById("announcement-content").value.trim()});e.currentTarget.reset();setMessage("announcement-feedback","Duyuru yayınlandı.","success");await loadAdminDashboard();await loadAnnouncements();}
-  catch(error){setMessage("announcement-feedback",error?.message||"Duyuru yayınlanamadı.","error");}
+  const btn=form.querySelector('button[type="submit"]');
+  const title=document.getElementById("announcement-title").value.trim();
+  const content=document.getElementById("announcement-content").value.trim();
+  if(!title||!content){setMessage("announcement-feedback","Başlık ve içerik boş bırakılamaz.","error");return;}
+  btn.disabled=true;btn.textContent="Yayınlanıyor…";
+  try{
+    await window.MortaLeague.createAnnouncement({title,content});
+    form.reset();
+    setMessage("announcement-feedback","Duyuru başarıyla yayınlandı.","success");
+    await loadAdminDashboard();
+    await loadAnnouncements();
+  }catch(error){setMessage("announcement-feedback",error?.message||"Duyuru yayınlanamadı.","error");}
   finally{btn.disabled=false;btn.textContent="Duyuruyu Yayınla ↗";}
 });
 document.getElementById("admin-announcements")?.addEventListener("click",async e=>{

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#08040d">
-<title>MORTALLEAGUE — The Dark Football Era | Quality Pass 02</title>
+<title>MORTALLEAGUE — Sistem Kuralları | V2</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 :root{color-scheme:dark;--bg:#08040d;--panel:#110919;--panel2:#170c21;--line:#34203f;--text:#f8f0ff;--muted:#aa9bb8;--purple:#b94bff;--pink:#e34bff;--lav:#d2a5ff;--mint:#81f5d2;--content:1260px}
@@ -314,7 +314,7 @@ body.has-pointer .pointer-aura{opacity:1}
  </div>
 </section>
 <section class="page" id="page-systems">
- <div class="page-head"><div class="eyebrow">THE GAMEPLAY ENGINE</div><h1>SİSTEM <span>MERKEZİ.</span></h1><p>Şimdilik tüm 16 modülün tasarım kartları gösteriliyor. İşlevler görsel tasarım onaylandıktan sonra aşamalı geliştirilecek.</p></div><div class="systems-grid" id="systems-grid"></div>
+ <div class="page-head"><div class="eyebrow">THE GAMEPLAY ENGINE</div><h1>SİSTEM <span>MERKEZİ.</span></h1><p>Gönderilen kuralların tamamı 16 sistem kartında toplandı. Her kartı açarak güncel değerleri, limitleri ve koşulları inceleyebilirsin.</p></div><div class="systems-grid" id="systems-grid"></div>
 </section>
 <section class="page" id="page-rules">
  <div class="page-head"><div class="eyebrow">FAIR PLAY / THE CODE</div><h1>OYUN <span>KURALLARI.</span></h1><p>MORTALLEAGUE'in görsel ve ürün prensipleri. Kesin oyun kuralları özellikler geliştirilirken netleştirilecek.</p></div>
@@ -400,22 +400,139 @@ window.MORTA_CONFIG = {
 </script>
 <script>
 const systems=[
-{title:"Yayın Geliri Sistemi",icon:"◉",short:"Yayın ve yayın etkinliklerinden elde edilen gelirin kaydı ve dağıtımı.",intro:"Yayınlar MortaLeague ekonomisinin bir parçası olacak. Bu bölüm, yayın etkinliklerinin gelirini ve oluşan kayıtları takip etmek için tasarlanıyor.",purpose:"Yayınla ilişkili gelirlerin tek bir yerde kaydedilmesini; gelirin hangi yayın, dönem veya etkinlikten geldiğinin sonradan anlaşılabilmesini sağlar.",items:["Yayın kaydı ve ilgili sezon/etkinlik bilgisi.","Her yayın için oluşan gelirin görüntülenmesi.","Gelir geçmişi ve toplamların raporlanması.","Dağıtım oranlarının yönetim tarafından belirlenebilmesi."],note:"Kesin gelir tutarları ve dağıtım oranları henüz belirlenmedi. Bu değerler uydurulmayacak; kurallar netleşince sisteme eklenecek."},
-{title:"Oyuncu Katkı Değerleri",icon:"↗",short:"Oyuncunun maç ve katkı etkinliklerine ait değerleri ayrı ayrı izlenir.",intro:"Oyuncu katkıları tek bir açıklamasız sayıya sıkıştırılmayacak. Katkının kaynağı, değeri ve hangi etkinlikten geldiği takip edilebilecek.",purpose:"Oyunculara yazılan katkının şeffaf olması ve farklı katkı türlerinin birbirine karışmamasını sağlar.",items:["Maç katkılarının oyuncu profiline kaydedilmesi.","Katkının kaynağının ve değerinin ayrı gösterilmesi.","Antrenman katkısının clean sheet katkısından ayrı tutulması.","Katkı geçmişinin sonradan incelenebilmesi."],note:"Önemli kural: clean sheet, takımın maçı gol yemeden tamamlamasıdır. Bu etkinlik antrenman katkısıyla birleştirilmeyecek. Katkı sınırları ayrıca Katkı Sınırı Sistemi tarafından uygulanacak."},
-{title:"Telefon Satın Alma Sistemi",icon:"▣",short:"Telefon kataloğu, fiyatlar, sahip olunan cihaz ve satın alma geçmişi.",intro:"Oyuncular profilleri üzerinden oyun içi telefon seçeneklerini inceleyebilecek. Katalog, fiyat ve sahiplik durumu aynı arayüzde gösterilecek.",purpose:"Oyuncunun bakiyesine göre bir telefon seçmesini ve satın alma işleminin hesabına doğru biçimde işlenmesini sağlar.",items:["Telefon kataloğu ve her modelin fiyatı.","Satın almadan önce bakiye kontrolü.","Sahip olunan telefonun oyuncu profilinde gösterilmesi.","Satın alma geçmişinin tutulması."],note:"Telefon modelleri, fiyatları ve varsa satın alma limitleri henüz tanımlanmadı. Katalog değerleri yönetim kuralları kesinleştiğinde eklenecek."},
-{title:"Ev Satın Alma Sistemi",icon:"⌂",short:"Ev seçenekleri, fiyatlar, sahiplik durumu ve satın alma kayıtları.",intro:"Evler oyuncunun oyun içi varlıklarından biri olacak. Oyuncu seçenekleri ve sahip olduğu evleri kişisel alanından görebilecek.",purpose:"Ev kataloğunu, satın alma akışını ve oyuncunun sahiplik kayıtlarını düzenli biçimde yönetir.",items:["Ev seçenekleri ve açıklamaları.","Her ev için görüntülenebilir fiyat ve özellikler.","Satın alma öncesi yeterli bakiye kontrolü.","Oyuncunun sahip olduğu evlerin listesi ve işlem geçmişi."],note:"Ev fiyatları, ev sayısı sınırı ve evlerin varsa ek faydaları henüz belirlenmedi; bu aşamada kesinmiş gibi gösterilmeyecek."},
-{title:"Taşıt Alma Sistemi",icon:"➤",short:"Taşıt kataloğu, satın alma, oyuncu sahipliği ve işlem geçmişi.",intro:"Oyuncular oyun içindeki taşıt seçeneklerini inceleyebilecek ve uygun olduklarında satın alma gerçekleştirebilecek.",purpose:"Taşıtların fiyat ve sahiplik bilgilerinin oyuncu profiliyle tutarlı kalmasını sağlar.",items:["Taşıtların katalog hâlinde listelenmesi.","Her taşıt için fiyat ve temel bilgiler.","Satın alma öncesi bakiye kontrolü.","Oyuncunun sahip olduğu taşıt ve geçmiş işlemler."],note:"Taşıtların fiyatları, modelleri ve olası sınırları henüz tanımlanmadı; yönetim tarafından belirlenebilir olacak."},
-{title:"Ödül Sistemi",icon:"✦",short:"Başarı, etkinlik veya sezon şartlarına bağlı ödüllerin takibi.",intro:"Lig içi başarılar ve tanımlanmış etkinlikler ödül kazanılmasını sağlayabilecek. Oyuncu ne kazandığını ve ödülün neden verildiğini görebilecek.",purpose:"Ödülleri gerekçesiyle birlikte kaydetmek ve aynı ödülün yanlışlıkla birden fazla verilmesini önlemek için tasarlanır.",items:["Ödül kataloğu ve ödül açıklamaları.","Ödülün hangi başarı veya etkinlik için verildiği.","Oyuncunun kazandığı ödüllerin geçmişi.","Yönetici tarafından ödül tanımlama ve denetleme."],note:"Ödül miktarları, başarı şartları ve dönemleri henüz kesinleştirilmedi. Sistemin her ödül için gerekçe kaydetmesi hedefleniyor."},
-{title:"UCL / UEL / UECL Oyuncu Katkıları",icon:"♜",short:"Avrupa kupalarında oluşan oyuncu katkılarını yerel lig katkılarından ayırır.",intro:"UEFA Champions League, Europa League ve Conference League etkinlikleri ayrı bağlamda izlenecek. Böylece Avrupa kupası katkıları, normal lig katkılarıyla karışmayacak.",purpose:"Avrupa kupalarından gelen katkıları turnuva türü ve maç bağlamıyla kaydeder.",items:["UCL, UEL ve UECL katkı türlerinin ayrı işaretlenmesi.","Oyuncu ve maç bağlantısının tutulması.","Avrupa katkı geçmişinin görüntülenmesi.","Katkı sınırlarının tanımlanmış kurallara göre kontrolü."],note:"Turnuva başına katkı değerleri henüz belirlenmedi. Kesin rakamlar bu aşamada uydurulmadı."},
-{title:"Sponsorluk Sistemi",icon:"◇",short:"Sponsor anlaşmaları, sözleşme koşulları, süreler ve gelir kayıtları.",intro:"Takım veya lig için oluşturulan sponsorlukların şartları ve mali karşılığı kayıt altına alınacak.",purpose:"Sponsor anlaşmasının kiminle yapıldığını, ne zaman başladığını, hangi koşullara bağlı olduğunu ve ne kadar gelir oluşturduğunu takip etmeyi sağlar.",items:["Sponsor adı ve anlaşma bilgileri.","Anlaşma süresi ve koşulları.","Sponsorluk gelirinin ve ödemelerin kaydı.","Aktif, süresi dolmuş veya tamamlanmış anlaşma durumu."],note:"Sponsor fiyatları, süreleri ve hedef koşulları henüz belirlenmedi. Bunlar yönetim tarafından tanımlanacak."},
-{title:"Teknik Direktör Olma Sistemi",icon:"♟",short:"Oyuncunun teknik direktörlük rolüne geçiş süreci ve yetki durumu.",intro:"Teknik direktörlük oyuncu hesabından ayrı bir sorumluluk ve yetki alanı olarak tasarlanıyor.",purpose:"Teknik direktör rolünün kimde olduğunu ve bu role geçişin nasıl onaylandığını düzenli biçimde yönetir.",items:["Teknik direktörlük başvuru veya atama akışı.","Rolün aktiflik durumunun gösterilmesi.","Takım ve teknik direktör ilişkisinin kaydı.","Yetkilerin yalnızca uygun hesaba verilmesi."],note:"Teknik direktör olma şartları ve onay yetkisi kesinleştirilmedi. Başka oyuncuların veya takımların verilerini değiştiren yetkiler güvenlik politikalarıyla korunmalı."},
-{title:"Teknik Direktör Değerleri",icon:"◈",short:"Teknik direktörlerin performans ve başarı geçmişini düzenler.",intro:"Teknik direktör profillerinde yalnızca isim değil, ligdeki sorumluluk ve performans geçmişi de yer alabilecek.",purpose:"Teknik direktörleri değerlendiren metrikleri ortak ve denetlenebilir bir yerde tutar.",items:["Teknik direktör profil ve takım geçmişi.","Tanımlanacak performans metrikleri ve dönemleri.","Başarı kayıtları ve sezon geçmişi.","Değişikliklerin hangi kaynakla yapıldığının izlenmesi."],note:"Puanlama formülü, katsayılar ve sıralama ölçütleri henüz kararlaştırılmadı. Resmî kurallar netleşmeden değer hesaplanmayacak."},
-{title:"Maaş Sistemi",icon:"₺",short:"Oyuncu maaşı, ödeme dönemi ve maaş hareketlerinin izlenmesi.",intro:"Maaş sistemi oyuncu veya sözleşmeye bağlı ücretin, ödeme durumunun ve geçmiş hareketlerin takip edilmesini sağlar.",purpose:"Maaş borçlarının ve ödemelerin rastgele değişmesini önleyerek ekonomi kayıtlarını tutarlı hâle getirir.",items:["Oyuncu ile ilişkilendirilmiş maaş/sözleşme kaydı.","Maaş tutarı ve geçerli dönem bilgisi.","Ödeme hareketleri ve güncel durum.","Yetkili yöneticiler için kontrollü maaş güncellemesi."],note:"Maaş seviyeleri, ödeme sıklığı ve sözleşme kuralları henüz belirlenmedi. Finans hareketleri sonradan denetlenebilir şekilde kaydedilmelidir."},
-{title:"UCL / UEL / UECL Gelir Sistemi",icon:"⌁",short:"Avrupa kupalarının turnuva ve aşama bazlı gelirlerini kaydeder.",intro:"Avrupa kupalarında oluşan gelirler normal lig gelirlerinden ayrı tutulacak. Turnuva türü ve gelir nedeni kayıt üzerinde anlaşılır olacak.",purpose:"UCL, UEL ve UECL gelirlerinin ayrı izlenmesini ve tanımlanan paylaşım kurallarının uygulanmasını sağlar.",items:["Turnuva türünün ve gelir döneminin kaydı.","Tur veya sonuç bazında gelir kaydı için altyapı.","Oyuncu/takım/lig paylarının kural tabanlı hesaplanabilmesi.","Gelir geçmişi ve raporlama."],note:"Tur gelir tutarları ve paylaşım oranları henüz belirlenmedi. Kesin miktarlar yönetim tarafından tanımlanacak."},
-{title:"Stadyum Sistemi",icon:"▤",short:"Stadyum sahipliği, seviye, kapasite ve geliştirme durumları.",intro:"Stadyum, takımın veya kulübün yönetilebilir varlıklarından biri olacak. Kapasite ve geliştirme bilgileri tek ekranda görülebilecek.",purpose:"Stadyumun mevcut seviyesini, kapasitesini ve geliştirme geçmişini tutarlı biçimde saklar.",items:["Stadyum bilgileri ve sahiplik bağlantısı.","Seviye ve kapasite alanları.","Geliştirme seçenekleri ve maliyetleri.","İşlem geçmişi ve mevcut durum."],note:"Stadyum seviyeleri, fiyatlar ve kapasite artış kuralları henüz kararlaştırılmadı."},
-{title:"Katkı Sınırı Sistemi",icon:"⊙",short:"Katkı türleri için tanımlanmış üst sınırları ve kontrolleri yönetir.",intro:"Katkı değerlerinin ekonomik ve rekabetçi dengeyi bozacak şekilde sınırsız yükselmemesi için sınır kuralları uygulanacak.",purpose:"Her katkı türünün kendi limitine göre kontrol edilmesini ve aşımın engellenmesini sağlar.",items:["Katkı türüne göre limit tanımları.","İşlem öncesi sınır kontrolü.","Limit aşımlarında açıklayıcı hata mesajı.","Yönetim değişikliklerinin kayıt altına alınması."],note:"Sayısal limitler henüz verilmedi. Clean sheet ve antrenman katkısı gibi ayrı türlerin birbirine karıştırılmaması gerekir."},
-{title:"Yaş Sistemi",icon:"◷",short:"Oyuncu yaşı bilgisini ve yaşa bağlı kural kontrollerini yönetir.",intro:"Oyuncu yaşının profil verisi olarak tutulması ve ileride tanımlanacak yaş kurallarında tutarlı kullanılması hedefleniyor.",purpose:"Yaşla ilgili şartların her ekranda farklı yorumlanmasını önler ve oyuncu kayıtlarını standartlaştırır.",items:["Oyuncunun doğum tarihi veya tanımlanmış yaş bilgisi.","Yaşın tutarlı şekilde görüntülenmesi.","Yaşa bağlı kurallar için merkezi kontrol noktası.","Yaş bilgisindeki değişikliklerin denetlenmesi."],note:"Yaş sınırları, yaş ilerleme sıklığı ve yaşın oyuncu değerine etkisi henüz kararlaştırılmadı."},
-{title:"Antrenman Sahası Sistemi",icon:"⌁",short:"Antrenman alanları ve seçilebilir antrenman katkılarının yönetimi.",intro:"Antrenman etkinlikleri, oyuncu katkısına bağlanan ayrı bir sistem olarak takip edilecek; seçilen katkı değerleri görünür ve denetlenebilir olacak.",purpose:"Antrenman sahası kayıtlarını, oyuncunun seçtiği katkı tutarını ve ilgili geçmişi yönetir.",items:["Antrenman sahası ve seviye alanları.","Antrenman katkısı seçenekleri: 50.000, 75.000, 100.000, 125.000, 150.000 ve 200.000.","Seçilen antrenman katkısının oyuncu ve tarih ile kaydedilmesi.","Antrenman katkısının clean sheet etkinliğinden ayrı kaydedilmesi."],note:"Clean sheet, takımın bir maçı sıfır gol yiyerek tamamlamasıdır. Bu katkı, antrenman katkısından ayrı tutulacak. Antrenman maliyetleri ve diğer saha kuralları henüz belirlenmedi."}
+{title:"Yayın Geliri Sistemi",icon:"◉",short:"Lig sıralaması, maç sonuçları ve kupa başarılarından elde edilen gelirler.",intro:"Takımlar sezon performanslarına göre gelir elde eder. Gelirler sezon ortasında veya sezon sonunda eklenebilir.",purpose:"MortaLeague sıralama gelirlerini, maç sonuçlarını ve yerel kupa ödüllerini aynı sistemde açıkça gösterir.",items:[
+"MortaLeague sıralama geliri — tüm lig kategorilerinde geçerli: 1. sıra 100.000.000€; 2. sıra 75.000.000€.",
+"Sıralama geliri: 3–5. sıralar 50.000.000€; 6–10. sıralar 30.000.000€; 11–15. sıralar 25.000.000€; 16–20. sıralar 10.000.000€.",
+"MortaLeague A maç geliri: galibiyet 4.000.000€, beraberlik 2.000.000€.",
+"Tüm yerel kupa maçlarında: galibiyet 2.000.000€, beraberlik 1.000.000€.",
+"ZMK: şampiyon 70.000.000€, finalist 35.000.000€.",
+"FA Cup: şampiyon 50.000.000€, finalist 25.000.000€.",
+"GOAT Cup: şampiyon 40.000.000€, finalist 20.000.000€.",
+"Süper Kupa: şampiyon 20.000.000€, finalist 10.000.000€.",
+"Gelirler sezon ortasında veya sezon sonunda eklenebilir."
+],note:"Sıralama aralıkları çakışma olmaması için 3–5, 6–10, 11–15 ve 16–20 şeklinde gösterilmiştir."},
+{title:"Oyuncu Katkı Değerleri",icon:"↗",short:"MIA, ZMK, FA Cup, GOAT Cup ve Süper Kupa katkı değerleri.",intro:"Oyuncuların yerel lig ve kupa performansları belirlenen gol, asist/GolxGym ve kupa katkı değerlerine göre hesaplanır.",purpose:"Yerel organizasyonlardaki oyuncu katkı tutarlarını ve kupa katılım koşullarını açıkça belirtir.",items:[
+"MIA: GolxGym 40K€, asist 30K€, kupa 2.000.000€.",
+"ZMK (ligdeki tüm takımlar katılır): GolxGym 30K€, asist 20K€, kupa 1.500.000€.",
+"FA Cup (MIA ve ZMK kazananları katılamaz): GolxGym 20K€, asist 10K€, kupa 1.000.000€.",
+"GOAT Cup (MIA, ZMK ve FA Cup kazananları katılamaz): GolxGym 10K€, asist 5K€, kupa 500.000€.",
+"Süper Kupa (MIA, ZMK, FA Cup ve GOAT Cup kazananları kendi aralarında oynar): GolxGym 10K€, asist 5K€, kupa 250.000€."
+],note:"GolxGym ifadesi, gönderilen kural metnindeki yazımıyla korunmuştur."},
+{title:"Telefon Satın Alma Sistemi",icon:"▣",short:"Oyuncular maaşlarıyla telefon satın alabilir; telefonlar oyuncu değerine katkı sağlar.",intro:"Oyuncular aldıkları maaşı kullanarak telefon satın alabilir. Telefonun seviyesi yükseldikçe oyuncu değerine eklenen katkı artar.",purpose:"Telefon türü, satın alma maliyeti ve oyuncu değerine sağladığı katkıyı gösterir.",items:[
+"Oppo Telefon: fiyat 3.000.000€; oyuncu değerine +250.000€.",
+"Mi Telefon: fiyat 5.000.000€; oyuncu değerine +500.000€.",
+"Samsung Telefon: fiyat 15.000.000€; oyuncu değerine +750.000€.",
+"iPhone Telefon: fiyat 20.000.000€; oyuncu değerine +1.000.000€."
+],note:"Maliyet ve katkılar gönderilen telefon satın alma sistemi metnine göre gösterilmiştir."},
+{title:"Ev Satın Alma Sistemi",icon:"⌂",short:"Oyuncular maaşlarıyla ev satın alabilir; evler oyuncu değerine katkı sağlar.",intro:"Oyuncular maaşlarıyla farklı seviyelerde ev satın alabilir. Ev seçenekleri oyuncu değerine farklı miktarlarda katkı sağlar.",purpose:"Ev seçeneklerini, fiyatlarını ve oyuncu değerine eklenen katkıyı listeler.",items:[
+"Apartman Dairesi: fiyat 10.000.000€; oyuncu değerine +500.000€.",
+"Dubleks Ev: fiyat 25.000.000€; oyuncu değerine +1.500.000€.",
+"Villa: fiyat 50.000.000€; oyuncu değerine +2.000.000€.",
+"Malikane: fiyat 100.000.000€; oyuncu değerine +3.000.000€.",
+"Lüks Malikane: fiyat 150.000.000€; oyuncu değerine +3.500.000€."
+],note:"Ev seçenekleri ve tutarları gönderilen ev satın alma sistemi metnine göre gösterilmiştir."},
+{title:"Taşıt Alma Sistemi",icon:"➤",short:"Oyuncular maaşlarıyla taşıt satın alabilir; taşıtlar oyuncu değerine katkı sağlar.",intro:"Oyuncular aldıkları maaşla taşıt satın alabilir. Daha lüks taşıtlar oyuncu değerine daha yüksek katkı sağlar.",purpose:"Taşıtların satın alma maliyetini ve oyuncu değerine katkısını gösterir.",items:[
+"Motosiklet: fiyat 5.000.000€; oyuncu değerine +250.000€.",
+"SUV: fiyat 10.000.000€; oyuncu değerine +500.000€.",
+"Spor Araba: fiyat 20.000.000€; oyuncu değerine +1.000.000€.",
+"Yat: fiyat 40.000.000€; oyuncu değerine +2.000.000€.",
+"Özel Jet: fiyat 100.000.000€; oyuncu değerine +3.000.000€."
+],note:"Taşıt seçenekleri ve tutarları gönderilen taşıt alma sistemi metnine göre gösterilmiştir."},
+{title:"Ödül Sistemi",icon:"✦",short:"Ödüller ve karşılık gelen para ödülleri.",intro:"Belirlenen bireysel ve sezonluk başarılar, aşağıdaki ödül tutarlarıyla karşılık bulur.",purpose:"Ödül adlarını ve her ödül için belirtilen para miktarını tek yerde toplar.",items:[
+"Ballon D’or: 2.500.000€.",
+"Golden Boy: 1.500.000€.",
+"Golden Boot: 1.000.000€.",
+"Best Teknik Direktör: 1.000.000€.",
+"Best Mevki: 1.000.000€.",
+"Best 11: 500.000€."
+],note:"Ödül adları, gönderilen metindeki yazımlarıyla korunmuştur."},
+{title:"UCL / UEL / UECL Oyuncu Katkıları",icon:"♜",short:"Güncel Avrupa kupası ve uluslararası turnuva katkı değerleri.",intro:"Şampiyonlar Ligi, Avrupa Ligi ve Konferans Ligi katkı değerleri önceki değerlerin yerine güncellenmiştir. Diğer gönderilmiş turnuva değerleri de aşağıda listelenmiştir.",purpose:"Avrupa kupaları ve diğer uluslararası turnuvalardaki gol, asist, Gym ve kupa katkılarını birbirinden ayırır.",items:[
+"Şampiyonlar Ligi (güncel): gol 70K€, asist 60K€, Gym 70K€, kupa 5.000.000€.",
+"UEFA Avrupa Ligi (güncel): gol 60K€, asist 50K€, Gym 60K€, kupa 4.000.000€.",
+"UEFA Konferans Ligi (güncel): gol 50K€, asist 40K€, Gym 50K€, kupa 3.000.000€.",
+"UEFA Süper Kupa: GolxGym 50K€, asist 40K€, kupa 3.000.000€.",
+"Dünya Kupası: GolxGym 70K€, asist 60K€, kupa 5.000.000€.",
+"Avrupa Şampiyonası (Euro): GolxGym 60K€, asist 50K€, kupa 4.000.000€.",
+"Uluslar Ligi: GolxGym 40K€, asist 30K€, kupa 2.500.000€."
+],note:"Şampiyonlar Ligi, UEFA Avrupa Ligi ve UEFA Konferans Ligi için gönderdiğin yeni değerler eskilerinin yerine geçer. Diğer turnuvalar daha önce gönderilen değerlerle bırakılmıştır."},
+{title:"Sponsorluk Sistemi",icon:"◇",short:"Sponsor hesabı, takım sınırları, sözleşme süresi ve başarı bonusları.",intro:"Herkes sponsor hesabı açabilir. Hesap açarken Sırt Sponsoru, Göğüs Sponsoru veya Stadyum Sponsoru kategorilerinden biri seçilir.",purpose:"Sponsor bütçelerini, imzalanabilecek takım sayılarını, bonusları ve sözleşme şartlarını listeler.",items:[
+"Sponsor hesabı açmak çar sınırına dahil değildir. Her kategori bütçesi 500.000.000€ ile başlar ve her sezon sonunda 100.000.000€ artar.",
+"Sırt Sponsoru en fazla 8 takımla; Göğüs Sponsoru en fazla 6 takımla; Stadyum Sponsoru en fazla 4 takımla anlaşabilir. Bir takımın en fazla 3 sponsoru olabilir: göğüs, sırt ve stadyum.",
+"Takımlar sponsorlardan yalnızca imza bonusu ve kupa bonusu alır.",
+"Göğüs Sponsoru — azami imza bonusu 20.000.000€; MLA şampiyonu 25.000.000€; ZMK şampiyonu 20.000.000€; FA Cup şampiyonu 15.000.000€; GOAT Cup şampiyonu 10.000.000€; Süper Kupa şampiyonu 5.000.000€.",
+"Sırt Sponsoru — azami imza bonusu 15.000.000€; MLA şampiyonu 15.000.000€; ZMK şampiyonu 10.000.000€; FA Cup şampiyonu 7.000.000€; GOAT Cup şampiyonu 5.000.000€; Süper Kupa şampiyonu 3.000.000€.",
+"Stadyum Sponsoru — azami imza bonusu 30.000.000€; MLA şampiyonu 30.000.000€; ZMK şampiyonu 25.000.000€; FA Cup şampiyonu 20.000.000€; GOAT Cup şampiyonu 15.000.000€; Süper Kupa şampiyonu 10.000.000€.",
+"Sözleşmeler en az 2 yıllık olmalıdır ve sözleşme süresinde feshedilemez.",
+"Sponsorluk kapanırsa yeni bir sponsorluk başlatmadan önce en az 1 sezon beklenmelidir."
+]},
+{title:"Teknik Direktör Olma Sistemi",icon:"♟",short:"Gerçek hayattaki teknik direktör adına hesap açma ve kayıt başvurusu.",intro:"MortaLeague'de teknik direktör olmak için önce gerçek hayattaki bir teknik direktör adına hesap açılmalıdır.",purpose:"Teknik direktörlük başvurusunun hangi adımlarla yapılacağını açıklar.",items:[
+"Gerçek hayattaki teknik direktör adına bir hesap açın.",
+"Kayıt hesabına “Kayıt Olmak İstiyorum” mesajını gönderin.",
+"Teknik direktörlerin başlangıç değeri 1.000.000€ olur.",
+"Teknik direktör değeri alınan sonuçlara ve kazanılan kupalara göre artar.",
+"Galibiyet, beraberlik, mağlubiyet ve kupa sayıları biyografiye eklenmeli ve düzenli olarak güncellenmelidir."
+],note:"Teknik direktör olma ve kayıt talebi adımları gönderdiğin kurala göre listelenmiştir."},
+{title:"Teknik Direktör Değerleri",icon:"◈",short:"Teknik direktörlerin maç ve kupa başarılarına göre değer katkıları.",intro:"Teknik direktörler maç sonuçlarına, kupalara ve finallerdeki başarılarına göre değer kazanır. Başlangıç değeri 1.000.000€'dur.",purpose:"Yerel lig ve kupalar ile Avrupa ve millî turnuvalar için belirtilmiş teknik direktör değerlerini gösterir.",items:[
+"ML A: galibiyet 40K€; beraberlik 20K€; kupa 2.000.000€; finalist 1.000.000€.",
+"ZMK: galibiyet 30K€; beraberlik 20K€; kupa 1.500.000€; finalist 750.000€.",
+"FA Cup: galibiyet 20K€; beraberlik 10K€; kupa 1.000.000€; finalist 500.000€.",
+"GOAT Cup: galibiyet 10K€; beraberlik 5K€; kupa 500.000€; finalist 250.000€.",
+"ML Süper Kupa: galibiyet 10K€; beraberlik 5K€; kupa 250.000€; finalist 100.000€.",
+"UCL: galibiyet 70K€; beraberlik 35K€; kupa 5.000.000€; final 2.500.000€.",
+"UEL: galibiyet 60K€; beraberlik 30K€; kupa 4.000.000€; final 2.000.000€.",
+"UECL: galibiyet 50K€; beraberlik 25K€; kupa 3.000.000€; final 1.500.000€.",
+"UEFA Süper Kupa: G 40K€; B 20K€; kupa 3.000.000€; finalist 1.500.000€.",
+"Dünya Kupası: G 50K€; B 30K€; kupa 5.000.000€; finalist 2.500.000€.",
+"Euro: G 40K€; B 20K€; kupa 4.000.000€; finalist 2.000.000€.",
+"Uluslar Ligi: G 30K€; B 10K€; kupa 2.500.000€; finalist 1.000.000€."
+],note:"G ve B kısaltmaları, gönderilen tabloda galibiyet ve beraberlik değerleri için kullanılmıştır."},
+{title:"Maaş Sistemi",icon:"₺",short:"Maaş alt sınırı, bonuslar, sezon sonu ödemeleri ve otomatik maaş güncellemesi.",intro:"Bir futbolcunun maaşı minimum kendi değeri kadar olabilir; maksimum maaş sınırı yoktur.",purpose:"Takımların tüm oyuncularına maaş vermesini, sözleşme bonuslarını ve sezon sonu ödeme kurallarını açıklar.",items:[
+"Bir oyuncunun değeri 2M€ ise en az 2M€ maaş verilmelidir. Maksimum maaş sınırı yoktur.",
+"Bir takım bütün oyuncularına maaş vermek zorundadır.",
+"Sözleşme yapılırken bonus maaş belirlenebilir. Örnek: Ballon d’Or kazanırsa tek seferlik 5M€ bonus.",
+"Maaşlar sezon sonunda ödenir ve takım bütçesinden düşülür.",
+"Oyuncular aldıkları maaşı ve toplam paralarını biyografilerine yazmak zorundadır.",
+"Oyuncunun maaşını nasıl kullanabileceği diğer sistem sayfalarında açıklanır.",
+"Örnek: 1M€ sezonluk maaş üzerinden 3 yıllık sözleşmede oyuncunun değeri ikinci sezonda 2M€ olursa maaşı otomatik olarak 2M€ olur."
+],note:"Maaş alt sınırı oyuncunun güncel değerine bağlıdır; örnek sözleşmede maaşın ikinci sezonda otomatik güncellendiği belirtilmiştir."},
+{title:"UCL / UEL / UECL Gelir Sistemi",icon:"⌁",short:"Avrupa kupalarında maç, lig aşaması, tur ve şampiyonluk primleri.",intro:"Avrupa kupalarında elde edilen sonuçlar ve turnuva aşamaları aşağıdaki primlerle ödüllendirilir.",purpose:"Şampiyonlar Ligi, UEFA Avrupa Ligi ve UEFA Konferans Ligi gelir primlerini ayrı ayrı listeler.",items:[
+"Şampiyonlar Ligi: galibiyet 10M€; beraberlik 5M€; lig etabına giriş 50M€; ilk 24'e kalma 30M€; son 16 40M€; çeyrek final 50M€; yarı final 60M€; final 70M€; şampiyonluk 200M€.",
+"UEFA Avrupa Ligi: galibiyet 8M€; beraberlik 4M€; lig etabına giriş 40M€; ilk 24'e kalma 20M€; son 16 30M€; çeyrek final 40M€; yarı final 50M€; final 60M€; şampiyonluk 150M€.",
+"UEFA Konferans Ligi: galibiyet 6M€; beraberlik 3M€; lig etabına giriş 30M€; ilk 24'e kalma 10M€; son 16 20M€; çeyrek final 30M€; yarı final 40M€; final 50M€; şampiyonluk 120M€."
+],note:"Primler gönderilen Avrupa Kupaları Primleri metnine göre gösterilmiştir."},
+{title:"Stadyum Sistemi",icon:"▤",short:"Zorunlu stadyum sahipliği ve seviyeye göre takım gücü katkısı.",intro:"Stadyum sahibi olmak takım değerine güç katkısı sağlar. Her takımın stadyumunun olması zorunludur.",purpose:"Beş stadyum seviyesinin satın alma maliyetini ve takım gücüne eklediği miktarı listeler.",items:[
+"1. Seviye: 100.000.000€; +2 güç.",
+"2. Seviye: 250.000.000€; +4 güç.",
+"3. Seviye: 500.000.000€; +6 güç.",
+"4. Seviye: 750.000.000€; +8 güç.",
+"5. Seviye: 1.000.000.000€; +10 güç.",
+"Her takımın stadyum sahibi olması zorunludur."
+],note:"Fiyatlar ve güç katkıları gönderilen stadyum sistemi metnine göre gösterilmiştir."},
+{title:"Katkı Sınırı Sistemi",icon:"⊙",short:"Mevkilere göre maç başına gol/asist sınırları.",intro:"MortaLeague katkı sistemi, mevkiye ve maç sayısına göre gol/asist (G/A) sınırları uygular.",purpose:"Forvet, orta saha, defans ve kaleci katkı limitlerini aynı yerde gösterir.",items:[
+"Forvet: maç başına en fazla 3 G/A; 15 maçta bir en fazla 4 G/A.",
+"Orta saha: maç başına en fazla 2 G/A; 15 maçta bir en fazla 3 G/A.",
+"Defans: maç başına en fazla 1 G/A; 15 maçta bir en fazla 2 G/A.",
+"Kaleci: 10 maçta en fazla 1 asist alabilir; 50 maçta bir 1 gol alabilir."
+],note:"G/A, gol ve asist anlamında kullanılmıştır. Kaleci için verilen sınırlar gönderilen metindeki gibi ayrı tutulmuştur."},
+{title:"Yaş Sistemi",icon:"◷",short:"Oyuncu yaş kategorileri ve sezon sonundaki değer artış/azalışları.",intro:"Oyuncular yaşlarına ve yaşlarına göre gösterdikleri gol, asist ve Gym performansına göre değer kazanır veya kaybeder. Yaş kaynaklı değer değişiklikleri sezon sonunda uygulanır.",purpose:"Yaş kategorilerini ve her yaş için belirtilen değer değişimini listeler.",items:[
+"Yaş kategorileri: 16–20 Genç Yetenek; 20–24 Gelişen Yetenek; 24–28 Zirve Dönemi; 28–33 Deneyimli Oyuncu; 33–40 Veteran Oyuncu.",
+"Genç Yetenek: 17 yaş +500K€; 18 yaş +450K€; 19 yaş +400K€.",
+"Gelişen Yetenek: 20 yaş +350K€; 21 yaş +300K€; 22 yaş +250K€; 23 yaş +200K€.",
+"Zirve Dönemi: 24 yaş +150K€; 25 yaş +100K€; 26 yaş +50K€; 27 yaş nötr.",
+"Deneyimli Oyuncu: 29 yaş nötr; 30 yaş nötr; 31 yaş −250K€; 32 yaş −500K€.",
+"Veteran Oyuncu: 33 yaş −2.5M€; 34 yaş −3M€; 35 yaş −3.5M€; 36 yaş −4M€; 37 yaş −5M€; 38 yaş −6M€; 39 yaş −8M€; 40 yaş −10M€.",
+"Yaş değişimleri sezon sonunda oyuncu değerine eklenir veya düşülür."
+],note:"Yaş kategorileri ve değerler gönderilen metne göre korunmuştur. 16 ve 28 yaş için ayrıca bir değer değişimi belirtilmemiştir."},
+{title:"Antrenman Sahası Sistemi",icon:"⌁",short:"Antrenman sahası satın alma maliyetleri ve günlük oyuncu değer katkıları.",intro:"Takımlar belirli maliyetlerle antrenman sahası satın alabilir. Saha seviyesi yükseldikçe oyuncu değerine sağlanan antrenman katkısı artar.",purpose:"Saha seviyelerinin maliyetlerini, oyuncu değer katkılarını ve günlük antrenman kurallarını gösterir.",items:[
+"1. Seviye Antrenman Sahası: 100.000.000€; oyuncu değerine +75K€.",
+"2. Seviye Antrenman Sahası: 250.000.000€; oyuncu değerine +100K€.",
+"3. Seviye Antrenman Sahası: 500.000.000€; oyuncu değerine +125K€.",
+"4. Seviye Antrenman Sahası: 750.000.000€; oyuncu değerine +150K€.",
+"5. Seviye Antrenman Sahası: 1.000.000.000€; oyuncu değerine +200K€.",
+"Antrenmanlar günlük olarak yapılır ve en fazla 5 oyuncuya antrenman uygulanabilir.",
+"Antrenman sahası olmadan yapılan antrenman oyuncu değerine +50K€ etki eder.",
+"Antrenmanları gönderi (post) olarak paylaşmak zorunludur."
+],note:"Antrenman maliyetleri, katkıları ve paylaşım zorunluluğu gönderilen metne göre gösterilmiştir."}
 ];
 const systemGrid=document.getElementById("systems-grid");
 systemGrid.innerHTML=systems.map((s,i)=>`<article class="system-card"><span class="system-number">${String(i+1).padStart(2,"0")}</span><span class="system-glyph">${s.icon}</span><h3>${s.title}</h3><p>${s.short}</p><button class="system-detail-button" type="button" data-system-detail="${i}">Detayları Gör <span>↗</span></button></article>`).join("");

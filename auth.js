@@ -178,8 +178,18 @@
       return;
     }
     const cfg = window.MORTA_CONFIG;
+    // Keep the session in this browser's persistent localStorage so normal page visits
+    // and reloads do not require signing in again. The key matches Supabase's default
+    // project key, so existing sessions remain readable. Signing out or clearing site data
+    // intentionally removes the saved session.
     client = window.supabase.createClient(cfg.supabaseUrl, cfg.supabasePublishableKey, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: false,
+        storage: window.localStorage,
+        storageKey: "sb-dxznuiqachpggwxmczwn-auth-token"
+      }
     });
     setupNote.textContent = "Kayıtta yalnızca kullanıcı adı ve şifre istenir. Supabase'te Email → Confirm email kapalı olmalı; SQL kurulum dosyasını bir kez çalıştır.";
     client.auth.onAuthStateChange((_event, session) => updateHeader(session));

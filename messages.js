@@ -190,6 +190,7 @@
     }
     activeConversationId = conversationId;
     activePeer = peer;
+    document.querySelector(".messages-shell")?.classList.add("dm-mobile-chat-open");
     conversations = conversations.map(c => ({ ...c, id: c.id }));
     renderConversations();
     $("dm-chat-empty").hidden = true;
@@ -276,6 +277,9 @@
     }
   });
   $("dm-user-search")?.addEventListener("input", () => { clearTimeout(searchPlayers.delay); searchPlayers.delay = setTimeout(searchPlayers, 220); });
+  $("dm-mobile-back")?.addEventListener("click", () => {
+    document.querySelector(".messages-shell")?.classList.remove("dm-mobile-chat-open");
+  });
   $("dm-refresh")?.addEventListener("click", async () => {
     await loadConversations();
     if (activeConversationId) await refreshActiveMessages(true);
@@ -351,6 +355,7 @@
       activeConversationId = null;
       activePeer = null;
       currentCanSend = false;
+      document.querySelector(".messages-shell")?.classList.remove("dm-mobile-chat-open");
       setNavUnread(0);
       if (activeChannel && currentClient()) {
         try { await currentClient().removeChannel(activeChannel); } catch (_) {}

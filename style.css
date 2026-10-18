@@ -1153,3 +1153,36 @@ img, svg, video, canvas { max-width: 100%; }
 .install-help-message{margin:0 0 22px;color:#c7bbd1;font-size:15px;line-height:1.65}
 .install-help-close{width:100%;min-height:48px}
 @media(prefers-reduced-motion:no-preference){.install-help-dialog[open]{animation:install-dialog-in .18s ease-out both}@keyframes install-dialog-in{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}}
+
+
+/* MortaLeague focused community + messaging refinement (2026-10-18) */
+.home-announcements{margin-top:18px;padding:4px 0 44px}
+.home-announcements>.section-heading{margin-bottom:14px}
+#page-community .community-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,180px));width:max-content;max-width:100%;gap:6px;padding:6px}
+#page-community .community-tabs button{min-width:0;padding:0 18px}
+.messages-sidebar{gap:10px}
+.messages-section-title{margin-bottom:2px}
+.messages-section-title h2{font-size:10px;letter-spacing:1.05px}
+.dm-conversation-search{max-width:none;width:100%;margin:0}
+.dm-conversation-search input{min-width:0}
+.dm-conversation-list{max-height:360px;overscroll-behavior:contain}
+.dm-sidebar-empty{padding:18px 10px;border:1px dashed #392743;border-radius:11px;background:#0e081455}
+.dm-player-search-block{gap:8px;margin-top:8px;padding-top:14px}
+.dm-user-search-results[hidden]{display:none!important}
+.dm-user-result{transition:border-color .16s ease,background-color .16s ease}
+.dm-composer textarea{height:48px;resize:none;overflow-y:auto;transition:border-color .16s ease,box-shadow .16s ease}
+.dm-message-intro{min-height:180px}
+.dm-message-intro small{display:none}
+@media(max-width:700px){
+ #page-community .community-tabs{width:100%;grid-template-columns:repeat(2,minmax(0,1fr))}
+ #page-community .community-tabs button{min-height:44px}
+ .messages-sidebar{padding:13px}
+ .dm-conversation-search,.dm-search-field{height:44px}
+ .dm-conversation-search input,.dm-search-field input{font-size:16px}
+ .dm-composer textarea{font-size:16px;line-height:1.45;min-height:48px}
+ .dm-composer-footer .btn{min-height:44px}
+ .dm-player-search-block{padding-top:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ .dm-user-result,.dm-composer textarea{transition:none}
+}

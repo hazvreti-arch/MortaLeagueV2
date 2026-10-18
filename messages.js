@@ -81,14 +81,20 @@
   function renderConversations() {
     const host = $("dm-conversation-list");
     if (!host) return;
-    if (!conversations.length) {
-      host.innerHTML = '<div class="dm-sidebar-empty">Henüz bir sohbetin yok.<br>Yeni sohbet için kullanıcı adıyla oyuncu ara.</div>';
+    const query = ($("dm-conversation-search")?.value || "").trim().toLocaleLowerCase("tr-TR");
+    const visible = conversations.filter(conv => {
+      const p = conv.otherProfile || {};
+      const haystack = `${p.display_name || ""} ${p.username || ""} ${conv.last_message_preview || ""}`.toLocaleLowerCase("tr-TR");
+      return haystack.includes(query);
+    });
+    if (!visible.length) {
+      host.innerHTML = `<div class="dm-sidebar-empty">${query ? "Eşleşen sohbet yok." : "Henüz sohbet yok."}</div>`;
       return;
     }
-    host.innerHTML = conversations.map(conv => {
+    host.innerHTML = visible.map(conv => {
       const p = conv.otherProfile;
       const name = p?.display_name || p?.username || "Oyuncu";
-      const preview = conv.last_message_preview || "Sohbet başladı · İlk mesajı gönder";
+      const preview = conv.last_message_preview || "İlk mesajı gönder";
       return `<button class="dm-conversation-item${conv.id === activeConversationId ? " active" : ""}" type="button" data-dm-conversation="${esc(conv.id)}" aria-label="${esc(name)} ile sohbeti aç">
         ${avatarHTML(p, "dm-list-avatar")}
         <span class="dm-conversation-copy"><strong>${esc(name)}</strong><small>@${esc(p?.username || "oyuncu")}</small><span class="dm-conversation-preview">${esc(preview)}</span></span>
@@ -114,7 +120,7 @@
       renderConversations();
       const unread = conversations.reduce((sum, row) => sum + (row.unreadCount || 0), 0);
       setNavUnread(unread);
-      say("dm-list-status", conversations.length ? `${conversations.length} sohbet` : "Sohbet listen hazır.");
+      say("dm-list-status", conversations.length ? `${conversations.length} sohbet` : "");
       if (activeConversationId) {
         const active = conversations.find(c => c.id === activeConversationId);
         if (active?.otherProfile) activePeer = active.otherProfile;
@@ -137,8 +143,9 @@
   function renderSearchResults(rows) {
     const host = $("dm-user-search-results");
     if (!host) return;
+    host.hidden = false;
     if (!rows.length) {
-      host.innerHTML = '<p class="dm-help-text">Eşleşen oyuncu bulunamadı.</p>';
+      host.innerHTML = '<p class="dm-help-text">Oyuncu bulunamadı.</p>';
       return;
     }
     host.innerHTML = rows.slice(0, 12).map(p => `<div class="dm-user-result">
@@ -151,9 +158,10 @@
     const query = ($("dm-user-search")?.value || "").trim().toLocaleLowerCase("tr-TR");
     const host = $("dm-user-search-results");
     if (!host) return;
-    if (!currentUserId()) { host.innerHTML = '<p class="dm-help-text">Oyuncu aramak için giriş yap.</p>'; return; }
-    if (query.length < 2) { host.innerHTML = '<p class="dm-help-text">En az 2 karakter yazıp oyuncu ara.</p>'; return; }
-    host.innerHTML = '<p class="dm-help-text">Oyuncular aranıyor…</p>';
+    if (query.length < 2) { host.innerHTML = ""; host.hidden = true; return; }
+    host.hidden = false;
+    if (!currentUserId()) { host.innerHTML = '<p class="dm-help-text">Giriş yapman gerekiyor.</p>'; return; }
+    host.innerHTML = '<p class="dm-help-text">Aranıyor…</p>';
     try {
       const profiles = await fetchProfiles();
       const matches = profiles.filter(p => `${p.username || ""} ${p.display_name || ""}`.toLocaleLowerCase("tr-TR").includes(query));
@@ -166,7 +174,7 @@
     const host = $("dm-message-list");
     if (!host) return;
     if (!rows.length) {
-      host.innerHTML = '<div class="dm-message-intro"><span>✦</span><strong>İlk mesajı sen gönder.</strong><small>Bu konuşma yalnızca sana ve bu oyuncuya görünür.</small></div>';
+      host.innerHTML = '<div class="dm-message-intro"><span>✦</span><strong>İlk mesajı gönder</strong></div>';
       return;
     }
     const viewerId = currentUserId();
@@ -332,6 +340,7 @@
       }
     }
   });
+  $("dm-conversation-search")?.addEventListener("input", renderConversations);
   $("dm-user-search")?.addEventListener("input", () => { clearTimeout(searchPlayers.delay); searchPlayers.delay = setTimeout(searchPlayers, 220); });
   $("dm-mobile-back")?.addEventListener("click", () => {
     document.querySelector(".messages-shell")?.classList.remove("dm-mobile-chat-open");
@@ -340,10 +349,23 @@
     await loadConversations();
     if (activeConversationId) await refreshActiveMessages(true);
   });
-  $("dm-message-input")?.addEventListener("input", event => {
+  const messageInput = $("dm-message-input");
+  function resizeMessageInput() {
+    if (!messageInput) return;
+    messageInput.style.height = "auto";
+    messageInput.style.height = `${Math.min(messageInput.scrollHeight, 150)}px`;
+  }
+  messageInput?.addEventListener("input", event => {
     const count = $("dm-character-count");
     if (count) count.textContent = `${event.target.value.length} / 2000`;
+    resizeMessageInput();
     noteTypingInput();
+  });
+  messageInput?.addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+      event.preventDefault();
+      if (messageInput.value.trim()) $("dm-send-form")?.requestSubmit();
+    }
   });
   $("dm-send-form")?.addEventListener("submit", async event => {
     event.preventDefault();
@@ -358,6 +380,7 @@
     try {
       await window.MortaLeague.sendDirectMessage(activeConversationId, body);
       input.value = "";
+      input.style.height = "48px";
       $("dm-character-count").textContent = "0 / 2000";
       say("dm-chat-status", "Mesaj gönderildi.", "success");
       await refreshActiveMessages(true);

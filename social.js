@@ -4,7 +4,7 @@
   const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const initials = value => String(value || "ML").trim().split(/\s+/).slice(0,2).map(v => v[0] || "").join("").toUpperCase() || "ML";
   const safeImage = value => /^https:\/\//i.test(String(value || "").trim()) ? String(value).trim() : "";
-  const state = { view:"feed", feedMode:"all", posts:[], comments:[], likes:new Set(), following:new Set(), followCounts:new Map(), profiles:new Map(), notifications:[], reports:[], loaded:false, loading:false };
+  const state = { view:"feed", feedMode:"all", posts:[], comments:[], likes:new Set(), following:new Set(), followCounts:new Map(), profiles:new Map(), notifications:[], reports:[], loaded:false, loading:false, followStateLoadedAt:0, followStatePromise:null, followStateUserId:null };
   const client = () => window.MortaLeague?.client || null;
   const userId = () => window.MortaLeague?.session?.user?.id || null;
   const profile = () => window.MortaLeague?.profile || null;
@@ -37,12 +37,20 @@
     ["social-nav-unread","social-tab-unread"].forEach(id=>{const node=$(id);if(node){node.hidden=n<1;node.textContent=n>99?"99+":String(n);}});
     const button=document.querySelector('[data-page="community"]'); if(button) button.setAttribute("aria-label",n?`Topluluk, ${n} okunmamış bildirim`:"Topluluk");
   }
-  async function loadFollowState() {
-    if(!client() || !userId()) return;
-    const {data,error}=await client().from("user_follows").select("follower_id,following_id").limit(5000);
-    if(error) throw error;
-    state.following.clear(); state.followCounts.clear();
-    (data||[]).forEach(row=>{if(row.follower_id===userId())state.following.add(row.following_id);state.followCounts.set(row.following_id,(state.followCounts.get(row.following_id)||0)+1);});
+  async function loadFollowState(force=false) {
+    const uid=userId();
+    if(!client() || !uid) { state.following.clear();state.followCounts.clear();state.followStateLoadedAt=0;state.followStateUserId=null;return; }
+    if(state.followStateUserId!==uid){state.following.clear();state.followCounts.clear();state.followStateLoadedAt=0;state.followStatePromise=null;state.followStateUserId=uid;}
+    if(!force&&state.followStateLoadedAt&&Date.now()-state.followStateLoadedAt<45000)return;
+    if(state.followStatePromise)return state.followStatePromise;
+    state.followStatePromise=(async()=>{
+      const {data,error}=await client().from("user_follows").select("follower_id,following_id").limit(5000);
+      if(error)throw error;
+      state.following.clear();state.followCounts.clear();
+      (data||[]).forEach(row=>{if(row.follower_id===uid)state.following.add(row.following_id);state.followCounts.set(row.following_id,(state.followCounts.get(row.following_id)||0)+1);});
+      state.followStateLoadedAt=Date.now();
+    })();
+    try{await state.followStatePromise;}finally{state.followStatePromise=null;}
   }
   async function loadProfilesFor(ids) {
     const unique=[...new Set((ids||[]).filter(Boolean))];
@@ -153,15 +161,22 @@
   }
   async function toggleFollow(targetId) {
     if(!needLogin()||suspended())return false;
-    if(targetId===userId())return false;
+    const uid=userId();if(!targetId||targetId===uid)return false;
     try {
       await loadFollowState();
-      const result=state.following.has(targetId)
-        ?await client().from("user_follows").delete().eq("follower_id",userId()).eq("following_id",targetId)
-        :await client().from("user_follows").insert({follower_id:userId(),following_id:targetId});
+      const wasFollowing=state.following.has(targetId);
+      const result=wasFollowing
+        ?await client().from("user_follows").delete().eq("follower_id",uid).eq("following_id",targetId)
+        :await client().from("user_follows").insert({follower_id:uid,following_id:targetId});
       if(result.error)throw result.error;
-      await loadFollowState(); if(state.view==="feed")renderFeed(); await updateNotificationCount();
-      document.querySelectorAll(`[data-social-follow="${CSS.escape(targetId)}"]`).forEach(button=>{const following=state.following.has(targetId);button.textContent=following?"Takip ediliyor":"Takip et";button.classList.toggle("btn-secondary",following);button.classList.toggle("btn-outline",!following);});
+      // Update local state after the database confirms success; no second full-table query needed.
+      const oldCount=Number(state.followCounts.get(targetId)||0);
+      if(wasFollowing){state.following.delete(targetId);state.followCounts.set(targetId,Math.max(0,oldCount-1));}
+      else{state.following.add(targetId);state.followCounts.set(targetId,oldCount+1);}
+      state.followStateLoadedAt=Date.now();
+      if(state.view==="feed")renderFeed();
+      document.querySelectorAll(`[data-social-follow="${CSS.escape(targetId)}"]`).forEach(button=>{button.textContent=state.following.has(targetId)?"Takip ediliyor":"Takip et";button.classList.toggle("btn-secondary",state.following.has(targetId));button.classList.toggle("btn-outline",!state.following.has(targetId));});
+      await updateNotificationCount();
       window.dispatchEvent(new CustomEvent("ml:follow-change",{detail:{targetId,following:state.following.has(targetId)}}));
       return true;
     } catch(error){status(state.view==="notifications"?"social-notifications-status":"social-feed-status",friendlyError(error,"Takip durumu değiştirilemedi."),"error");return false;}
@@ -256,8 +271,8 @@
   document.addEventListener("submit",event=>{const form=event.target.closest("[data-social-comment-form]");if(form){addComment(event,form.dataset.socialCommentForm);}});
   window.addEventListener("ml:page-change",event=>{if(event.detail?.page==="community"&&userId()){state.loaded=true;setView(state.view);updateNotificationCount();}if(event.detail?.page==="admin"&&isAdmin()){loadReports();loadAuditLog();}});
   window.addEventListener("ml:ready",()=>{if(userId())updateNotificationCount();});
-  window.setInterval(()=>{if(!userId())return;updateNotificationCount();if($("page-community")?.classList.contains("active")&&state.view==="notifications")loadNotifications();},30000);
-  window.addEventListener("ml:auth-state",()=>{if(userId()){state.loaded=true;updateNotificationCount();if($("page-community")?.classList.contains("active"))setView(state.view);if($("page-admin")?.classList.contains("active")&&isAdmin()){loadReports();loadAuditLog();}}else{syncUnreadBadge(0);state.posts=[];state.notifications=[];state.following.clear();}});
+  window.setInterval(()=>{if(document.hidden||!userId())return;updateNotificationCount();if($("page-community")?.classList.contains("active")&&state.view==="notifications")loadNotifications();},45000);
+  window.addEventListener("ml:auth-state",()=>{if(userId()){state.loaded=true;updateNotificationCount();if($("page-community")?.classList.contains("active"))setView(state.view);if($("page-admin")?.classList.contains("active")&&isAdmin()){loadReports();loadAuditLog();}}else{syncUnreadBadge(0);state.posts=[];state.notifications=[];state.following.clear();state.followCounts.clear();state.followStateLoadedAt=0;state.followStateUserId=null;state.followStatePromise=null;}});
   window.MortaSocial={
     loadFeed,loadNotifications,loadReports,loadAuditLog,setView,updateNotificationCount,
     refresh:()=>{loadFeed();loadNotifications();},

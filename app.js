@@ -172,8 +172,12 @@ systemBackdrop.addEventListener("click",e=>{if(e.target===systemBackdrop)closeSy
 document.addEventListener("keydown",e=>{if(e.key==="Escape" && !systemBackdrop.hidden)closeSystemDetail();});
 const validPages=["home","systems","players","community","messages","admin"];
 let cachedPlayers=[];
+let cachedPlayersAt=0;
+let playersLoadPromise=null;
 let cachedAdminPlayers=[];
 let cachedAnnouncements=[];
+let cachedAnnouncementsAt=0;
+let announcementsLoadPromise=null;
 const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const initials=value=>String(value||"ML").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"ML";
 // Broken third-party avatar URLs should fall back to initials instead of showing
@@ -227,22 +231,28 @@ function showPage(name){
   if(name==="home")loadAnnouncements();
   if(document.getElementById("auth-backdrop")&&!document.getElementById("auth-backdrop").hidden)window.MortaLeague?.closeAuth();
   window.dispatchEvent(new CustomEvent("ml:page-change",{detail:{page:name}}));
-  window.scrollTo({top:0,behavior:"smooth"});
+  window.scrollTo({top:0,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
 }
 let currentPublicProfile=null;
 window.MortaUI={showPage,loadPlayers,loadAdminDashboard,loadAnnouncements,get currentPublicProfile(){return currentPublicProfile;}};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();showPage(b.dataset.page);}});
 
-async function loadPlayers(){
+async function loadPlayers(force=false){
   const grid=document.getElementById("players-grid");if(!grid)return;
   if(!window.MortaLeague?.client){setInlineStatus("players-status","Oyuncu profilleri için Supabase bağlantısı kurulamadı.","error");return;}
-  setInlineStatus("players-status","Oyuncular yükleniyor…");renderSkeletonCards(grid,6,"skeleton-player");
-  try{
-    if(window.MortaLeague?.session?.user){try{await window.MortaSocial?.primeFollowing?.();}catch(error){console.warn("Takip verileri şu an yüklenemedi:",error?.message||error);}}
-    const rows=await window.MortaLeague.listProfiles();
-    cachedPlayers=Array.isArray(rows)?rows:[];
-    renderPlayers();
-  }catch(error){grid.innerHTML="";setInlineStatus("players-status",friendlyAppError(error,"Oyuncu profilleri yüklenemedi. Profil SQL kurulumunu kontrol et."),"error");}
+  if(!force&&cachedPlayersAt&&Date.now()-cachedPlayersAt<45000){renderPlayers();return;}
+  if(playersLoadPromise)return playersLoadPromise;
+  playersLoadPromise=(async()=>{
+    setInlineStatus("players-status","Oyuncular yükleniyor…");
+    if(!cachedPlayers.length)renderSkeletonCards(grid,6,"skeleton-player");
+    try{
+      if(window.MortaLeague?.session?.user){try{await window.MortaSocial?.primeFollowing?.();}catch(error){console.warn("Takip verileri şu an yüklenemedi:",error?.message||error);}}
+      const rows=await window.MortaLeague.listProfiles();
+      cachedPlayers=Array.isArray(rows)?rows:[];cachedPlayersAt=Date.now();
+      renderPlayers();
+    }catch(error){if(!cachedPlayers.length)grid.innerHTML="";setInlineStatus("players-status",friendlyAppError(error,"Oyuncu profilleri yüklenemedi. Profil SQL kurulumunu kontrol et."),"error");}
+  })();
+  try{return await playersLoadPromise;}finally{playersLoadPromise=null;}
 }
 function renderPlayers(){
   const grid=document.getElementById("players-grid");if(!grid)return;
@@ -253,7 +263,7 @@ function renderPlayers(){
   setInlineStatus("players-status",rows.length?`${rows.length} oyuncu profili gösteriliyor.`:(q?"Aramana uygun oyuncu bulunamadı.":"Henüz herkese açık oyuncu profili yok. İlk profil seninki olabilir."));
 }
 document.getElementById("players-search")?.addEventListener("input",renderPlayers);
-document.getElementById("players-refresh")?.addEventListener("click",loadPlayers);
+document.getElementById("players-refresh")?.addEventListener("click",()=>loadPlayers(true));
 document.getElementById("players-grid")?.addEventListener("click",e=>{const b=e.target.closest("[data-player-profile]");if(!b)return;const player=cachedPlayers.find(p=>p.username===b.dataset.playerProfile);if(player)openPublicProfile(player);});
 function openPublicProfile(player){
   const modal=document.getElementById("public-profile-backdrop");if(!modal)return;
@@ -316,12 +326,15 @@ function closePublicProfile(){const modal=document.getElementById("public-profil
 document.getElementById("public-profile-close")?.addEventListener("click",closePublicProfile);
 document.getElementById("public-profile-backdrop")?.addEventListener("click",e=>{if(e.target===e.currentTarget)closePublicProfile();});
 
-async function loadAnnouncements(){
+async function loadAnnouncements(force=false){
   const host=document.getElementById("home-announcements-list");if(!host)return;
   if(!window.MortaLeague?.client){host.innerHTML='<div class="empty-state">Duyurular bağlantı kurulduktan sonra burada görünecek.</div>';return;}
+  if(!force&&cachedAnnouncementsAt&&Date.now()-cachedAnnouncementsAt<30000){renderAnnouncements(host,cachedAnnouncements.slice(0,3),false);return;}
+  if(announcementsLoadPromise){await announcementsLoadPromise;renderAnnouncements(host,cachedAnnouncements.slice(0,3),false);return;}
   if(!cachedAnnouncements.length)renderSkeletonCards(host,2,"skeleton-announcement");
-  try{cachedAnnouncements=await window.MortaLeague.listAnnouncements();renderAnnouncements(host,cachedAnnouncements.slice(0,3),false);}
-  catch(error){host.innerHTML=`<div class="empty-state">${esc(friendlyAppError(error,"Duyurular yüklenemedi. announcements tablosunun ve Supabase bağlantısının kurulu olduğunu kontrol et."))}</div>`;}
+  announcementsLoadPromise=(async()=>{try{cachedAnnouncements=await window.MortaLeague.listAnnouncements();cachedAnnouncementsAt=Date.now();renderAnnouncements(host,cachedAnnouncements.slice(0,3),false);}
+  catch(error){host.innerHTML=`<div class="empty-state">${esc(friendlyAppError(error,"Duyurular yüklenemedi. announcements tablosunun ve Supabase bağlantısının kurulu olduğunu kontrol et."))}</div>`;}})();
+  try{await announcementsLoadPromise;}finally{announcementsLoadPromise=null;}
 }
 function renderAnnouncements(host,rows,admin=false){
   if(!host)return;
@@ -342,7 +355,7 @@ async function loadAdminDashboard(){
   renderSkeletonCards(document.getElementById("admin-users-list"),4,"skeleton-player");
   try{
     const [users,announcements]=await Promise.all([window.MortaLeague.listAdminProfiles(),window.MortaLeague.listAnnouncements()]);
-    cachedAdminPlayers=users||[];cachedAnnouncements=announcements||[];
+    cachedAdminPlayers=users||[];cachedAnnouncements=announcements||[];cachedAnnouncementsAt=Date.now();
     document.getElementById("admin-player-count").textContent=String(cachedAdminPlayers.length);
     document.getElementById("admin-announcement-count").textContent=String(cachedAnnouncements.length);
     const cl=window.MortaLeague.client;
@@ -437,7 +450,7 @@ document.getElementById("announcement-form")?.addEventListener("submit", async e
     contentInput.value = "";
     setMessage("announcement-feedback", "Duyuru başarıyla yayınlandı.", "success");
     await loadAdminDashboard();
-    await loadAnnouncements();
+    await loadAnnouncements(true);
   } catch (error) {
     const raw = String(error?.message || "");
     const message = /row-level security|42501|permission denied|yetki/i.test(raw)
@@ -453,7 +466,7 @@ document.getElementById("admin-announcements")?.addEventListener("click",async e
   const b=e.target.closest("[data-delete-announcement]");if(!b)return;
   if(!window.MortaLeague?.isAdmin())return;
   b.disabled=true;b.textContent="Kaldırılıyor…";
-  try{await window.MortaLeague.deleteAnnouncement(b.dataset.deleteAnnouncement);await loadAdminDashboard();await loadAnnouncements();}
+  try{await window.MortaLeague.deleteAnnouncement(b.dataset.deleteAnnouncement);await loadAdminDashboard();await loadAnnouncements(true);}
   catch(error){setInlineStatus("admin-users-status",error?.message||"Duyuru kaldırılamadı.","error");b.disabled=false;b.textContent="Duyuruyu kaldır";}
 });
 window.addEventListener("ml:ready",()=>{loadAnnouncements();});

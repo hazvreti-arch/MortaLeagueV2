@@ -12,7 +12,7 @@
   let profileCache = [];
   let profileCacheAt = 0;
   let loadingConversations = false;
-  let loadingMessages = false;
+  let messageRequestSeq = 0;
   let pollTimer = null;
   let typingStopTimer = null;
   let peerTypingTimer = null;
@@ -195,32 +195,42 @@
     say("dm-chat-status", msg, currentCanSend ? "" : "error");
   }
   async function refreshActiveMessages(markRead = true) {
-    if (!activeConversationId || !currentUserId() || loadingMessages) return;
-    loadingMessages = true;
+    const conversationId = activeConversationId;
+    if (!conversationId || !currentUserId()) return;
+    const requestSeq = ++messageRequestSeq;
     try {
-      const rows = await window.MortaLeague.listDirectMessages(activeConversationId);
+      const rows = await window.MortaLeague.listDirectMessages(conversationId);
+      // A fast switch between conversations must never paint stale messages into the new chat.
+      if (requestSeq !== messageRequestSeq || conversationId !== activeConversationId) return;
       renderMessages(rows);
-      if (markRead) {
-        await window.MortaLeague.markDirectMessagesRead(activeConversationId);
+      if (markRead && conversationId === activeConversationId) {
+        await window.MortaLeague.markDirectMessagesRead(conversationId);
       }
     } catch (error) {
-      say("dm-chat-status", friendlyError(error,"Mesajlar yüklenemedi. Sohbet SQL kurulumunu ve bağlantını kontrol et."), "error");
-    } finally {
-      loadingMessages = false;
+      if (requestSeq === messageRequestSeq && conversationId === activeConversationId) {
+        say("dm-chat-status", friendlyError(error,"Mesajlar yüklenemedi. Sohbet SQL kurulumunu ve bağlantını kontrol et."), "error");
+      }
     }
   }
-  async function updateCurrentBlockState() {
-    if (!activePeer?.id) return;
+  async function updateCurrentBlockState(peer = activePeer) {
+    const peerId = peer?.id;
+    if (!peerId) return;
+    let blockedIds = myBlockedIds;
+    let canSend = false;
     try {
-      myBlockedIds = new Set(await window.MortaLeague.listDirectBlocks());
-      currentCanSend = await window.MortaLeague.canDirectMessage(activePeer.id);
+      blockedIds = new Set(await window.MortaLeague.listDirectBlocks());
+      canSend = await window.MortaLeague.canDirectMessage(peerId);
     } catch (_) {
-      currentCanSend = false;
+      canSend = false;
     }
+    // Do not let a slow request for the previous peer overwrite the current chat state.
+    if (activePeer?.id !== peerId) return;
+    myBlockedIds = blockedIds;
+    currentCanSend = canSend;
     const blockButton = $("dm-block-button");
     if (blockButton) {
-      blockButton.textContent = myBlockedIds.has(activePeer.id) ? "Engeli kaldır" : "Engelle";
-      blockButton.setAttribute("aria-pressed", String(myBlockedIds.has(activePeer.id)));
+      blockButton.textContent = myBlockedIds.has(peerId) ? "Engeli kaldır" : "Engelle";
+      blockButton.setAttribute("aria-pressed", String(myBlockedIds.has(peerId)));
     }
     await setReadOnlyState();
   }
@@ -233,6 +243,7 @@
     }
     activeConversationId = conversationId;
     activePeer = peer;
+    ++messageRequestSeq; // invalidate requests still returning from the previous chat
     document.querySelector(".messages-shell")?.classList.add("dm-mobile-chat-open");
     conversations = conversations.map(c => ({ ...c, id: c.id }));
     renderConversations();
@@ -247,8 +258,11 @@
     $("dm-message-list").innerHTML = '<div class="skeleton-card skeleton-message" aria-hidden="true"><span class="skeleton-line skeleton-short"></span><span class="skeleton-line"></span><span class="skeleton-line skeleton-medium"></span></div><div class="skeleton-card skeleton-message skeleton-message-right" aria-hidden="true"><span class="skeleton-line skeleton-short"></span><span class="skeleton-line"></span></div>';
     say("dm-chat-status", "Sohbet yükleniyor…");
     await updateCurrentBlockState();
+    if (activeConversationId !== conversationId) return;
     await refreshActiveMessages(true);
+    if (activeConversationId !== conversationId) return;
     await loadConversations();
+    if (activeConversationId !== conversationId) return;
     const client = currentClient();
     if (client) {
       activeChannel = client.channel(`mortaleague-dm-${conversationId}`, {
@@ -311,11 +325,12 @@
   }
   function startPolling() {
     if (pollTimer) clearInterval(pollTimer);
+    // Realtime is primary; this is only a foreground fallback for dropped connections.
     pollTimer = setInterval(async () => {
-      if (!$("page-messages")?.classList.contains("active") || !currentUserId()) return;
-      await loadConversations();
+      if (document.hidden || !$("page-messages")?.classList.contains("active") || !currentUserId()) return;
+      if (!loadingConversations) await loadConversations();
       if (activeConversationId) await refreshActiveMessages(true);
-    }, 9000);
+    }, 12000);
   }
   document.addEventListener("click", event => {
     const start = event.target.closest("[data-dm-start], [data-message-user]");
@@ -373,7 +388,7 @@
     const input = $("dm-message-input");
     const button = $("dm-send-button");
     const body = input.value.trim();
-    if (!body || !currentCanSend) return;
+    if (!body || !currentCanSend || button.disabled) return;
     button.disabled = true;
     button.textContent = "Gönderiliyor…";
     clearTimeout(typingStopTimer);broadcastTyping(false);
@@ -434,6 +449,7 @@
     if (!event.detail?.session?.user) {
       conversations = [];
       activeConversationId = null;
+      ++messageRequestSeq;
       activePeer = null;
       currentCanSend = false;
       clearTimeout(typingStopTimer);clearTimeout(peerTypingTimer);localTypingActive=false;showPeerTyping(false);setPeerStatus(false);

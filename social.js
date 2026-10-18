@@ -4,7 +4,7 @@
   const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const initials = value => String(value || "ML").trim().split(/\s+/).slice(0,2).map(v => v[0] || "").join("").toUpperCase() || "ML";
   const safeImage = value => /^https:\/\//i.test(String(value || "").trim()) ? String(value).trim() : "";
-  const state = { view:"feed", feedMode:"all", posts:[], comments:[], likes:new Set(), following:new Set(), followCounts:new Map(), profiles:new Map(), notifications:[], reports:[], loaded:false, loading:false, loadToken:0, notificationToken:0, followStateLoadedAt:0, followStatePromise:null, followStateUserId:null };
+  const state = { view:"feed", feedMode:"all", posts:[], comments:[], likes:new Set(), following:new Set(), followCounts:new Map(), profiles:new Map(), notifications:[], reports:[], loaded:false, loading:false, loadToken:0, notificationToken:0, followStateLoadedAt:0, followStatePromise:null, followStateUserId:null, composerOpen:false, publishing:false, previewObjectUrl:null };
   const client = () => window.MortaLeague?.client || null;
   const userId = () => window.MortaLeague?.session?.user?.id || null;
   const profile = () => window.MortaLeague?.profile || null;
@@ -23,6 +23,28 @@
   function renderSkeletons(host,count=3,kind="wide") { if(!host)return;host.innerHTML=Array.from({length:count},(_,i)=>`<div class="skeleton-card ${esc(kind)}" aria-hidden="true"><span class="skeleton-line skeleton-short"></span><span class="skeleton-line"></span><span class="skeleton-line skeleton-medium"></span></div>`).join(""); }
   function avatar(p, className="social-avatar") { const name=p?.display_name||p?.username||"Oyuncu", img=safeImage(p?.avatar_url); return img ? `<span class="${className}"><img src="${esc(img)}" alt="${esc(name)}" loading="lazy" referrerpolicy="no-referrer"></span>` : `<span class="${className}">${esc(initials(name))}</span>`; }
   function needLogin() { if(!userId()){ window.MortaLeague?.openAuth?.(); return false; } return true; }
+  function setComposeStatus(text,type=""){status("social-compose-status",text,type);}
+  function updateComposeCounter(){const input=$("social-post-content"),counter=$("social-post-counter");if(!input||!counter)return;const n=input.value.length;counter.textContent=`${n} / 1200`;counter.classList.toggle("near-limit",n>=1100);}
+  function clearImagePreview(){if(state.previewObjectUrl){try{URL.revokeObjectURL(state.previewObjectUrl);}catch{}state.previewObjectUrl=null;}const wrap=$("social-post-image-preview"),img=$("social-post-image-preview-img");if(img)img.removeAttribute("src");if(wrap)wrap.hidden=true;}
+  function renderImagePreview(){
+    const file=$("social-post-image-file")?.files?.[0]||null,url=$("social-post-image-url")?.value?.trim()||"",wrap=$("social-post-image-preview"),img=$("social-post-image-preview-img");
+    if(!wrap||!img)return;
+    if(state.previewObjectUrl){try{URL.revokeObjectURL(state.previewObjectUrl);}catch{}state.previewObjectUrl=null;}
+    let src="";if(file){if(!["image/jpeg","image/png","image/webp","image/gif"].includes(file.type)||file.size>5*1024*1024){wrap.hidden=true;return;}state.previewObjectUrl=URL.createObjectURL(file);src=state.previewObjectUrl;}else if(safeImage(url)){src=url;}
+    if(!src){wrap.hidden=true;img.removeAttribute("src");return;}
+    img.onerror=()=>{wrap.hidden=true;};img.onload=()=>{wrap.hidden=false;};img.src=src;wrap.hidden=false;
+  }
+  function setComposerOpen(open,{discard=false}={}){
+    const form=$("social-post-form"),launch=$("social-open-composer");
+    state.composerOpen=!!open;
+    if(form)form.hidden=!state.composerOpen||suspended();
+    if(launch){launch.setAttribute("aria-expanded",String(state.composerOpen));launch.hidden=suspended();}
+    if(discard&&form){form.reset();clearImagePreview();updateComposeCounter();setComposeStatus("");}
+    if(open&&form&&!suspended()){
+      setComposeStatus("");
+      requestAnimationFrame(()=>{form.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});$("social-post-content")?.focus({preventScroll:true});});
+    }
+  }
   function setView(view) {
     if(!["feed","notifications"].includes(view)) view="feed";
     state.view=view;
@@ -76,11 +98,12 @@
     const host=$("social-feed-list"); if(!host)return;
     let rows=state.feedMode==="following"?state.posts.filter(p=>state.following.has(p.author_id)):[...state.posts];
     if(state.feedMode==="popular") rows.sort((a,b)=>((b.likeCount||0)*2+(b.commentCount||0))-((a.likeCount||0)*2+(a.commentCount||0)));
-    if(!rows.length){host.innerHTML=`<div class="empty-state">${state.feedMode==="following"?"Takip ettiğin oyuncular henüz gönderi paylaşmamış.":"Henüz gönderi yok. İlk paylaşımı sen yap!"}</div>`;return;}
+    if(!rows.length){host.innerHTML=`<div class="empty-state">${state.feedMode==="following"?"Takip ettiğin oyuncular henüz gönderi paylaşmamış.":"Henüz gönderi yok."}<br><button class="btn btn-primary social-empty-create" type="button" data-social-open-composer>＋ İlk gönderiyi paylaş</button></div>`;return;}
     host.innerHTML=rows.map(p=>{
       const author=state.profiles.get(p.author_id)||{}; const postComments=state.comments.filter(c=>c.post_id===p.id).slice(-3);
       const img=safeImage(p.image_url); const liked=state.likes.has(p.id);
-      return `<article class="social-post-card" id="post-${esc(p.id)}"><header class="social-post-header">${profileLine(author,true)}<div class="social-post-meta"><time>${esc(when(p.created_at))}</time><button type="button" class="social-report-button" data-report-type="post" data-report-id="${esc(p.id)}" aria-label="Gönderiyi şikâyet et">⋯</button></div></header><div class="social-post-body">${esc(p.content)}</div>${img?`<a class="social-post-image-link" href="${esc(img)}" target="_blank" rel="noopener noreferrer"><img class="social-post-image" src="${esc(img)}" loading="lazy" alt="Gönderiye eklenen görsel" referrerpolicy="no-referrer"></a>`:""}<div class="social-post-actions"><button class="social-action ${liked?"liked":""}" type="button" data-social-like="${esc(p.id)}">${liked?"♥ Beğenildi":"♡ Beğen"} <span>${p.likeCount||0}</span></button><span class="social-action-static">◌ ${p.commentCount||0} yorum</span>${followButton(p.author_id,true)}</div><div class="social-comments">${postComments.map(c=>{const cp=state.profiles.get(c.author_id)||{};return `<div class="social-comment-row">${avatar(cp,"social-comment-avatar")}<div><strong>${esc(cp.display_name||cp.username||"Oyuncu")}</strong><p>${esc(c.content)}</p></div><button class="social-report-button" type="button" data-report-type="comment" data-report-id="${esc(c.id)}" title="Yorumu şikâyet et">⚑</button></div>`;}).join("")}${(p.commentCount||0)>3?`<p class="social-muted-note">ve ${p.commentCount-3} yorum daha…</p>`:""}<form class="social-comment-form" data-social-comment-form="${esc(p.id)}"><input type="text" maxlength="500" required placeholder="Yorum yaz…" aria-label="Yorum yaz"><button type="submit" class="btn btn-secondary">Yorum yap</button></form></div></article>`;
+      const ownerPost=p.author_id===userId();const postMenu=ownerPost?`<button type="button" class="social-delete-own-post" data-social-delete-post="${esc(p.id)}" aria-label="Kendi gönderini sil" title="Gönderiyi sil">⌫</button>`:`<button type="button" class="social-report-button" data-report-type="post" data-report-id="${esc(p.id)}" aria-label="Gönderiyi şikâyet et">⋯</button>`;
+      return `<article class="social-post-card" id="post-${esc(p.id)}"><header class="social-post-header">${profileLine(author,true)}<div class="social-post-meta"><time>${esc(when(p.created_at))}</time><div class="social-post-owner-actions">${postMenu}</div></div></header><div class="social-post-body">${esc(p.content)}</div>${img?`<a class="social-post-image-link" href="${esc(img)}" target="_blank" rel="noopener noreferrer"><img class="social-post-image" src="${esc(img)}" loading="lazy" alt="Gönderiye eklenen görsel" referrerpolicy="no-referrer"></a>`:""}<div class="social-post-actions"><button class="social-action ${liked?"liked":""}" type="button" data-social-like="${esc(p.id)}">${liked?"♥ Beğenildi":"♡ Beğen"} <span>${p.likeCount||0}</span></button><span class="social-action-static">◌ ${p.commentCount||0} yorum</span>${followButton(p.author_id,true)}</div><div class="social-comments">${postComments.map(c=>{const cp=state.profiles.get(c.author_id)||{};return `<div class="social-comment-row">${avatar(cp,"social-comment-avatar")}<div><strong>${esc(cp.display_name||cp.username||"Oyuncu")}</strong><p>${esc(c.content)}</p></div><button class="social-report-button" type="button" data-report-type="comment" data-report-id="${esc(c.id)}" title="Yorumu şikâyet et">⚑</button></div>`;}).join("")}${(p.commentCount||0)>3?`<p class="social-muted-note">ve ${p.commentCount-3} yorum daha…</p>`:""}<form class="social-comment-form" data-social-comment-form="${esc(p.id)}"><input type="text" maxlength="500" required placeholder="Yorum yaz…" aria-label="Yorum yaz"><button type="submit" class="btn btn-secondary">Yorum yap</button></form></div></article>`;
     }).join("");
   }
   async function loadFeed() {
@@ -113,7 +136,7 @@
       }
       await loadProfilesFor([...authorIds,...state.comments.map(c=>c.author_id)]);
       if(!isCurrent())return;
-      const compose=$("social-post-form"); if(compose){compose.hidden=suspended();const notice=$("social-suspended-note");if(notice)notice.hidden=!suspended();}
+      const compose=$("social-post-form"); if(compose){compose.hidden=suspended()||!state.composerOpen;const notice=$("social-suspended-note");if(notice)notice.hidden=!suspended();const launch=$("social-open-composer");if(launch)launch.hidden=suspended();}
       renderFeed(); status("social-feed-status",`${state.posts.length} gönderi`+(suspended()?" · Hesabın kısıtlandığı için etkileşim yapamazsın.":""),suspended()?"error":"");
     } catch(error) {if(!isCurrent())return;status("social-feed-status",friendlyError(error,"Akış yüklenemedi. 03_social_community.sql dosyasının çalıştırıldığını kontrol et."),"error");host.innerHTML='<div class="empty-state">Topluluk verileri yüklenemedi. Veritabanı güncellemesi gerekebilir.</div>';}
     finally{if(isCurrent())state.loading=false;}
@@ -121,40 +144,61 @@
   async function publishPost(event) {
     event.preventDefault();
     const form=event.currentTarget;
+    if(state.publishing)return;
     if(!needLogin()||suspended())return;
+    const ownerId=userId();
     const content=$("social-post-content").value.trim();
     const file=$("social-post-image-file")?.files?.[0]||null;
     let imageUrl=$("social-post-image-url").value.trim();
-    if(!content||content.length>1200){status("social-feed-status","Gönderi 1–1200 karakter olmalı.","error");return;}
-    if(file&&imageUrl){status("social-feed-status","Fotoğraf seçtiysen bağlantı alanını boş bırak.","error");return;}
-    if(imageUrl&&!safeImage(imageUrl)){status("social-feed-status","Görsel bağlantısı https:// ile başlamalı.","error");return;}
+    if((!content&&!file&&!imageUrl)||content.length>1200){setComposeStatus("Metin yaz veya fotoğraf ekle. Metin en fazla 1200 karakter olabilir.","error");return;}
+    if(file&&imageUrl){setComposeStatus("Dosya seçtiysen görsel bağlantısı alanını boş bırak.","error");return;}
+    if(imageUrl&&!safeImage(imageUrl)){setComposeStatus("Görsel bağlantısı https:// ile başlamalı.","error");return;}
     const allowedTypes=new Set(["image/jpeg","image/png","image/webp","image/gif"]);
-    if(file&&!allowedTypes.has(file.type)){status("social-feed-status","JPG, PNG, WEBP veya GIF biçiminde fotoğraf seç.","error");return;}
-    if(file&&file.size>5*1024*1024){status("social-feed-status","Fotoğraf en fazla 5 MB olabilir.","error");return;}
-    const button=$("social-post-submit");button.disabled=true;button.textContent=file?"Fotoğraf yükleniyor…":"Paylaşılıyor…";
+    if(file&&!allowedTypes.has(file.type)){setComposeStatus("JPG, PNG, WEBP veya GIF biçiminde fotoğraf seç.","error");return;}
+    if(file&&file.size>5*1024*1024){setComposeStatus("Fotoğraf en fazla 5 MB olabilir.","error");return;}
+    const button=$("social-post-submit");state.publishing=true;button.disabled=true;button.textContent=file?"Fotoğraf yükleniyor…":"Paylaşılıyor…";
     let uploadedPath=null;
     try{
       if(file){
         const bucket=client().storage.from("mortaleague-post-images");
         const safeName=(file.name||"image").replace(/[^a-z0-9._-]+/gi,"_").slice(-80)||"image";
-        uploadedPath=`${userId()}/${Date.now()}-${Math.random().toString(36).slice(2,10)}-${safeName}`;
+        uploadedPath=`${ownerId}/${Date.now()}-${Math.random().toString(36).slice(2,10)}-${safeName}`;
         const {error:uploadError}=await bucket.upload(uploadedPath,file,{cacheControl:"3600",upsert:false,contentType:file.type});
         if(uploadError){
-          if(/bucket not found|not found/i.test(uploadError.message||""))throw new Error("Fotoğraf alanı kurulmamış. Önce 03_social_community.sql dosyasını Supabase'te çalıştır.");
+          if(/bucket not found|not found/i.test(uploadError.message||""))throw new Error("Fotoğraf alanı kurulmamış. Supabase'te 03_social_community.sql kurulumunu kontrol et.");
           throw uploadError;
         }
         imageUrl=bucket.getPublicUrl(uploadedPath).data?.publicUrl||"";
         if(!safeImage(imageUrl))throw new Error("Fotoğraf bağlantısı oluşturulamadı.");
       }
+      if(ownerId!==userId())throw new Error("Hesap değiştiği için gönderi durduruldu. Yeniden giriş yapıp tekrar dene.");
       button.textContent="Paylaşılıyor…";
-      const {error}=await client().from("posts").insert({author_id:userId(),content,image_url:imageUrl||null});
+      const {error}=await client().from("posts").insert({author_id:ownerId,content,image_url:imageUrl||null});
       if(error)throw error;
       uploadedPath=null;
-      form.reset();await loadFeed();await updateNotificationCount();status("social-feed-status","Gönderin paylaşıldı.","success");
+      form.reset();clearImagePreview();updateComposeCounter();setComposerOpen(false);setComposeStatus("");
+      status("social-feed-status","Gönderin paylaşıldı.","success");
+      await loadFeed();await updateNotificationCount();
+      const firstPost=$("social-feed-list")?.firstElementChild;
+      if(firstPost&&firstPost.classList.contains("social-post-card"))firstPost.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
     }catch(error){
       if(uploadedPath){try{await client().storage.from("mortaleague-post-images").remove([uploadedPath]);}catch{}}
-      status("social-feed-status",friendlyError(error,"Gönderi paylaşılamadı. Bağlantını ve görsel yükleme izinlerini kontrol et."),"error");
-    }finally{button.disabled=false;button.textContent="Paylaş ↗";}
+      setComposeStatus(friendlyError(error,"Gönderi paylaşılamadı. Bağlantını ve fotoğraf yükleme izinlerini kontrol et."),"error");
+    }finally{state.publishing=false;button.disabled=false;button.textContent="Paylaş ↗";}
+  }
+  async function deleteOwnPost(postId){
+    if(!needLogin()||suspended())return;
+    const ownerId=userId(),post=state.posts.find(p=>String(p.id)===String(postId));
+    if(!post||post.author_id!==ownerId){status("social-feed-status","Yalnızca kendi gönderini silebilirsin.","error");return;}
+    if(!window.confirm("Bu gönderiyi kalıcı olarak silmek istiyor musun?"))return;
+    try{
+      const {error}=await client().from("posts").delete().eq("id",postId).eq("author_id",ownerId);
+      if(error)throw error;
+      const image=safeImage(post.image_url),marker="/storage/v1/object/public/mortaleague-post-images/",index=image.indexOf(marker);
+      if(index>=0){const path=image.slice(index+marker.length).split(/[?#]/)[0];if(path.startsWith(`${ownerId}/`)){try{await client().storage.from("mortaleague-post-images").remove([decodeURIComponent(path)]);}catch{}}}
+      status("social-feed-status","Gönderi silindi.","success");
+      await loadFeed();await updateNotificationCount();
+    }catch(error){status("social-feed-status",friendlyError(error,"Gönderi silinemedi. Kendi gönderin olduğundan ve bağlantının çalıştığından emin ol."),"error");}
   }
   async function toggleLike(postId) {
     if(!needLogin()||suspended())return; const liked=state.likes.has(postId);
@@ -267,6 +311,10 @@
     }catch(error){status("social-audit-status",friendlyError(error,"İşlem geçmişi yüklenemedi."),"error");host.innerHTML='<div class="empty-state">İşlem geçmişi için 03_social_community.sql migration dosyasını çalıştır.</div>';}
   }
   document.addEventListener("click",async event=>{
+    const composeOpen=event.target.closest("[data-social-open-composer]");if(composeOpen){if(!needLogin())return;if(suspended()){status("social-feed-status","Hesabın geçici olarak kısıtlandığı için gönderi paylaşamazsın.","error");return;}setComposerOpen(true);return;}
+    if(event.target.closest("#social-compose-close")){setComposerOpen(false);return;}
+    if(event.target.closest("#social-post-image-remove")){const file=$("social-post-image-file"),url=$("social-post-image-url");if(file)file.value="";if(url)url.value="";clearImagePreview();return;}
+    const deletePost=event.target.closest("[data-social-delete-post]");if(deletePost){deleteOwnPost(deletePost.dataset.socialDeletePost);return;}
     const tab=event.target.closest("[data-community-tab]");if(tab){setView(tab.dataset.communityTab);return;}
     const filter=event.target.closest("[data-social-feed-filter]");if(filter){state.feedMode=filter.dataset.socialFeedFilter;document.querySelectorAll("[data-social-feed-filter]").forEach(b=>b.classList.toggle("active",b===filter));renderFeed();return;}
     const like=event.target.closest("[data-social-like]");if(like){toggleLike(like.dataset.socialLike);return;}
@@ -279,6 +327,11 @@
     const action=event.target.closest("[data-report-action]");if(action){const type=action.dataset.reportTargetType;const confirmed=window.confirm(type==="profile"?"Bu hesabı askıya almak istediğine emin misin?":"Bu içeriği kaldırıp şikâyeti kapatmak istediğine emin misin?");if(confirmed)resolveReport(action.dataset.reportAction,"remove",type,action.dataset.reportTargetId);return;}
   });
   $("social-post-form")?.addEventListener("submit",publishPost);
+  $("social-post-content")?.addEventListener("input",updateComposeCounter);
+  $("social-post-image-file")?.addEventListener("change",()=>{if($("social-post-image-url"))$("social-post-image-url").value="";renderImagePreview();});
+  $("social-post-image-url")?.addEventListener("input",()=>{if($("social-post-image-file")?.files?.length)$("social-post-image-file").value="";renderImagePreview();});
+  $("social-post-content")?.addEventListener("keydown",event=>{if((event.ctrlKey||event.metaKey)&&event.key==="Enter"){event.preventDefault();$("social-post-form")?.requestSubmit();}});
+  updateComposeCounter();
   $("social-feed-refresh")?.addEventListener("click",loadFeed);
   $("social-notifications-refresh")?.addEventListener("click",loadNotifications);
   $("social-reports-refresh")?.addEventListener("click",loadReports);
@@ -296,6 +349,7 @@
       if($("page-community")?.classList.contains("active"))setView(state.view);
       if($("page-admin")?.classList.contains("active")&&isAdmin()){loadReports();loadAuditLog();}
     }else{
+      setComposerOpen(false,{discard:true});
       syncUnreadBadge(0);state.posts=[];state.comments=[];state.likes.clear();state.notifications=[];state.profiles.clear();state.following.clear();state.followCounts.clear();state.followStateLoadedAt=0;state.followStateUserId=null;state.followStatePromise=null;
       renderFeed();
     }
@@ -305,6 +359,7 @@
     refresh:()=>{loadFeed();loadNotifications();},
     primeFollowing:async()=>{if(userId())await loadFollowState();return true;},
     isFollowingNow:id=>state.following.has(id),
+    openComposer:()=>setComposerOpen(true),
     getFollowCount:id=>Number(state.followCounts.get(id)||0),
     toggleFollowById:toggleFollow
   };

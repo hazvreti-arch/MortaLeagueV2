@@ -175,6 +175,7 @@ let cachedPlayers=[];
 let cachedPlayersAt=0;
 let playersLoadPromise=null;
 let cachedAdminPlayers=[];
+let adminDashboardRequestSeq=0;
 let cachedAnnouncements=[];
 let cachedAnnouncementsAt=0;
 let announcementsLoadPromise=null;
@@ -246,9 +247,9 @@ async function loadPlayers(force=false){
     setInlineStatus("players-status","Oyuncular yükleniyor…");
     if(!cachedPlayers.length)renderSkeletonCards(grid,6,"skeleton-player");
     try{
-      if(window.MortaLeague?.session?.user){try{await window.MortaSocial?.primeFollowing?.();}catch(error){console.warn("Takip verileri şu an yüklenemedi:",error?.message||error);}}
       const rows=await window.MortaLeague.listProfiles();
       cachedPlayers=Array.isArray(rows)?rows:[];cachedPlayersAt=Date.now();
+      if(window.MortaLeague?.session?.user){try{await window.MortaSocial?.primeFollowing?.();}catch(error){console.warn("Takip durumu şu an yüklenemedi:",error?.message||error);}}
       renderPlayers();
     }catch(error){if(!cachedPlayers.length)grid.innerHTML="";setInlineStatus("players-status",friendlyAppError(error,"Oyuncu profilleri yüklenemedi. Profil SQL kurulumunu kontrol et."),"error");}
   })();
@@ -259,7 +260,7 @@ function renderPlayers(){
   const q=(document.getElementById("players-search")?.value||"").trim().toLocaleLowerCase("tr-TR");
   const rows=cachedPlayers.filter(p=>`${p.username||""} ${p.display_name||""} ${p.bio||""}`.toLocaleLowerCase("tr-TR").includes(q));
   const viewerId=window.MortaLeague?.session?.user?.id;
-  grid.innerHTML=rows.map(p=>{const own=viewerId&&p.id===viewerId,canFollow=viewerId&&p.id&&!own;const followerCount=p.id?Number(window.MortaSocial?.getFollowCount?.(p.id)||0):null;const isFollowing=!!window.MortaSocial?.isFollowingNow?.(p.id);return `<article class="player-card"><span class="player-card-avatar">${p.avatar_url&&/^https:\/\//i.test(p.avatar_url)?`<img src="${esc(p.avatar_url)}" alt="${esc(p.display_name||p.username)} profil fotoğrafı" loading="lazy" referrerpolicy="no-referrer">`:esc(initials(p.display_name||p.username))}</span><div class="player-card-main"><h3>${esc(p.display_name||p.username)}</h3><p class="player-handle">@${esc(p.username)}</p><p class="player-bio">${esc(p.bio||"Biyografi eklenmemiş.")}</p>${followerCount!==null?`<p class="player-follow-meta">${followerCount} takipçi</p>`:""}<div class="player-card-actions"><button class="player-open" type="button" data-player-profile="${esc(p.username)}">Profili görüntüle</button>${canFollow?`<button class="btn ${isFollowing?"btn-secondary":"btn-outline"} social-follow-button" type="button" data-social-follow="${esc(p.id)}">${isFollowing?"Takip ediliyor":"Takip et"}</button><button class="player-message-button" type="button" data-message-user="${esc(p.id)}">Mesaj</button>`:""}</div></div></article>`;}).join("");
+  grid.innerHTML=rows.map(p=>{const own=viewerId&&p.id===viewerId,canFollow=viewerId&&p.id&&!own;const isFollowing=!!window.MortaSocial?.isFollowingNow?.(p.id);return `<article class="player-card"><span class="player-card-avatar">${p.avatar_url&&/^https:\/\//i.test(p.avatar_url)?`<img src="${esc(p.avatar_url)}" alt="${esc(p.display_name||p.username)} profil fotoğrafı" loading="lazy" referrerpolicy="no-referrer">`:esc(initials(p.display_name||p.username))}</span><div class="player-card-main"><h3>${esc(p.display_name||p.username)}</h3><p class="player-handle">@${esc(p.username)}</p><p class="player-bio">${esc(p.bio||"Biyografi eklenmemiş.")}</p><div class="player-card-actions"><button class="player-open" type="button" data-player-profile="${esc(p.username)}">Profili görüntüle</button>${canFollow?`<button class="btn ${isFollowing?"btn-secondary":"btn-outline"} social-follow-button" type="button" data-social-follow="${esc(p.id)}">${isFollowing?"Takip ediliyor":"Takip et"}</button><button class="player-message-button" type="button" data-message-user="${esc(p.id)}">Mesaj</button>`:""}</div></div></article>`;}).join("");
   setInlineStatus("players-status",rows.length?`${rows.length} oyuncu profili gösteriliyor.`:(q?"Aramana uygun oyuncu bulunamadı.":"Henüz herkese açık oyuncu profili yok. İlk profil seninki olabilir."));
 }
 document.getElementById("players-search")?.addEventListener("input",renderPlayers);
@@ -344,9 +345,14 @@ function renderAnnouncements(host,rows,admin=false){
 
 async function loadAdminDashboard(){
   const content=document.getElementById("admin-content"),note=document.getElementById("admin-access-note");
-  if(!window.MortaLeague?.isAdmin()){
+  const requestId=++adminDashboardRequestSeq;
+  const requestUserId=window.MortaLeague?.session?.user?.id||null;
+  const isCurrentAdmin=()=>requestId===adminDashboardRequestSeq&&!!requestUserId&&window.MortaLeague?.session?.user?.id===requestUserId&&!!window.MortaLeague?.isAdmin?.();
+  if(!isCurrentAdmin()){
     if(content)content.hidden=true;
+    cachedAdminPlayers=[];
     if(note){note.textContent="Yönetici erişimi yok. Yönetici hesabı veritabanında yetkilendirilmelidir.";note.className="admin-access-note error";}
+    renderAdminPlayers();
     return;
   }
   if(note){note.textContent="Yönetici yetkisi doğrulandı. Değişiklikler veritabanındaki erişim kurallarıyla korunur.";note.className="admin-access-note success";}
@@ -355,21 +361,24 @@ async function loadAdminDashboard(){
   renderSkeletonCards(document.getElementById("admin-users-list"),4,"skeleton-player");
   try{
     const [users,announcements]=await Promise.all([window.MortaLeague.listAdminProfiles(),window.MortaLeague.listAnnouncements()]);
+    if(!isCurrent())return;
     cachedAdminPlayers=users||[];cachedAnnouncements=announcements||[];cachedAnnouncementsAt=Date.now();
-    document.getElementById("admin-player-count").textContent=String(cachedAdminPlayers.length);
-    document.getElementById("admin-announcement-count").textContent=String(cachedAnnouncements.length);
+    const playerCount=document.getElementById("admin-player-count"), announcementCount=document.getElementById("admin-announcement-count");
+    if(playerCount)playerCount.textContent=String(cachedAdminPlayers.length);
+    if(announcementCount)announcementCount.textContent=String(cachedAnnouncements.length);
     const cl=window.MortaLeague.client;
     const [postCount,reportCount]=await Promise.allSettled([
       cl.from("posts").select("id",{count:"exact",head:true}),
       cl.from("content_reports").select("id",{count:"exact",head:true}).in("status",["open","reviewing"])
     ]);
+    if(!isCurrent())return;
     const postNode=document.getElementById("admin-post-count"),reportNode=document.getElementById("admin-report-count");
     if(postNode)postNode.textContent=String(postCount.status==="fulfilled"&&!postCount.value.error?(postCount.value.count??0):"—");
     if(reportNode)reportNode.textContent=String(reportCount.status==="fulfilled"&&!reportCount.value.error?(reportCount.value.count??0):"—");
     renderAdminPlayers();
     renderAnnouncements(document.getElementById("admin-announcements"),cachedAnnouncements,true);
     setInlineStatus("admin-users-status",`${cachedAdminPlayers.length} üye listelendi.`);
-  }catch(error){setInlineStatus("admin-users-status",friendlyAppError(error,"Yönetim verileri alınamadı. Yönetici rolünü ve SQL kurulumunu kontrol et."),"error");}
+  }catch(error){if(isCurrent())setInlineStatus("admin-users-status",friendlyAppError(error,"Yönetim verileri alınamadı. Yönetici rolünü ve SQL kurulumunu kontrol et."),"error");}
 }
 function renderAdminPlayers(){
   const host=document.getElementById("admin-users-list");if(!host)return;
@@ -473,6 +482,8 @@ window.addEventListener("ml:ready",()=>{loadAnnouncements();});
 window.addEventListener("ml:auth-state",()=>{
   const isAdmin=!!window.MortaLeague?.isAdmin();
   const adminOpen=document.getElementById("profile-admin-open");if(adminOpen)adminOpen.hidden=!isAdmin;
+  // Invalidate in-flight admin reads immediately on sign-out/role loss.
+  if(!isAdmin){adminDashboardRequestSeq++;cachedAdminPlayers=[];const content=document.getElementById("admin-content");if(content)content.hidden=true;renderAdminPlayers();}
   if(document.getElementById("page-admin")?.classList.contains("active"))loadAdminDashboard();
   if(document.getElementById("page-players")?.classList.contains("active"))loadPlayers();
 });
@@ -487,7 +498,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePublicProfile(
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) { canvas.remove(); return; }
 
-  let width = 0, height = 0, dpr = 1, particles = [], raf = 0;
+  let width = 0, height = 0, dpr = 1, particles = [], raf = 0, running = false;
   const pointer = { x: -1000, y: -1000, active: false };
   const isSmall = () => window.innerWidth < 700;
   const rand = (min, max) => min + Math.random() * (max - min);
@@ -512,6 +523,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePublicProfile(
 
   let lastFrameAt = 0;
   function draw(now = 0) {
+    if (!running || document.hidden) return;
     // Mobile devices render this decorative canvas at ~30fps to reduce battery and heat.
     if (isSmall() && now - lastFrameAt < 32) { raf = window.requestAnimationFrame(draw); return; }
     lastFrameAt = now;
@@ -559,10 +571,21 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePublicProfile(
     const art = document.querySelector('.hero-art');
     if (art) art.style.transform = '';
   });
+  function stopAnimation() {
+    running = false;
+    if (raf) window.cancelAnimationFrame(raf);
+    raf = 0;
+  }
+  function startAnimation() {
+    if (running || document.hidden) return;
+    running = true;
+    lastFrameAt = 0;
+    raf = window.requestAnimationFrame(draw);
+  }
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { window.cancelAnimationFrame(raf); }
-    else { window.cancelAnimationFrame(raf); raf = window.requestAnimationFrame(draw); }
+    if (document.hidden) stopAnimation();
+    else startAnimation();
   });
   resize();
-  raf = window.requestAnimationFrame(draw);
+  startAnimation();
 })();

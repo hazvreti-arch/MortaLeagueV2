@@ -1,17 +1,17 @@
 /* MortaLeague PWA shell cache. Supabase/API responses are deliberately never cached. */
-const CACHE_NAME = "mortaleague-quality-20261018-10";
+const CACHE_NAME = "mortaleague-quality-20261018-12";
 const SHELL_ASSETS = [
   "/", "/index.html", "/offline.html",
-  "/style.css?v=ml-quality-20261018-10",
-  "/config.js?v=ml-quality-20261018-10",
-  "/app.js?v=ml-quality-20261018-10",
-  "/auth.js?v=ml-quality-20261018-10",
-  "/messages.js?v=ml-quality-20261018-10",
-  "/social.js?v=ml-quality-20261018-10",
-  "/visual-polish.js?v=ml-quality-20261018-10",
-  "/pwa.js?v=ml-quality-20261018-10",
-  "/manifest.webmanifest?v=ml-quality-20261018-10",
-  "/favicon.svg?v=ml-quality-20261018-10",
+  "/style.css?v=ml-quality-20261018-12",
+  "/config.js?v=ml-quality-20261018-12",
+  "/app.js?v=ml-quality-20261018-12",
+  "/auth.js?v=ml-quality-20261018-12",
+  "/messages.js?v=ml-quality-20261018-12",
+  "/social.js?v=ml-quality-20261018-12",
+  "/visual-polish.js?v=ml-quality-20261018-12",
+  "/pwa.js?v=ml-quality-20261018-12",
+  "/manifest.webmanifest?v=ml-quality-20261018-12",
+  "/favicon.svg?v=ml-quality-20261018-12",
   "/icon-192.png", "/icon-512.png"
 ];
 self.addEventListener("install", event => {
@@ -28,7 +28,7 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter(key => key.startsWith("mortaleague-shell-") && key !== CACHE_NAME).map(key => caches.delete(key)));
+    await Promise.all(keys.filter(key => /^(?:mortaleague-shell-|mortaleague-quality-)/.test(key) && key !== CACHE_NAME).map(key => caches.delete(key)));
     await self.clients.claim();
   })());
 });

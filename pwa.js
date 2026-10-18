@@ -115,7 +115,7 @@
     });
 
     if ("serviceWorker" in navigator && location.protocol === "https:") {
-      navigator.serviceWorker.register("/service-worker.js?v=ml-quality-20261018-10", { scope: "/" })
+      navigator.serviceWorker.register("/service-worker.js?v=ml-quality-20261018-12", { scope: "/" })
         .catch(error => console.warn("MortaLeague çevrimdışı desteği kurulamadı:", error));
     }
 

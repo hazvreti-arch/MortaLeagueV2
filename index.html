@@ -7,18 +7,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MortaLeague">
-<link rel="manifest" href="manifest.webmanifest?v=ml-social-post-20261018-13">
-<link rel="apple-touch-icon" href="icon-192.png?v=ml-social-post-20261018-13">
+<link rel="manifest" href="manifest.webmanifest?v=ml-valuecalc-20261018-14">
+<link rel="apple-touch-icon" href="icon-192.png?v=ml-valuecalc-20261018-14">
 <meta name="description" content="MortaLeague futbol topluluğu: oyuncu profilleri, sistem kuralları, özel mesajlar ve futbol içerikleri.">
 <meta property="og:title" content="MortaLeague — Futbol Evreni">
 <meta property="og:description" content="Oyuncu profilleri, futbol kuralları ve MortaLeague topluluğu tek yerde.">
 <meta property="og:type" content="website">
-<link rel="icon" type="image/svg+xml" href="favicon.svg?v=ml-social-post-20261018-13">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=ml-valuecalc-20261018-14">
 <title>MortaLeague — Futbol Evreni</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=ml-social-post-20261018-13">
+<link rel="stylesheet" href="style.css?v=ml-valuecalc-20261018-14">
 </head>
 <body>
 <div class="ambient" aria-hidden="true"></div>
@@ -31,7 +31,7 @@
    <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 21 12l-9 9.2L3 12 12 2.8Z" fill="#D9A5FF" stroke="#F0DAFF" stroke-width="1.1"/><path d="m12 6.5 5.4 5.5-5.4 5.5L6.6 12 12 6.5Z" fill="#9A4BCA"/></svg></span>
    <span><span class="brand-name">MORTALEAGUE</span></span>
   </a>
-  <nav class="nav" aria-label="Ana gezinme"><button class="active" data-page="home">Ana Sayfa</button><button data-page="systems">Sistemler</button><button data-page="players">Oyuncular</button><button data-page="community">Topluluk <span class="nav-unread" id="social-nav-unread" hidden>0</span></button><button data-page="messages">Mesajlar <span class="nav-unread" id="dm-nav-unread" hidden>0</span></button><button class="mobile-auth-nav" type="button" data-auth-open>Giriş Yap</button></nav>
+  <nav class="nav" aria-label="Ana gezinme"><button class="active" data-page="home">Ana Sayfa</button><button data-page="systems">Sistemler</button><button data-page="calculator">Hesaplayıcı</button><button data-page="players">Oyuncular</button><button data-page="community">Topluluk <span class="nav-unread" id="social-nav-unread" hidden>0</span></button><button data-page="messages">Mesajlar <span class="nav-unread" id="dm-nav-unread" hidden>0</span></button><button class="mobile-auth-nav" type="button" data-auth-open>Giriş Yap</button></nav>
   <div class="header-cta"><button class="btn btn-primary account-btn" id="account-trigger" type="button" data-auth-open><span class="account-glyph" aria-hidden="true">↗</span><span id="account-trigger-label">Giriş Yap</span></button></div>
  </div>
 </header>
@@ -58,6 +58,55 @@
 </section>
 <section class="page" id="page-systems">
  <div class="page-head"><h1>SİSTEM <span>REHBERİ.</span></h1><p>16 sistemi ara, aç ve kuralları incele.</p></div><div class="systems-toolbar"><label class="search-field"><span aria-hidden="true">⌕</span><input id="system-search" type="search" placeholder="Sistem ara… (maaş, stadyum, katkı)" autocomplete="off"></label><span class="results-count" id="systems-results">16 sistem</span></div><div class="systems-grid" id="systems-grid"></div>
+</section>
+<section class="page" id="page-calculator">
+ <div class="page-head calculator-page-head">
+  <span class="calculator-eyebrow"><span class="calculator-live-dot"></span> MORTALEAGUE ARAÇLARI</span>
+  <h1>OYUNCU DEĞERİ<span> HESAPLA.</span></h1>
+  <p>Turnuvanı seç, gol · asist · gym ve kupa sayılarını yaz. Seçtiğin sistemin katkı değerleriyle toplam otomatik hesaplansın.</p>
+ </div>
+ <div class="value-calculator">
+  <section class="calculator-form-panel" aria-labelledby="calculator-form-title">
+   <div class="calculator-panel-heading"><span class="calculator-panel-icon" aria-hidden="true">✳</span><div><h2 id="calculator-form-title">İSTATİSTİKLERİN</h2><p>Değerlerini kutulara kendin yaz.</p></div></div>
+   <label class="calculator-field calculator-tournament-field" for="valuecalc-tournament"><span>Turnuva seçimi</span>
+    <select id="valuecalc-tournament">
+     <option value="MIA">MortaLeague A</option>
+     <option value="ZMK">ZMK</option>
+     <option value="FA">FA Cup</option>
+     <option value="GOAT">GOAT Cup</option>
+     <option value="SUPER">ML Süper Kupa</option>
+     <option value="UCL">UEFA Şampiyonlar Ligi</option>
+     <option value="UEL">UEFA Avrupa Ligi</option>
+     <option value="UECL">UEFA Konferans Ligi</option>
+     <option value="USC">UEFA Süper Kupa</option>
+     <option value="WC">Dünya Kupası</option>
+     <option value="EURO">Avrupa Şampiyonası</option>
+     <option value="NL">UEFA Uluslar Ligi</option>
+    </select>
+   </label>
+   <div class="calculator-input-grid">
+    <label class="calculator-field" for="valuecalc-goals"><span>Gol sayısı</span><span class="calculator-number-wrap"><input id="valuecalc-goals" type="number" inputmode="numeric" min="0" step="1" value="0"><span class="calculator-input-suffix">GOL</span></span><small id="valuecalc-goal-rate">Gol başına 40.000 €</small></label>
+    <label class="calculator-field" for="valuecalc-assists"><span>Asist sayısı</span><span class="calculator-number-wrap"><input id="valuecalc-assists" type="number" inputmode="numeric" min="0" step="1" value="0"><span class="calculator-input-suffix">AST</span></span><small id="valuecalc-assist-rate">Asist başına 30.000 €</small></label>
+    <label class="calculator-field" for="valuecalc-gym"><span>Gym sayısı</span><span class="calculator-number-wrap"><input id="valuecalc-gym" type="number" inputmode="numeric" min="0" step="1" value="0"><span class="calculator-input-suffix">GYM</span></span><small id="valuecalc-gym-rate">Gym başına 40.000 €</small></label>
+    <label class="calculator-field" for="valuecalc-cups"><span>Kupa sayısı</span><span class="calculator-number-wrap"><input id="valuecalc-cups" type="number" inputmode="numeric" min="0" step="1" value="0"><span class="calculator-input-suffix">KUPA</span></span><small id="valuecalc-cup-rate">Kupa başına 2.000.000 €</small></label>
+   </div>
+   <div class="calculator-form-note"><span aria-hidden="true">ⓘ</span><p>Yalnızca tam sayı ve sıfırdan büyük veya eşit değerler kullanılır. Bu araç katkı toplamını hesaplar; oyuncunun mevcut piyasa değeriyle birleştirmez.</p></div>
+   <div class="calculator-actions"><button class="btn btn-secondary" type="button" id="valuecalc-reset">Sıfırla ↺</button><button class="btn btn-primary" type="button" id="valuecalc-copy">Sonucu kopyala ↗</button></div>
+   <p class="calculator-feedback" id="valuecalc-feedback" role="status" aria-live="polite"></p>
+  </section>
+  <aside class="calculator-result-panel" aria-labelledby="calculator-result-title">
+   <div class="calculator-result-top"><span class="calculator-result-kicker" id="calculator-result-title">HESAPLANAN KATKI DEĞERİ</span><span class="calculator-result-symbol" aria-hidden="true">M</span></div>
+   <div class="calculator-total" id="valuecalc-total" aria-live="polite">0 €</div>
+   <div class="calculator-result-tournament" id="valuecalc-result-tournament">MortaLeague A</div>
+   <div class="calculator-result-rule"></div>
+   <div class="calculator-breakdown-title"><span>HESAPLAMA DÖKÜMÜ</span><span>TOPLAM</span></div>
+   <div class="calculator-breakdown-row"><span><i class="calculator-breakdown-dot goal-dot"></i>Gollerden</span><strong id="valuecalc-goal-total">0 €</strong></div>
+   <div class="calculator-breakdown-row"><span><i class="calculator-breakdown-dot assist-dot"></i>Asistlerden</span><strong id="valuecalc-assist-total">0 €</strong></div>
+   <div class="calculator-breakdown-row"><span><i class="calculator-breakdown-dot gym-dot"></i>Gym'den</span><strong id="valuecalc-gym-total">0 €</strong></div>
+   <div class="calculator-breakdown-row"><span><i class="calculator-breakdown-dot cup-dot"></i>Kupalardan</span><strong id="valuecalc-cup-total">0 €</strong></div>
+   <div class="calculator-result-foot"><span class="calculator-result-check" aria-hidden="true">✓</span><span>Seçtiğin turnuvanın değerleri uygulanıyor</span></div>
+  </aside>
+ </div>
 </section>
 <section class="page" id="page-players">
  <div class="page-head"><h1>OYUNCU <span>PROFİLLERİ.</span></h1></div>
@@ -228,12 +277,13 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=ml-social-post-20261018-13"></script>
-<script src="app.js?v=ml-social-post-20261018-13"></script>
-<script src="auth.js?v=ml-social-post-20261018-13"></script>
-<script src="messages.js?v=ml-social-post-20261018-13"></script>
-<script src="social.js?v=ml-social-post-20261018-13"></script>
-<script src="visual-polish.js?v=ml-social-post-20261018-13"></script>
-<script src="pwa.js?v=ml-social-post-20261018-13" defer></script>
+<script src="config.js?v=ml-valuecalc-20261018-14"></script>
+<script src="app.js?v=ml-valuecalc-20261018-14"></script>
+<script src="calculator.js?v=ml-valuecalc-20261018-14" defer></script>
+<script src="auth.js?v=ml-valuecalc-20261018-14"></script>
+<script src="messages.js?v=ml-valuecalc-20261018-14"></script>
+<script src="social.js?v=ml-valuecalc-20261018-14"></script>
+<script src="visual-polish.js?v=ml-valuecalc-20261018-14"></script>
+<script src="pwa.js?v=ml-valuecalc-20261018-14" defer></script>
 </body>
 </html>

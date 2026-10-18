@@ -1482,3 +1482,55 @@ input, select, textarea { min-width: 0; }
  .social-compose-limit{display:block;text-align:right;width:100%;font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.social-compose{animation:none!important}}
+
+
+/* MORTALEAGUE PLAYER VALUE CALCULATOR — dark violet glass panels */
+.calculator-page-head{max-width:820px;margin-bottom:29px}
+.calculator-eyebrow{display:inline-flex;align-items:center;gap:8px;color:#c9a2e0;font-size:9px;font-weight:800;letter-spacing:2px}
+.calculator-live-dot{width:6px;height:6px;border-radius:50%;background:#b95cff;box-shadow:0 0 13px #b95cffaa}
+.calculator-page-head h1{margin-top:15px}
+.calculator-page-head>p{max-width:680px;margin:13px 0 0;color:#a99ab7;font-size:12px;line-height:1.85}
+.value-calculator{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);align-items:stretch;gap:16px;margin-bottom:35px}
+.calculator-form-panel,.calculator-result-panel{position:relative;min-width:0;overflow:hidden;border:1px solid #43254f;border-radius:18px;background:linear-gradient(145deg,#170d21f5,#0d0713f7);box-shadow:0 18px 50px #00000024}
+.calculator-form-panel{padding:23px}
+.calculator-form-panel:before,.calculator-result-panel:before{content:"";position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,#c47af14a,transparent);pointer-events:none}
+.calculator-panel-heading{display:flex;align-items:center;gap:12px;padding-bottom:21px;margin-bottom:19px;border-bottom:1px solid #30203a}
+.calculator-panel-icon{display:grid;place-items:center;width:42px;height:42px;flex:0 0 auto;border:1px solid #5a3470;border-radius:13px;background:linear-gradient(145deg,#2b1538,#170d22);color:#e6bfff;font-size:20px;box-shadow:inset 0 1px #ffffff10,0 0 20px #b74bf314}
+.calculator-panel-heading h2{margin:0;color:#f5e9fc;font:700 13px 'Orbitron',sans-serif;letter-spacing:.6px}
+.calculator-panel-heading p{margin:6px 0 0;color:#9c8aaa;font-size:10px}
+.calculator-field{display:grid;align-content:start;gap:8px;min-width:0;color:#ddcde8;font-size:11px;font-weight:700}
+.calculator-tournament-field{margin-bottom:19px}
+.calculator-field select,.calculator-field input{width:100%;min-width:0;border:1px solid #422a50;border-radius:11px;background:#0b0611;color:#f4e8fc;font:600 13px 'Space Grotesk',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s,background .2s}
+.calculator-field select{height:48px;padding:0 13px;appearance:auto;cursor:pointer}
+.calculator-field input{height:50px;padding:0 12px;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;appearance:textfield;-moz-appearance:textfield}
+.calculator-field input::-webkit-outer-spin-button,.calculator-field input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.calculator-field select:focus,.calculator-field input:focus{border-color:#a85ad0;box-shadow:0 0 0 3px #a23ce71a;background:#100817}
+.calculator-field small{min-height:13px;color:#8e7a9d;font-size:9px;font-weight:500;line-height:1.4}
+.calculator-number-wrap{position:relative;display:block;min-width:0}
+.calculator-number-wrap input{padding-right:53px}
+.calculator-input-suffix{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#8c6da2;font:700 8px 'Orbitron',sans-serif;letter-spacing:.6px;pointer-events:none}
+.calculator-input-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 13px}
+.calculator-form-note{display:flex;align-items:flex-start;gap:9px;margin-top:21px;padding:12px;border:1px solid #34213f;border-radius:11px;background:#0c0712a8;color:#9d8ba9}
+.calculator-form-note>span{color:#b986d4;font-size:15px;line-height:1.2}
+.calculator-form-note p{margin:0;font-size:9px;font-weight:400;line-height:1.75}
+.calculator-actions{display:flex;gap:9px;margin-top:20px}
+.calculator-actions .btn{min-width:0;flex:1}
+.calculator-feedback{min-height:13px;margin:10px 0 0;color:#9ce6cb;font-size:10px;line-height:1.5}
+.calculator-result-panel{display:flex;flex-direction:column;justify-content:flex-start;padding:24px;background:radial-gradient(ellipse at 100% 0%,#61247e3e,transparent 46%),linear-gradient(145deg,#1a0e25fa,#0c0712fa)}
+.calculator-result-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.calculator-result-kicker{color:#bca7c9;font-size:9px;font-weight:800;letter-spacing:1.3px}
+.calculator-result-symbol{display:grid;place-items:center;width:34px;height:34px;border:1px solid #6b4480;border-radius:10px;background:linear-gradient(145deg,#321941,#160d20);color:#d9a2f8;font:800 15px 'Orbitron',sans-serif;box-shadow:0 0 20px #af3fe71a}
+.calculator-total{margin-top:19px;color:#fff;font:800 clamp(29px,3.2vw,43px)/1.15 'Space Grotesk',sans-serif;letter-spacing:-1.4px;overflow-wrap:anywhere;text-shadow:0 0 28px #b94bff18;font-variant-numeric:tabular-nums}
+.calculator-result-tournament{margin-top:8px;color:#c18cde;font-size:10px;font-weight:700;letter-spacing:.4px}
+.calculator-result-rule{height:1px;margin:23px 0 19px;background:linear-gradient(90deg,#8548a4a6,#45264e45,transparent)}
+.calculator-breakdown-title{display:flex;justify-content:space-between;gap:10px;margin-bottom:7px;color:#8d7b9a;font-size:8px;font-weight:800;letter-spacing:1.1px}
+.calculator-breakdown-row{display:flex;align-items:center;justify-content:space-between;gap:13px;min-height:43px;border-bottom:1px solid #ffffff08;color:#b9a7c6;font-size:11px}
+.calculator-breakdown-row>span{display:inline-flex;align-items:center;gap:9px}
+.calculator-breakdown-row strong{color:#f5e9fb;font:700 12px 'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;text-align:right;overflow-wrap:anywhere}
+.calculator-breakdown-dot{display:block;width:7px;height:7px;border-radius:50%;box-shadow:0 0 10px currentColor}
+.goal-dot{background:#d7a0ff;color:#d7a0ff}.assist-dot{background:#b66be7;color:#b66be7}.gym-dot{background:#8d7cff;color:#8d7cff}.cup-dot{background:#f0bc78;color:#f0bc78}
+.calculator-result-foot{display:flex;align-items:center;gap:9px;margin-top:auto;padding-top:24px;color:#9e8bab;font-size:9px;line-height:1.5}
+.calculator-result-check{display:grid;place-items:center;width:21px;height:21px;flex:0 0 auto;border:1px solid #4b715f;border-radius:50%;background:#14261f;color:#9ae4c3;font-size:11px}
+@media(max-width:850px){.value-calculator{grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:12px}.calculator-form-panel,.calculator-result-panel{padding:18px}.calculator-total{font-size:clamp(26px,4vw,37px)}}
+@media(max-width:700px){.calculator-page-head{margin-bottom:22px}.calculator-page-head h1{font-size:clamp(31px,8.5vw,43px);letter-spacing:-1.7px}.calculator-page-head>p{font-size:11px;line-height:1.8}.value-calculator{grid-template-columns:minmax(0,1fr);gap:12px}.calculator-form-panel,.calculator-result-panel{padding:17px;border-radius:15px}.calculator-panel-heading{padding-bottom:17px;margin-bottom:17px}.calculator-panel-icon{width:38px;height:38px}.calculator-input-grid{gap:15px 10px}.calculator-field{font-size:10px}.calculator-field input{height:49px;font-size:19px}.calculator-field select{height:47px;font-size:12px}.calculator-total{font-size:clamp(30px,9vw,42px)}.calculator-result-panel{min-height:360px}.calculator-result-foot{margin-top:25px}}
+@media(max-width:370px){.calculator-input-grid{grid-template-columns:minmax(0,1fr)}.calculator-actions{flex-direction:column}.calculator-actions .btn{width:100%}.calculator-form-panel,.calculator-result-panel{padding:14px}}

@@ -1187,3 +1187,155 @@ img, svg, video, canvas { max-width: 100%; }
 @media(prefers-reduced-motion:reduce){
  .dm-user-result,.dm-composer textarea{transition:none}
 }
+
+/* Mobile fine-tuning v3: slightly tighter typography, safer widths, same tap comfort. */
+@media (max-width: 700px) {
+  .site-header { height: auto; min-height: 0; }
+  .header-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    margin: 0 14px;
+    padding: 10px 0 7px;
+  }
+  .brand { min-width: 0; }
+  .nav {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    gap: 4px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 1px 0 4px;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav button {
+    flex: 0 0 auto;
+    min-height: 38px;
+    padding: 8px 10px;
+    font-size: 10.5px;
+    letter-spacing: 0;
+  }
+  .nav-unread { min-width: 15px; height: 15px; font-size: 8px; }
+
+  main { width: auto; min-width: 0; margin-inline: 14px; }
+  .page { width: 100%; min-width: 0; padding: 32px 0 58px; }
+  .page-head { margin-bottom: 18px; }
+  .page h1 { max-width: 100%; font-size: 33px; line-height: 1.12; letter-spacing: -1.5px; overflow-wrap: anywhere; }
+  .page-head > p { font-size: 11px; line-height: 1.65; }
+  .section-heading { margin-bottom: 14px; }
+  .section-heading h2 { font-size: 18px; }
+  .section-heading p { font-size: 9px; }
+  .hero { padding-top: 27px; padding-bottom: 25px; gap: 6px; }
+  .hero-title { font-size: clamp(40px, 10.9vw, 61px); line-height: 1.03; letter-spacing: -2.4px; margin: 20px 0 13px; }
+  .hero-description { max-width: 42ch; font-size: 12px; line-height: 1.7; }
+  .hero-art { height: clamp(260px, 78vw, 315px); }
+
+  .systems-toolbar { gap: 8px; margin-bottom: 16px; }
+  .search-field { height: 43px; padding-inline: 12px; }
+  .systems-grid, .players-grid { gap: 9px; }
+  .system-card { min-height: 142px; padding: 12px; border-radius: 12px; }
+  .system-card h3 { margin: 13px 0 5px; font-size: 11.5px; line-height: 1.35; }
+  .system-card p { font-size: 10px; line-height: 1.6; overflow-wrap: anywhere; }
+  .system-detail-button { padding-top: 7px; font-size: 9.5px; }
+  .player-card { gap: 10px; padding: 13px; border-radius: 12px; }
+  .player-card-avatar { width: 41px; height: 41px; border-radius: 11px; }
+  .player-card h3 { font-size: 12px; }
+  .player-card .player-bio { font-size: 9.5px; line-height: 1.55; }
+  .player-card .player-open, .player-message-button { font-size: 9.5px; }
+  .player-card-actions { gap: 8px; margin-top: 9px; }
+  .player-card-actions .social-follow-button { min-height: 38px; padding-inline: 10px; }
+
+  .home-announcements { margin-top: 12px; padding: 2px 0 32px; }
+  .announcement-list { gap: 9px; }
+  .announcement-card { padding: 12px 13px; border-radius: 11px; }
+  .announcement-card h3 { font-size: 12px; }
+  .announcement-card p { font-size: 10px; line-height: 1.6; }
+  .announcement-meta { gap: 8px; margin-top: 9px; font-size: 9px; }
+
+  .community-tabs { margin: 14px 0; padding: 5px; gap: 5px; }
+  #page-community .community-tabs button { min-height: 40px; padding-inline: 12px; font-size: 10px; }
+  .social-compose { padding: 14px; gap: 10px; border-radius: 13px; }
+  .social-compose-heading h2, .social-side-title h2, .social-section-toolbar h2 { font-size: 15px; }
+  .social-feed-toolbar { align-items: flex-start; gap: 8px; }
+  .social-filter-tabs { min-width: 0; gap: 4px; }
+  .social-filter-tabs button { min-height: 36px; padding-inline: 9px; font-size: 9px; }
+  .social-feed-list, .social-notifications-list, .social-reports-list { gap: 10px; }
+  .social-post-card { padding: 12px; border-radius: 13px; }
+  .social-avatar, .social-notification-avatar { width: 38px; height: 38px; border-radius: 11px; }
+  .social-author { gap: 8px; }
+  .social-author-info strong { font-size: 11px; }
+  .social-author-info small { font-size: 9px; }
+  .social-post-body { margin: 9px 0; font-size: 11px; line-height: 1.65; }
+  .social-post-actions { gap: 9px; padding: 10px 0; }
+  .social-action, .social-action-static { font-size: 10px; }
+  .social-comment-row p { font-size: 10px; }
+
+  .messages-shell { gap: 10px; padding-bottom: 36px; }
+  .messages-sidebar, .messages-chat-pane { border-radius: 12px; }
+  .messages-sidebar { padding: 11px; }
+  .dm-conversation-item { gap: 8px; padding: 8px; border-radius: 10px; }
+  .dm-list-avatar, .dm-search-avatar { width: 37px; height: 37px; border-radius: 11px; }
+  .dm-conversation-copy strong { font-size: 10.5px; }
+  .dm-conversation-preview { font-size: 9px; }
+  .dm-chat-header { gap: 9px; padding: 11px; }
+  .dm-chat-identity strong { font-size: 11px; }
+  .dm-message-list { gap: 8px; padding: 10px; }
+  .dm-message-bubble { padding: 8px 10px 7px; }
+  .dm-message-bubble p { font-size: 11px; line-height: 1.55; }
+  .dm-composer { gap: 8px; padding: 9px; }
+  .dm-composer-footer { gap: 8px; }
+  .dm-composer-footer .btn { min-height: 40px; padding-inline: 12px; }
+
+  .public-profile-dialog, .system-detail-dialog { width: calc(100vw - 20px); padding: 20px 16px; }
+  .public-profile-header { gap: 12px; }
+  .public-profile-header h2 { font-size: 20px; }
+  .public-profile-stats { gap: 5px; }
+  .public-profile-stats strong { font-size: 15px; }
+  .public-profile-stats span { font-size: 9px; }
+  .public-profile-post { padding: 10px; }
+  .public-profile-post p { font-size: 11px; line-height: 1.6; }
+  .site-footer { gap: 9px; font-size: 7.5px; letter-spacing: .7px; }
+
+  /* Keep phone input text at 16px to avoid iOS auto-zoom. */
+  input, select, textarea { max-width: 100%; }
+  .social-compose textarea, .social-image-url input, .social-comment-form input,
+  .dm-search-field input, .dm-conversation-search input, .dm-composer textarea,
+  .search-field input, .auth-dialog input { font-size: 16px; }
+  img, video, canvas, svg { max-width: 100%; }
+  .page, .page > *, .messages-shell, .social-post-card, .announcement-card,
+  .player-card, .system-card, .public-profile-dialog { min-width: 0; }
+  .page h1, .system-card h3, .player-card h3, .announcement-card p,
+  .social-post-body, .dm-message-bubble p { overflow-wrap: anywhere; }
+}
+@media (max-width: 420px) {
+  main { margin-inline: 12px; }
+  .header-inner { margin-inline: 12px; }
+  .brand-mark { width: 31px; height: 31px; }
+  .brand-name { font-size: 11px; letter-spacing: .8px; }
+  .nav button { min-height: 37px; padding: 8px 9px; font-size: 10px; }
+  .page { padding-top: 27px; }
+  .page h1 { font-size: 30px; letter-spacing: -1.2px; }
+  .hero-title { font-size: clamp(38px, 10.4vw, 46px); letter-spacing: -2px; }
+  .systems-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .system-card { min-height: 136px; padding: 10px; }
+  .system-card h3 { font-size: 11px; }
+  .system-card p { font-size: 9.5px; }
+  .social-post-meta { gap: 5px; font-size: 8px; }
+  .social-report-button { width: 30px; height: 30px; }
+  .dm-composer-footer > span { font-size: 8px; }
+}
+@media (max-width: 359px) {
+  .site-header > .header-inner > .nav > button { padding-inline: 8px !important; font-size: 9.5px !important; }
+  .brand-name { font-size: 10.5px; }
+  .systems-grid { grid-template-columns: 1fr; }
+  .system-card { min-height: 0; padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav button, .player-card, .system-card, .social-post-card, .announcement-card,
+  .dm-conversation-item, .dm-message-bubble { transition: none !important; transform: none !important; }
+}

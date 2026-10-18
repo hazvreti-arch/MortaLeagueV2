@@ -1,17 +1,17 @@
 /* MortaLeague PWA shell cache. Supabase/API responses are deliberately never cached. */
-const CACHE_NAME = "mortaleague-shell-20261018-08";
+const CACHE_NAME = "mortaleague-shell-20261018-09";
 const SHELL_ASSETS = [
   "/", "/index.html", "/offline.html",
-  "/style.css?v=ml-compact-ui-20261018-08",
-  "/config.js?v=ml-compact-ui-20261018-08",
-  "/app.js?v=ml-compact-ui-20261018-08",
-  "/auth.js?v=ml-compact-ui-20261018-08",
-  "/messages.js?v=ml-compact-ui-20261018-08",
-  "/social.js?v=ml-compact-ui-20261018-08",
-  "/visual-polish.js?v=ml-compact-ui-20261018-08",
-  "/pwa.js?v=ml-compact-ui-20261018-08",
-  "/manifest.webmanifest?v=ml-compact-ui-20261018-08",
-  "/favicon.svg?v=ml-compact-ui-20261018-08",
+  "/style.css?v=ml-compact-ui-20261018-09",
+  "/config.js?v=ml-compact-ui-20261018-09",
+  "/app.js?v=ml-compact-ui-20261018-09",
+  "/auth.js?v=ml-compact-ui-20261018-09",
+  "/messages.js?v=ml-compact-ui-20261018-09",
+  "/social.js?v=ml-compact-ui-20261018-09",
+  "/visual-polish.js?v=ml-compact-ui-20261018-09",
+  "/pwa.js?v=ml-compact-ui-20261018-09",
+  "/manifest.webmanifest?v=ml-compact-ui-20261018-09",
+  "/favicon.svg?v=ml-compact-ui-20261018-09",
   "/icon-192.png", "/icon-512.png"
 ];
 self.addEventListener("install", event => {

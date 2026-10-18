@@ -1,0 +1,2 @@
+[functions.mortabot]
+verify_jwt = true

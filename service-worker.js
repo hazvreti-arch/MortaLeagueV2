@@ -1,18 +1,19 @@
 /* MortaLeague PWA shell cache. Supabase/API responses are deliberately never cached. */
-const CACHE_NAME = "mortaleague-quality-20261018-14-calculator";
+const CACHE_NAME = "mortaleague-quality-20261018-15-mortabot";
 const SHELL_ASSETS = [
   "/", "/index.html", "/offline.html",
-  "/style.css?v=ml-valuecalc-20261018-14",
-  "/config.js?v=ml-valuecalc-20261018-14",
-  "/app.js?v=ml-valuecalc-20261018-14",
-  "/calculator.js?v=ml-valuecalc-20261018-14",
-  "/auth.js?v=ml-valuecalc-20261018-14",
-  "/messages.js?v=ml-valuecalc-20261018-14",
-  "/social.js?v=ml-valuecalc-20261018-14",
-  "/visual-polish.js?v=ml-valuecalc-20261018-14",
-  "/pwa.js?v=ml-valuecalc-20261018-14",
-  "/manifest.webmanifest?v=ml-valuecalc-20261018-14",
-  "/favicon.svg?v=ml-valuecalc-20261018-14",
+  "/style.css?v=ml-mortabot-20261018-01",
+  "/config.js?v=ml-mortabot-20261018-01",
+  "/app.js?v=ml-mortabot-20261018-01",
+  "/calculator.js?v=ml-mortabot-20261018-01",
+  "/mortabot.js?v=ml-mortabot-20261018-01",
+  "/auth.js?v=ml-mortabot-20261018-01",
+  "/messages.js?v=ml-mortabot-20261018-01",
+  "/social.js?v=ml-mortabot-20261018-01",
+  "/visual-polish.js?v=ml-mortabot-20261018-01",
+  "/pwa.js?v=ml-mortabot-20261018-01",
+  "/manifest.webmanifest?v=ml-mortabot-20261018-01",
+  "/favicon.svg?v=ml-mortabot-20261018-01",
   "/icon-192.png", "/icon-512.png"
 ];
 self.addEventListener("install", event => {

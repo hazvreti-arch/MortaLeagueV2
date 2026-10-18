@@ -1534,3 +1534,57 @@ input, select, textarea { min-width: 0; }
 @media(max-width:850px){.value-calculator{grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:12px}.calculator-form-panel,.calculator-result-panel{padding:18px}.calculator-total{font-size:clamp(26px,4vw,37px)}}
 @media(max-width:700px){.calculator-page-head{margin-bottom:22px}.calculator-page-head h1{font-size:clamp(31px,8.5vw,43px);letter-spacing:-1.7px}.calculator-page-head>p{font-size:11px;line-height:1.8}.value-calculator{grid-template-columns:minmax(0,1fr);gap:12px}.calculator-form-panel,.calculator-result-panel{padding:17px;border-radius:15px}.calculator-panel-heading{padding-bottom:17px;margin-bottom:17px}.calculator-panel-icon{width:38px;height:38px}.calculator-input-grid{gap:15px 10px}.calculator-field{font-size:10px}.calculator-field input{height:49px;font-size:19px}.calculator-field select{height:47px;font-size:12px}.calculator-total{font-size:clamp(30px,9vw,42px)}.calculator-result-panel{min-height:360px}.calculator-result-foot{margin-top:25px}}
 @media(max-width:370px){.calculator-input-grid{grid-template-columns:minmax(0,1fr)}.calculator-actions{flex-direction:column}.calculator-actions .btn{width:100%}.calculator-form-panel,.calculator-result-panel{padding:14px}}
+
+
+/* ===== MortaBot AI companion ===== */
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.mbot-root{position:fixed;z-index:1200;right:24px;bottom:22px;font-family:'DM Sans',sans-serif;color:#f8f0ff}
+.mbot-launcher{position:relative;display:flex;align-items:center;gap:10px;border:1px solid #cb81fa;border-radius:999px;padding:10px 16px 10px 10px;background:linear-gradient(125deg,#2b103b 0%,#150a20 80%);color:#fff;box-shadow:0 12px 36px #0008,0 0 28px #ac39f433;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.mbot-launcher:hover{transform:translateY(-2px);border-color:#edcaff;box-shadow:0 15px 40px #0009,0 0 36px #ac39f455}
+.mbot-launcher-orb,.mbot-avatar{display:grid;place-items:center;flex:0 0 auto;width:38px;height:38px;border:1px solid #d7a2ff;border-radius:50%;background:radial-gradient(circle at 35% 25%,#f2d9ff,#a437dc 42%,#351043 80%);box-shadow:inset 0 0 12px #fff4,0 0 18px #b33cf444;color:#fff;font-size:21px}
+.mbot-launcher-label{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;letter-spacing:.35px}
+.mbot-pulse{position:absolute;right:8px;top:6px;width:7px;height:7px;border-radius:50%;background:#81f5d2;box-shadow:0 0 0 4px #81f5d21c}
+.mbot-panel{position:absolute;right:0;bottom:64px;display:flex;flex-direction:column;width:min(390px,calc(100vw - 28px));height:min(610px,calc(100dvh - 112px));min-height:390px;overflow:hidden;border:1px solid #563568;border-radius:22px;background:linear-gradient(155deg,#140a1d 0%,#0c0711 66%,#100817 100%);box-shadow:0 28px 90px #000b,0 0 38px #8e32bc24;animation:mbot-pop .18s ease-out}
+.mbot-panel[hidden]{display:none}
+@keyframes mbot-pop{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.mbot-header{display:flex;align-items:center;gap:10px;flex:0 0 auto;padding:14px 13px;border-bottom:1px solid #35213f;background:linear-gradient(110deg,#24102f,#120a1b)}
+.mbot-avatar{width:40px;height:40px;font-size:22px}
+.mbot-heading{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.mbot-heading strong{font:700 12px 'Orbitron',sans-serif;letter-spacing:.35px}
+.mbot-heading>span{color:#ad9bb9;font-size:10px}
+.mbot-online-dot{display:inline-block;width:6px;height:6px;margin-right:5px;border-radius:50%;background:#81f5d2;box-shadow:0 0 8px #81f5d2}
+.mbot-icon-btn{display:grid;place-items:center;width:32px;height:32px;border:1px solid #442850;border-radius:10px;background:#1a0d23;color:#cdb4db;font-size:21px;line-height:1}
+.mbot-icon-btn:hover{border-color:#b94bff;color:#fff}
+.mbot-messages{display:flex;flex:1;flex-direction:column;gap:12px;overflow-y:auto;padding:16px 13px 12px;overscroll-behavior:contain;scroll-behavior:smooth}
+.mbot-message{max-width:92%;padding:11px 12px;border:1px solid #362342;border-radius:4px 15px 15px 15px;background:#180e20;color:#eee2f5;font-size:12px;line-height:1.7;overflow-wrap:anywhere;white-space:pre-wrap}
+.mbot-message.mbot-user{align-self:flex-end;border-color:#78429a;border-radius:15px 4px 15px 15px;background:linear-gradient(135deg,#562178,#321142);color:#fff}
+.mbot-message-tag{display:block;margin-bottom:4px;color:#cb8cf4;font:700 8px 'Orbitron',sans-serif;letter-spacing:1px}
+.mbot-message a{color:#e0b0ff;text-decoration:underline}
+.mbot-typing{display:flex;align-items:center;gap:5px;width:max-content;color:#b9a7c6}
+.mbot-typing i{width:5px;height:5px;border-radius:50%;background:#d19bf4;animation:mbot-dot .9s infinite ease-in-out}
+.mbot-typing i:nth-child(2){animation-delay:.13s}.mbot-typing i:nth-child(3){animation-delay:.26s}
+@keyframes mbot-dot{0%,60%,100%{opacity:.35;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+.mbot-suggestions{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 10px}
+.mbot-suggestions button{border:1px solid #543363;border-radius:999px;padding:7px 9px;background:#170d20;color:#d6b6e7;font-size:10px;transition:background .15s,border-color .15s}
+.mbot-suggestions button:hover{border-color:#bd69ee;background:#291137;color:#fff}
+.mbot-composer{display:flex;align-items:flex-end;gap:9px;margin:0 11px;padding:9px 9px 9px 12px;border:1px solid #4a2a5a;border-radius:15px;background:#100917;box-shadow:inset 0 0 16px #b94bff09}
+.mbot-composer:focus-within{border-color:#a950d7;box-shadow:0 0 0 3px #aa45df18}
+.mbot-composer textarea{flex:1;min-width:0;max-height:112px;resize:none;border:0;outline:0;background:transparent;color:#fff;font:12px/1.6 'DM Sans',sans-serif;padding:3px 0}
+.mbot-composer textarea::placeholder{color:#8f7c9d}
+.mbot-send{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border:1px solid #c15ff0;border-radius:11px;background:linear-gradient(130deg,#a835e9,#7022a3);box-shadow:0 4px 16px #ae39e72b;color:#fff}
+.mbot-send:disabled{opacity:.45;cursor:wait}
+.mbot-send svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.mbot-footnote{padding:8px 12px 11px;text-align:center;color:#7f6b8c;font-size:9px;line-height:1.4}
+.mbot-suggestions[hidden]{display:none}
+@media(max-width:600px){
+ .mbot-root{right:12px;bottom:calc(12px + env(safe-area-inset-bottom))}
+ .mbot-launcher{gap:8px;padding:8px 13px 8px 8px}
+ .mbot-launcher-orb{width:35px;height:35px}
+ .mbot-panel{position:fixed;right:8px;bottom:calc(64px + env(safe-area-inset-bottom));width:calc(100vw - 16px);height:min(72dvh,640px);min-height:370px;max-height:calc(100dvh - 86px);border-radius:20px}
+ .mbot-header{padding:12px}
+ .mbot-messages{padding:13px 11px}
+ .mbot-message{font-size:13px;max-width:94%}
+ .mbot-composer textarea{font-size:16px}
+ .mbot-suggestions button{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.mbot-panel{animation:none}.mbot-launcher{transition:none}.mbot-typing i{animation:none}}

@@ -4,8 +4,8 @@ Bu ZIP bir **site güncelleme paketi**dir. Doğrudan canlı yayına alınmış d
 
 ## 1) GitHub'daki MortaLeague deposuna ekle
 - Var olan `index.html`, `style.css`, `app.js` ve `service-worker.js` dosyalarını pakettekilerle güncelle.
-- `calculator.js` ve `mortabot.js` dosyalarını kök klasöre ekle/güncelle.
-- `supabase/functions/mortabot/index.ts` dosyasını aynı yol ile ekle.
+- `calculator.js` ve `mortabot.js` dosyalarını kök klasöre ekle/güncelle. Bu sürümde arayüzün eski `OPENAI_API_KEY` hatalı yönlendirmesi de `OPENROUTER_API_KEY` kurulumuna göre düzeltildi.
+- `supabase/functions/mortabot/index.ts` dosyasını aynı yol ile ekle. **Edge Function kodu depodaki kök `index.ts` dosyasında bırakılırsa Supabase bunu `mortabot` fonksiyonu olarak dağıtmaz.**
 - `config.js`, `auth.js`, `messages.js`, `social.js`, `visual-polish.js`, `pwa.js`, `manifest.webmanifest`, ikonlar veya mevcut başka dosyaları silme; bunlar ana projenin parçalarıdır.
 - `supabase/config.toml` zaten varsa, onu **tamamen değiştirme**. İçine sadece `supabase/functions/mortabot/verify_jwt_config_snippet.toml` içindeki `[functions.mortabot]` bölümünü ekle. Aynı bölüm varsa `verify_jwt = true` olduğunu doğrula.
 

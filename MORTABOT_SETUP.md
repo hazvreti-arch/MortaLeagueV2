@@ -14,7 +14,7 @@ Bu ZIP bir **site güncelleme paketi**dir. Doğrudan canlı yayına alınmış d
 - Bu paket varsayılan olarak `nvidia/nemotron-3-super-120b-a12b:free` modelini kullanır. Modelin ücretsiz erişimi ve kullanım limitleri sağlayıcı tarafından değiştirilebilir; sıfır ücret ve kesintisiz erişim garantisi yoktur.
 - OpenRouter ücretsiz sağlayıcı uyarısına göre gizli, hassas veya kişisel bilgileri bu modele göndermeyin. Bot kullanıcılarına da bunu bildirin.
 - Anahtarı bana mesaj atma, GitHub'a koyma ve HTML/JS'ye yazma. Supabase Edge Function Secrets bölümünde `OPENROUTER_API_KEY` adıyla sakla.
-- Modeli değiştirmek istersen `OPENROUTER_MODEL` secret'ı ekleyebilirsin; değeri OpenRouter model slug'ı olmalıdır.
+- `OPENROUTER_MODEL` ayarlanacaksa yalnızca `openrouter/free` veya `:free` ile biten bir model slug'ı kabul edilir; ücretli modele yönlendirme yapılmaz.
 
 ## 3) Güvenli erişim ve hız sınırı
 - Supabase Auth üzerinden giriş zorunludur. Function, bearer token'ı Supabase Auth ile doğrular.

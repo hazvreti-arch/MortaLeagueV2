@@ -1,19 +1,19 @@
 /* MortaLeague PWA shell cache. Supabase/API responses are deliberately never cached. */
-const CACHE_NAME = "mortaleague-quality-20261018-16-mortabot-openrouter";
+const CACHE_NAME = "mortaleague-quality-20261019-17-mortabot-openrouter-fallback";
 const SHELL_ASSETS = [
   "/", "/index.html", "/offline.html",
-  "/style.css?v=ml-mortabot-openrouter-20261018-02",
-  "/config.js?v=ml-mortabot-openrouter-20261018-02",
-  "/app.js?v=ml-mortabot-openrouter-20261018-02",
-  "/calculator.js?v=ml-mortabot-openrouter-20261018-02",
-  "/mortabot.js?v=ml-mortabot-openrouter-20261018-02",
-  "/auth.js?v=ml-mortabot-openrouter-20261018-02",
-  "/messages.js?v=ml-mortabot-openrouter-20261018-02",
-  "/social.js?v=ml-mortabot-openrouter-20261018-02",
-  "/visual-polish.js?v=ml-mortabot-openrouter-20261018-02",
-  "/pwa.js?v=ml-mortabot-openrouter-20261018-02",
-  "/manifest.webmanifest?v=ml-mortabot-openrouter-20261018-02",
-  "/favicon.svg?v=ml-mortabot-openrouter-20261018-02",
+  "/style.css?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/config.js?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/app.js?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/calculator.js?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/mortabot.js?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/auth.js?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/messages.js?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/social.js?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/visual-polish.js?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/pwa.js?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/manifest.webmanifest?v=ml-mortabot-openrouter-fallback-20261019-01",
+  "/favicon.svg?v=ml-mortabot-openrouter-fallback-20261019-01",
   "/icon-192.png", "/icon-512.png"
 ];
 self.addEventListener("install", event => {

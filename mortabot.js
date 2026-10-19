@@ -25,7 +25,7 @@
    const {data,error}=await client.functions.invoke("mortabot",{body:{messages:history.slice(-16)}});
    if(error)throw error;const reply=typeof data?.reply==="string"?data.reply:"bir şey oldu kral, cevabı alamadım. bi daha dener misin?";
    pending.remove();history.push({role:"assistant",content:reply});history=history.slice(-24);save();addMessage("assistant",reply);
-  }catch(error){pending.remove();let msg=String(error?.message||"");if(/401|403|unauthorized|jwt|not authenticated/i.test(msg))msg="giriş oturumun yenilenmeli kral. hesabından çıkıp tekrar giriş yap, sonra yeniden deneriz.";else msg="MortaBot'a şu an bağlanamadım kral. Supabase’deki `mortabot` Edge Function, `OPENROUTER_API_KEY` sırrı ve istek sınırı SQL kurulumu kontrol edilmeli.";addMessage("assistant",msg)}
+  }catch(error){pending.remove();let msg="";try{const response=error?.context;if(response&&typeof response.clone==="function"){const payload=await response.clone().json();if(typeof payload?.error==="string")msg=payload.error}}catch(_){}if(!msg)msg=String(error?.message||"");if(/401|403|unauthorized|jwt|not authenticated/i.test(msg))msg="giriş oturumun yenilenmeli kral. hesabından çıkıp tekrar giriş yap, sonra yeniden deneriz.";else if(!msg||/non-2xx|edge function returned/i.test(msg))msg="MortaBot ücretsiz model sağlayıcılarından yanıt alamadı. Otomatik yedekler denendi; biraz sonra tekrar dener misin?";addMessage("assistant",msg)}
   finally{busy=false;send.disabled=false;input.disabled=false;input.focus()}
  }
  form.addEventListener("submit",e=>{e.preventDefault();sendMessage(input.value)});

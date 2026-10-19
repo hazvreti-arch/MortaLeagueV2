@@ -1,5 +1,5 @@
 // MortaBot — Supabase Edge Function
-// Required: OPENROUTER_API_KEY. Optional: OPENROUTER_MODEL (defaults to NVIDIA Nemotron 3 Super free).
+// Required: OPENROUTER_API_KEY. Optional OPENROUTER_MODEL must be a free model slug (ends with :free) or openrouter/free.
 // Enforce Supabase JWT verification in supabase/config.toml AND validate the user here.
 // A database-backed limiter prevents a single account from consuming unlimited API budget.
 const allowedOrigins = new Set([
@@ -199,35 +199,82 @@ Deno.serve(async (req: Request) => {
   const rateAllowed = await allowRequest(supabaseUrl, serviceRoleKey, userId);
   if (rateAllowed === null) return json(req, { error: "MortaBot güvenlik sınırı henüz hazır değil. Biraz sonra tekrar dene." }, 503);
   if (!rateAllowed) return json(req, { error: "kanka biraz hızlı gittik 😅 dakikada 12, günde 100 mesaj sınırı var. Birazdan tekrar deneyebilirsin." }, 429);
-  const model = env("OPENROUTER_MODEL") || "nvidia/nemotron-3-super-120b-a12b:free";
+  // Never route this zero-budget deployment to a paid model by configuration accident.
+  const configuredModel = env("OPENROUTER_MODEL");
+  const primaryModel = configuredModel === "openrouter/free" || configuredModel.endsWith(":free")
+    ? configuredModel
+    : "nvidia/nemotron-3-super-120b-a12b:free";
+  // OpenRouter tries models in order when one is unavailable; every entry here is free.
+  const models = [...new Set([
+    primaryModel,
+    "google/gemma-4-31b-it:free",
+    "openrouter/free",
+    "qwen/qwen3.8-27b:free",
+  ])];
   const calc = calculationContext(messages);
   const instructions = rules + (calc ? "\n\n" + calc : "");
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-   method: "POST",
-   headers: {
+  const requestHeaders = {
     Authorization: `Bearer ${openRouterKey}`,
     "Content-Type": "application/json",
     "HTTP-Referer": "https://mortaleaguev2.vercel.app",
     "X-OpenRouter-Title": "MortaLeague MortaBot",
-   },
-   body: JSON.stringify({
-    model,
+  };
+  const requestBody = {
+    models,
     messages: [{ role: "system", content: instructions }, ...messages],
-    max_tokens: 700,
-    temperature: 0.7,
-   }),
-   signal: AbortSignal.timeout(35000),
+    max_tokens: 1000,
+    temperature: 0.55,
+    provider: { allow_fallbacks: true },
+  };
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: requestHeaders,
+    body: JSON.stringify(requestBody),
+    signal: AbortSignal.timeout(45000),
   });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
-   console.error("MortaBot model request failed", response.status, payload?.error?.code || payload?.error?.metadata?.provider_name || "unknown");
-   return json(req, { error: "MortaBot şu an cevap üretemedi. Ücretsiz model meşgul veya erişilemiyor olabilir; biraz sonra tekrar dene." }, 502);
+    const errorCode = payload?.error?.code || response.status;
+    const errorType = payload?.error?.metadata?.error_type || "unknown";
+    const providerCode = payload?.error?.metadata?.provider_code || "unknown";
+    console.error("MortaBot free model chain failed", response.status, errorCode, errorType, providerCode);
+    if (response.status === 401) {
+      return json(req, { error: "OpenRouter anahtarı kabul edilmedi. Supabase Secrets içindeki OPENROUTER_API_KEY değerini kontrol et." }, 502);
+    }
+    if (response.status === 429) {
+      return json(req, { error: "Ücretsiz AI modellerinin istek limiti dolmuş veya sağlayıcılar meşgul. Bu bir bekleme kuyruğu değil; biraz sonra tekrar dene." }, 429);
+    }
+    return json(req, { error: "Ücretsiz AI modelleri şu an yanıt veremedi. Otomatik yedekler de denendi; biraz sonra tekrar dene." }, 502);
   }
   const replyValue = payload?.choices?.[0]?.message?.content;
-  const reply = typeof replyValue === "string" ? replyValue.trim() : Array.isArray(replyValue)
-   ? replyValue.map((item: any) => typeof item?.text === "string" ? item.text : "").join("\n").trim()
-   : "";
-  if (!reply) return json(req, { error: "MortaBot boş cevap verdi. Tekrar deneyebilir misin?" }, 502);
+  let reply = typeof replyValue === "string" ? replyValue.trim() : Array.isArray(replyValue)
+    ? replyValue.map((item: any) => typeof item?.text === "string" ? item.text : "").join("\n").trim()
+    : "";
+  // Some reasoning models can return HTTP 200 without user-facing text. Retry once via the free router.
+  if (!reply) {
+    console.error("MortaBot model returned empty content; retrying openrouter/free", payload?.model || "unknown");
+    const retryResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: requestHeaders,
+      body: JSON.stringify({
+        model: "openrouter/free",
+        messages: [{ role: "system", content: instructions }, ...messages],
+        max_tokens: 1000,
+        temperature: 0.55,
+        provider: { allow_fallbacks: true },
+      }),
+      signal: AbortSignal.timeout(20000),
+    });
+    const retryPayload = await retryResponse.json().catch(() => ({}));
+    const retryValue = retryPayload?.choices?.[0]?.message?.content;
+    reply = typeof retryValue === "string" ? retryValue.trim() : Array.isArray(retryValue)
+      ? retryValue.map((item: any) => typeof item?.text === "string" ? item.text : "").join("\n").trim()
+      : "";
+    if (!retryResponse.ok || !reply) {
+      console.error("MortaBot free-router retry failed", retryResponse.status, retryPayload?.error?.code || "empty_response");
+      return json(req, { error: "Ücretsiz modeller yanıt üretmedi. Bu genellikle geçici sağlayıcı yoğunluğu veya ücretsiz kota sınırıdır; biraz sonra tekrar dene." }, 502);
+    }
+  }
   return json(req, { reply });
  } catch (error) {
   console.error("MortaBot handler error", String((error as Error)?.message || error));

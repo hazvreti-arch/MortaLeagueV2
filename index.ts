@@ -219,8 +219,11 @@ Deno.serve(async (req: Request) => {
     "HTTP-Referer": "https://mortaleaguev2.vercel.app",
     "X-OpenRouter-Title": "MortaLeague MortaBot",
   };
+  // OpenRouter requires `model`; `models` is the ordered fallback list.
+  // Omitting `model` makes the request invalid and causes repeated 502s in the UI.
   const requestBody = {
-    models,
+    model: models[0],
+    models: models.slice(1),
     messages: [{ role: "system", content: instructions }, ...messages],
     max_tokens: 1000,
     temperature: 0.55,

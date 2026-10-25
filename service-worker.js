@@ -1,8 +1,8 @@
 /* MortaLeague PWA shell cache. Supabase/API responses are deliberately never cached. */
-const CACHE_NAME = "mortaleague-quality-20261025-18-mortabot-mobile";
+const CACHE_NAME = "mortaleague-quality-20261025-19-profile-close";
 const SHELL_ASSETS = [
   "/", "/index.html", "/offline.html",
-  "/style.css?v=ml-mobile-ai-refresh-20261025-01",
+  "/style.css?v=ml-player-profile-close-20261025-02",
   "/config.js?v=ml-mobile-ai-refresh-20261025-01",
   "/app.js?v=ml-mobile-ai-refresh-20261025-01",
   "/mortabot.js?v=ml-mobile-ai-refresh-20261025-01",

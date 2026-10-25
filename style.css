@@ -1716,3 +1716,42 @@ input, select, textarea { min-width: 0; }
   .mbot-panel, .mbot-typing i, .page.active { animation: none !important; }
   .nav button, .btn, .mbot-launcher { transition: none !important; }
 }
+
+
+/* Fix: keep the public-player profile close control visible above the cover on all screens. */
+.public-player-profile #public-profile-close{
+  position:sticky;
+  top:10px;
+  z-index:999;
+  display:grid;
+  place-items:center;
+  width:42px;
+  height:42px;
+  margin:10px 10px -52px auto;
+  border:1px solid #8f5baa;
+  border-radius:12px;
+  background:rgba(16,8,24,.96);
+  color:#fff;
+  font-size:28px;
+  line-height:1;
+  cursor:pointer;
+  touch-action:manipulation;
+  box-shadow:0 4px 18px #0008;
+  backdrop-filter:blur(8px);
+}
+.public-player-profile #public-profile-close:hover{
+  background:#392047;
+  border-color:#c18ce5;
+}
+.public-player-profile #public-profile-close:focus-visible{
+  outline:3px solid #d9a7ff;
+  outline-offset:3px;
+}
+@media(max-width:700px){
+  .public-player-profile #public-profile-close{
+    top:8px;
+    width:42px;
+    height:42px;
+    margin:8px 8px -50px auto;
+  }
+}

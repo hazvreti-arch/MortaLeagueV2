@@ -326,6 +326,8 @@ document.getElementById("public-profile-follow")?.addEventListener("click",async
 });
 window.addEventListener("ml:follow-change",event=>{if(currentPublicProfile?.id===event.detail?.targetId)loadPublicProfileDetails(currentPublicProfile);if(document.getElementById("page-players")?.classList.contains("active"))renderPlayers();});
 function closePublicProfile(){const modal=document.getElementById("public-profile-backdrop");if(modal)modal.hidden=true;document.body.style.overflow="";currentPublicProfile=null;}
+// Close the profile immediately on any navigation attempt (including gated pages).
+window.addEventListener("ml:page-intent",()=>{const modal=document.getElementById("public-profile-backdrop");if(modal&&!modal.hidden)closePublicProfile();});
 document.getElementById("public-profile-close")?.addEventListener("click",closePublicProfile);
 document.getElementById("public-profile-backdrop")?.addEventListener("click",e=>{if(e.target===e.currentTarget)closePublicProfile();});
 

@@ -1,18 +1,18 @@
 /* MortaLeague PWA shell cache. Supabase/API responses are deliberately never cached. */
-const CACHE_NAME = "mortaleague-quality-20261025-19-profile-close";
+const CACHE_NAME = "mortaleague-quality-20261025-20-profile-nav-calculator-fix";
 const SHELL_ASSETS = [
   "/", "/index.html", "/offline.html",
-  "/style.css?v=ml-player-profile-close-20261025-02",
-  "/config.js?v=ml-mobile-ai-refresh-20261025-01",
-  "/app.js?v=ml-mobile-ai-refresh-20261025-01",
-  "/mortabot.js?v=ml-mobile-ai-refresh-20261025-01",
-  "/auth.js?v=ml-mobile-ai-refresh-20261025-01",
-  "/messages.js?v=ml-mobile-ai-refresh-20261025-01",
-  "/social.js?v=ml-mobile-ai-refresh-20261025-01",
-  "/visual-polish.js?v=ml-mobile-ai-refresh-20261025-01",
-  "/pwa.js?v=ml-mobile-ai-refresh-20261025-01",
-  "/manifest.webmanifest?v=ml-mobile-ai-refresh-20261025-01",
-  "/favicon.svg?v=ml-mobile-ai-refresh-20261025-01",
+  "/style.css?v=ml-mobile-ai-refresh-20261025-02",
+  "/config.js?v=ml-mobile-ai-refresh-20261025-02",
+  "/app.js?v=ml-mobile-ai-refresh-20261025-02",
+  "/mortabot.js?v=ml-mobile-ai-refresh-20261025-02",
+  "/auth.js?v=ml-mobile-ai-refresh-20261025-02",
+  "/messages.js?v=ml-mobile-ai-refresh-20261025-02",
+  "/social.js?v=ml-mobile-ai-refresh-20261025-02",
+  "/visual-polish.js?v=ml-mobile-ai-refresh-20261025-02",
+  "/pwa.js?v=ml-mobile-ai-refresh-20261025-02",
+  "/manifest.webmanifest?v=ml-mobile-ai-refresh-20261025-02",
+  "/favicon.svg?v=ml-mobile-ai-refresh-20261025-02",
   "/icon-192.png", "/icon-512.png"
 ];
 self.addEventListener("install", event => {

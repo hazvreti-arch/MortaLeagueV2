@@ -1588,3 +1588,131 @@ input, select, textarea { min-width: 0; }
  .mbot-suggestions button{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){.mbot-panel{animation:none}.mbot-launcher{transition:none}.mbot-typing i{animation:none}}
+
+
+/* MORTALEAGUE MOBILE PASS — 2026-10-25
+   A single final layer resolves earlier overlapping responsive rules. */
+.nav { gap: 3px; }
+.nav button { padding: 10px 11px; font-size: 12.5px; }
+
+@media (max-width: 900px) {
+  .site-header { height: auto !important; min-height: 0 !important; }
+  .site-header > .header-inner { grid-template-columns: minmax(0,1fr) !important; grid-template-rows: auto auto !important; gap: 0 !important; }
+  .site-header > .header-inner > .brand { min-height: 52px !important; margin-inline: 12px !important; }
+  .site-header > .header-inner > .brand .brand-mark { width: 32px !important; height: 32px !important; flex-basis: 32px !important; border-radius: 9px !important; }
+  .site-header > .header-inner > .brand .brand-mark svg { width: 20px !important; height: 20px !important; }
+  .site-header > .header-inner > .brand .brand-name { font-size: 11.5px !important; letter-spacing: .85px !important; }
+  .site-header > .header-inner > .nav { gap: 4px !important; padding: 6px 10px 7px !important; }
+  .site-header > .header-inner > .nav > button,
+  .site-header > .header-inner > .nav > .mobile-auth-nav { min-height: 36px !important; padding: 0 9px !important; border-radius: 8px !important; font-size: 10.5px !important; }
+  .site-header > .header-inner > .nav .nav-unread { min-width: 14px !important; height: 14px !important; padding-inline: 3px !important; margin-left: 3px !important; font-size: 8px !important; }
+  main { width: auto !important; max-width: 100% !important; min-width: 0 !important; margin-inline: 12px !important; }
+  .page { width: 100% !important; max-width: 100% !important; min-width: 0 !important; min-height: calc(100dvh - 96px) !important; padding: 24px 0 36px !important; }
+  .page-head { margin-bottom: 16px !important; }
+  .page h1 { max-width: 100%; overflow-wrap: anywhere; }
+  .hero { min-height: 0 !important; padding-top: 24px !important; padding-bottom: 18px !important; gap: 6px !important; }
+  .hero-art { max-width: 100% !important; overflow: clip; }
+  .systems-grid, .players-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .community-feed-layout { grid-template-columns: minmax(0,1fr) !important; }
+  .community-side-column { display: none !important; }
+  .messages-shell, .messages-sidebar, .messages-chat-pane, .dm-chat-view { min-width: 0 !important; max-width: 100% !important; }
+  .system-detail-backdrop, .auth-backdrop, .public-profile-backdrop, .admin-edit-backdrop { padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom)) !important; }
+  .system-detail-dialog, .auth-dialog, .public-profile-dialog, .admin-edit-dialog { width: 100%; max-width: 100%; max-height: calc(100dvh - 24px) !important; overflow-y: auto !important; overscroll-behavior: contain; }
+  input, select, textarea { max-width: 100%; }
+}
+
+@media (max-width: 600px) {
+  html { scroll-padding-top: 8px !important; }
+  body { min-width: 320px; }
+  main { margin-inline: 10px !important; }
+  .site-header > .header-inner > .brand { min-height: 48px !important; margin-inline: 10px !important; }
+  .site-header > .header-inner > .nav { padding: 5px 8px 6px !important; gap: 3px !important; }
+  .site-header > .header-inner > .nav > button,
+  .site-header > .header-inner > .nav > .mobile-auth-nav { min-height: 35px !important; padding: 0 8px !important; font-size: 10px !important; }
+  .page { padding-top: 21px !important; padding-bottom: 30px !important; }
+  .page h1 { font-size: clamp(24px, 7.2vw, 31px) !important; line-height: 1.16 !important; letter-spacing: -.8px !important; }
+  .page-head > p { font-size: 12px !important; line-height: 1.65 !important; }
+  .hero { padding: 24px 0 16px !important; }
+  .hero-title { font-size: clamp(34px, 9.5vw, 44px) !important; letter-spacing: -1.7px !important; line-height: 1.05 !important; }
+  .hero-description { font-size: 13px !important; line-height: 1.7 !important; }
+  .hero-art { height: clamp(235px, 65vw, 290px) !important; }
+  .orbit { width: min(250px, 72vw) !important; height: min(250px, 72vw) !important; }
+  .crest { width: 145px !important; height: 185px !important; }
+  .crest-letter { font-size: 70px !important; }
+  .floating-stat { min-width: 76px !important; padding: 8px 9px !important; }
+  .floating-stat strong { font-size: 11px !important; }
+  .section-heading h2 { font-size: 17px !important; }
+  .systems-toolbar, .social-feed-toolbar, .social-section-toolbar { align-items: stretch; min-width: 0; flex-wrap: wrap; }
+  .systems-toolbar > *, .social-feed-toolbar > *, .social-section-toolbar > * { min-width: 0; max-width: 100%; }
+  .search-field { min-width: 0; width: 100%; }
+  .systems-grid, .players-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 8px !important; }
+  .system-card, .player-card { padding: 10px !important; min-width: 0 !important; }
+  .system-card h3 { font-size: 10.5px !important; line-height: 1.45 !important; overflow-wrap: anywhere; }
+  .system-card p { font-size: 10px !important; line-height: 1.55 !important; }
+  .system-card .system-detail-button { max-width: 100%; padding-inline: 8px; font-size: 10px; }
+  .btn { min-height: 40px; max-width: 100%; padding-inline: 11px; font-size: 11.5px; }
+  .community-page-head { align-items: flex-start !important; flex-wrap: wrap !important; gap: 10px !important; }
+  .community-page-head .social-open-composer { width: 100%; }
+  .community-tabs { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px !important; padding: 5px !important; }
+  .community-tabs button { min-width: 0; min-height: 38px !important; padding-inline: 8px !important; font-size: 10.5px !important; }
+  .social-filter-tabs { display: flex; flex-wrap: nowrap; width: 100%; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .social-filter-tabs::-webkit-scrollbar { display: none; }
+  .social-filter-tabs button { flex: 0 0 auto; min-height: 36px; padding-inline: 10px; font-size: 10px; }
+  .social-post-card, .announcement-card { padding: 12px !important; }
+  .social-post-actions { gap: 6px !important; flex-wrap: wrap !important; }
+  .social-post-actions button, .social-follow-button { min-height: 34px; }
+  .social-compose-footer { display: flex; flex-wrap: wrap; gap: 8px; }
+  .social-compose-footer > * { min-width: 0; max-width: 100%; }
+  .social-compose-footer .social-image-url { flex: 1 1 100%; }
+  .social-compose-footer .btn { width: 100%; }
+  .messages-shell { gap: 8px !important; padding-bottom: 4px !important; }
+  .messages-sidebar, .messages-chat-pane { border-radius: 12px !important; }
+  .messages-sidebar { padding: 10px !important; }
+  .messages-chat-pane { max-height: calc(100dvh - 130px); }
+  .messages-shell.dm-mobile-chat-open .messages-chat-pane { height: calc(100dvh - 135px) !important; min-height: 280px !important; }
+  .dm-chat-header { gap: 7px !important; padding: 9px !important; }
+  .dm-chat-identity { min-width: 0; overflow-wrap: anywhere; }
+  .dm-message-list { min-width: 0; padding: 10px !important; }
+  .dm-message-bubble { max-width: 90% !important; }
+  .dm-composer { gap: 7px !important; padding: 8px !important; }
+  .dm-composer textarea, .social-compose textarea, .social-comment-form input, .dm-player-search-block input { font-size: 16px !important; }
+  .dm-composer-footer { align-items: stretch; }
+  .dm-composer-footer .btn { min-height: 40px !important; }
+  .admin-panel { padding: 12px !important; }
+  .admin-stats { gap: 8px !important; }
+  .profile-details, .profile-detail { min-width: 0; overflow-wrap: anywhere; }
+  .table-wrap, .table-scroll, .admin-table-wrap { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+  .site-footer { padding-bottom: calc(14px + env(safe-area-inset-bottom)) !important; }
+  .mbot-root { right: 10px !important; bottom: calc(10px + env(safe-area-inset-bottom)) !important; z-index: 1200 !important; }
+  .mbot-launcher { gap: 6px !important; padding: 6px 11px 6px 7px !important; min-height: 42px; }
+  .mbot-launcher-orb { width: 30px !important; height: 30px !important; font-size: 17px !important; }
+  .mbot-launcher-label { font-size: 10px !important; }
+  .mbot-panel { position: fixed !important; left: 8px !important; right: 8px !important; top: auto !important; bottom: calc(58px + env(safe-area-inset-bottom)) !important; width: auto !important; height: min(68dvh, 600px) !important; min-height: min(340px, calc(100dvh - 130px)) !important; max-height: calc(100dvh - 112px) !important; border-radius: 16px !important; }
+  .mbot-header { gap: 8px !important; padding: 10px !important; }
+  .mbot-avatar { width: 34px !important; height: 34px !important; font-size: 18px !important; }
+  .mbot-icon-btn { width: 30px !important; height: 30px !important; border-radius: 8px !important; font-size: 19px !important; }
+  .mbot-messages { min-height: 0 !important; padding: 10px !important; gap: 9px !important; -webkit-overflow-scrolling: touch; }
+  .mbot-message { max-width: 96% !important; padding: 9px 10px !important; font-size: 12px !important; line-height: 1.6 !important; }
+  .mbot-suggestions { max-height: 76px; overflow: auto; padding: 0 9px 8px !important; }
+  .mbot-suggestions button { padding: 6px 8px !important; font-size: 10px !important; }
+  .mbot-composer { flex: 0 0 auto; margin: 0 8px !important; padding: 7px 8px 7px 10px !important; gap: 7px !important; }
+  .mbot-composer textarea { min-height: 35px; max-height: 88px !important; font-size: 16px !important; line-height: 1.45 !important; }
+  .mbot-send { flex-basis: 34px !important; width: 34px !important; height: 34px !important; border-radius: 9px !important; }
+  .mbot-footnote { padding: 6px 8px calc(8px + env(safe-area-inset-bottom)) !important; font-size: 8px !important; }
+}
+
+@media (max-width: 380px) {
+  main { margin-inline: 9px !important; }
+  .site-header > .header-inner > .nav { gap: 2px !important; padding-inline: 6px !important; }
+  .site-header > .header-inner > .nav > button,
+  .site-header > .header-inner > .nav > .mobile-auth-nav { padding-inline: 7px !important; font-size: 9.5px !important; }
+  .systems-grid, .players-grid { grid-template-columns: minmax(0,1fr) !important; }
+  .system-card { padding: 12px !important; }
+  .hero-title { font-size: clamp(32px, 9vw, 38px) !important; }
+  .mbot-panel { left: 5px !important; right: 5px !important; bottom: calc(54px + env(safe-area-inset-bottom)) !important; height: min(66dvh, 570px) !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mbot-panel, .mbot-typing i, .page.active { animation: none !important; }
+  .nav button, .btn, .mbot-launcher { transition: none !important; }
+}

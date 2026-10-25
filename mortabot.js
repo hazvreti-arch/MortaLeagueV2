@@ -11,9 +11,11 @@
  function save(){try{localStorage.setItem(STORE,JSON.stringify(history.slice(-24)))}catch(_){}}
  function addMessage(role,content,opts={}){const div=document.createElement("div");div.className="mbot-message "+(role==="user"?"mbot-user":"mbot-assistant");if(role!=="user"){const tag=document.createElement("span");tag.className="mbot-message-tag";tag.textContent="MORTABOT";div.appendChild(tag)}const body=document.createElement("div");body.innerHTML=formatText(content);div.appendChild(body);if(opts.id)div.id=opts.id;list.appendChild(div);list.scrollTop=list.scrollHeight;return div}
  function renderHistory(){list.replaceChildren();if(!history.length){addMessage("assistant","selam kral ✨ MortaLeague sistemleri bende. oyuncu değerini hesaplayabilir, maaş ve sponsor kurallarını konuşabilir ya da aklına takılanı sorabilirsin");return}history.forEach(m=>addMessage(m.role,m.content));}
- function open(){panel.hidden=false;launcher.setAttribute("aria-expanded","true");launcher.setAttribute("aria-label","MortaBot sohbetini kapat");renderHistory();setTimeout(()=>input.focus(),80)}
+ function open(){panel.hidden=false;launcher.setAttribute("aria-expanded","true");launcher.setAttribute("aria-label","MortaBot sohbetini kapat");renderHistory();if(!window.matchMedia("(max-width: 600px)").matches)setTimeout(()=>input.focus(),80)}
  function shut(){panel.hidden=true;launcher.setAttribute("aria-expanded","false");launcher.setAttribute("aria-label","MortaBot sohbetini aç")}
  launcher.addEventListener("click",()=>panel.hidden?open():shut());close.addEventListener("click",shut);
+ // Any successful in-app navigation closes the floating chat so it cannot cover the next page.
+ window.addEventListener("ml:page-intent",shut);
  clear.addEventListener("click",()=>{history=[];save();renderHistory();suggestions.hidden=false;input.focus()});
  function loggedIn(){return !!window.MortaLeague?.session?.user}
  function showSignIn(){addMessage("assistant","kanka MortaBot'un yapay zekâ bağlantısını kullanmak için önce hesabına giriş yapman gerekiyor 🔐");window.MortaLeague?.openAuth?.()}

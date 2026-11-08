@@ -113,8 +113,8 @@ const systems=[
 "Defans: maç başına en fazla 1 G/A; 15 maçta bir en fazla 2 G/A.",
 "Kaleci: 10 maçta en fazla 1 asist alabilir; 50 maçta bir 1 gol alabilir."
 ],note:"G/A, gol ve asist anlamında kullanılmıştır. Kaleci için verilen sınırlar gönderilen metindeki gibi ayrı tutulmuştur."},
-{title:"Yaş Sistemi",icon:"◷",short:"Oyuncu yaş kategorileri ve sezon sonundaki değer artış/azalışları.",intro:"Oyuncular yaşlarına ve yaşlarına göre gösterdikleri gol, asist ve Gym performansına göre değer kazanır veya kaybeder. Yaş kaynaklı değer değişiklikleri sezon sonunda uygulanır.",purpose:"Yaş kategorilerini ve her yaş için belirtilen değer değişimini listeler.",items:[
-"Yaş kategorileri: 16–20 Genç Yetenek; 20–24 Gelişen Yetenek; 24–28 Zirve Dönemi; 28–33 Deneyimli Oyuncu; 33–40 Veteran Oyuncu.",
+{title:"Yaş Sistemi",icon:"◷",short:"Oyuncu yaş kategorileri ve sezon sonundaki değer artış/azalışları.",intro:"Oyuncular yaşlarına, gol, asist ve Gym performanslarına göre değer kazanır veya kaybeder. Yaş kaynaklı değer değişiklikleri sezon sonunda uygulanır.",purpose:"Yaş kategorilerini ve her yaş için belirtilen değer değişimini listeler.",items:[
+"Yaş kategorileri: 16–19 Genç Yetenek; 20–23 Gelişen Yetenek; 24–27 Zirve Dönemi; 28–32 Deneyimli Oyuncu; 33–40 Veteran Oyuncu.",
 "Genç Yetenek: 17 yaş +500K€; 18 yaş +450K€; 19 yaş +400K€.",
 "Gelişen Yetenek: 20 yaş +350K€; 21 yaş +300K€; 22 yaş +250K€; 23 yaş +200K€.",
 "Zirve Dönemi: 24 yaş +150K€; 25 yaş +100K€; 26 yaş +50K€; 27 yaş nötr.",
@@ -237,6 +237,11 @@ function showPage(name){
   window.scrollTo({top:0,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
 }
 let currentPublicProfile=null;
+let publicProfileRequestSeq=0;
+let publicProfileReturnFocus=null;
+let publicProfileBodyOverflow=null;
+let publicProfileHtmlOverflow=null;
+let publicProfileScrollY=0;
 window.MortaUI={showPage,loadPlayers,loadAdminDashboard,loadAnnouncements,get currentPublicProfile(){return currentPublicProfile;}};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(b){e.preventDefault();showPage(b.dataset.page);}});
 
@@ -269,67 +274,177 @@ document.getElementById("players-search")?.addEventListener("input",renderPlayer
 document.getElementById("players-refresh")?.addEventListener("click",()=>loadPlayers(true));
 document.getElementById("players-grid")?.addEventListener("click",e=>{const b=e.target.closest("[data-player-profile]");if(!b)return;const player=cachedPlayers.find(p=>p.username===b.dataset.playerProfile);if(player)openPublicProfile(player);});
 function openPublicProfile(player){
-  const modal=document.getElementById("public-profile-backdrop");if(!modal)return;
+  const modal=document.getElementById("public-profile-backdrop");
+  if(!modal||!player)return;
+
+  // Close an open MortaBot panel (and any previously open profile) before
+  // showing another full-screen layer on a phone.
+  const returnFocus=document.activeElement instanceof HTMLElement?document.activeElement:null;
+  window.dispatchEvent(new CustomEvent("ml:page-intent",{detail:{page:"public-profile"}}));
+  publicProfileReturnFocus=returnFocus;
+  publicProfileBodyOverflow=document.body.style.overflow;
+  publicProfileHtmlOverflow=document.documentElement.style.overflow;
+  publicProfileScrollY=window.scrollY;
+  const requestId=++publicProfileRequestSeq;
+
   const name=player.display_name||player.username||"Oyuncu";
   const avatar=document.getElementById("public-profile-avatar");
-  avatar.innerHTML=player.avatar_url&&/^https:\/\//i.test(player.avatar_url)?`<img src="${esc(player.avatar_url)}" alt="${esc(name)} profil fotoğrafı" referrerpolicy="no-referrer">`:esc(initials(name));
+  if(avatar){
+    avatar.innerHTML=player.avatar_url&&/^https:\/\//i.test(player.avatar_url)
+      ?`<img src="${esc(player.avatar_url)}" alt="${esc(name)} profil fotoğrafı" referrerpolicy="no-referrer">`
+      :esc(initials(name));
+  }
   document.getElementById("public-profile-name").textContent=name;
   document.getElementById("public-profile-username").textContent="@"+(player.username||"oyuncu");
   document.getElementById("public-profile-bio").textContent=player.bio||"Bu oyuncu henüz biyografi eklememiş.";
   document.getElementById("public-profile-created").textContent=formatDate(player.created_at);
   const cover=document.getElementById("public-profile-cover");
-  if(cover){cover.replaceChildren();if(player.cover_url&&/^https:\/\//i.test(player.cover_url)){const img=document.createElement("img");img.src=player.cover_url;img.alt="";img.loading="lazy";img.referrerPolicy="no-referrer";cover.appendChild(img);}}
+  if(cover){
+    cover.replaceChildren();
+    if(player.cover_url&&/^https:\/\//i.test(player.cover_url)){
+      const img=document.createElement("img");
+      img.src=player.cover_url;img.alt="";img.loading="lazy";img.referrerPolicy="no-referrer";
+      cover.appendChild(img);
+    }
+  }
   currentPublicProfile=player;
   const viewerId=window.MortaLeague?.session?.user?.id;
   const isOther=Boolean(viewerId&&player.id&&player.id!==viewerId);
-  const messageButton=document.getElementById("public-profile-message");if(messageButton)messageButton.hidden=!isOther;
-  const followButton=document.getElementById("public-profile-follow");if(followButton)followButton.hidden=!isOther;
+  const messageButton=document.getElementById("public-profile-message");
+  if(messageButton)messageButton.hidden=!isOther;
+  const followButton=document.getElementById("public-profile-follow");
+  if(followButton){followButton.hidden=!isOther;followButton.disabled=false;followButton.textContent="Takip et";}
   document.getElementById("public-profile-followers").textContent="—";
   document.getElementById("public-profile-following").textContent="—";
   document.getElementById("public-profile-post-count").textContent="—";
   document.getElementById("public-profile-posts").innerHTML='<div class="skeleton-card skeleton-profile-post" aria-hidden="true"><span class="skeleton-line"></span><span class="skeleton-line skeleton-medium"></span></div>';
-  const info=document.getElementById("public-profile-social-status");if(info)info.textContent="Profil ayrıntıları yükleniyor…";
-  modal.hidden=false;document.body.style.overflow="hidden";document.getElementById("public-profile-close")?.focus();
-  loadPublicProfileDetails(player);
+  const info=document.getElementById("public-profile-social-status");
+  if(info)info.textContent="Profil ayrıntıları yükleniyor…";
+
+  modal.hidden=false;
+  document.body.classList.add("public-profile-open");
+  document.documentElement.style.overflow="hidden";
+  document.body.style.overflow="hidden";
+  const closeButton=document.getElementById("public-profile-close");
+  if(closeButton)closeButton.focus({preventScroll:true});
+  loadPublicProfileDetails(player,requestId);
 }
-async function loadPublicProfileDetails(player){
-  const countFollowers=document.getElementById("public-profile-followers"),countFollowing=document.getElementById("public-profile-following"),countPosts=document.getElementById("public-profile-post-count"),postsHost=document.getElementById("public-profile-posts"),followButton=document.getElementById("public-profile-follow"),info=document.getElementById("public-profile-social-status");
-  if(!player?.id||!window.MortaLeague?.client){if(postsHost)postsHost.innerHTML='<div class="empty-state">Gönderileri ve takip bilgilerini görmek için giriş yap.</div>';if(info)info.textContent="Herkese açık profil";return;}
-  const client=window.MortaLeague.client,viewerId=window.MortaLeague?.session?.user?.id;
+
+async function loadPublicProfileDetails(player,requestId=++publicProfileRequestSeq){
+  const modal=document.getElementById("public-profile-backdrop");
+  const countFollowers=document.getElementById("public-profile-followers");
+  const countFollowing=document.getElementById("public-profile-following");
+  const countPosts=document.getElementById("public-profile-post-count");
+  const postsHost=document.getElementById("public-profile-posts");
+  const followButton=document.getElementById("public-profile-follow");
+  const info=document.getElementById("public-profile-social-status");
+  const isCurrent=()=>Boolean(modal&&!modal.hidden&&requestId===publicProfileRequestSeq&&currentPublicProfile?.id===player?.id);
+
+  if(!player?.id||!window.MortaLeague?.client){
+    if(!isCurrent())return;
+    if(postsHost)postsHost.innerHTML='<div class="empty-state">Gönderileri ve takip bilgilerini görmek için giriş yap.</div>';
+    if(info)info.textContent="Herkese açık profil";
+    return;
+  }
+  const client=window.MortaLeague.client;
+  const viewerId=window.MortaLeague?.session?.user?.id;
   try{
     const requests=await Promise.allSettled([
       client.from("user_follows").select("follower_id",{count:"exact",head:true}).eq("following_id",player.id),
       client.from("user_follows").select("following_id",{count:"exact",head:true}).eq("follower_id",player.id),
       client.from("posts").select("id",{count:"exact",head:true}).eq("author_id",player.id),
       client.from("posts").select("id,content,image_url,created_at").eq("author_id",player.id).order("created_at",{ascending:false}).limit(3),
-      viewerId&&viewerId!==player.id?client.from("user_follows").select("follower_id").eq("follower_id",viewerId).eq("following_id",player.id).maybeSingle():Promise.resolve({data:null,error:null})
+      viewerId&&viewerId!==player.id
+        ?client.from("user_follows").select("follower_id").eq("follower_id",viewerId).eq("following_id",player.id).maybeSingle()
+        :Promise.resolve({data:null,error:null})
     ]);
-    const val=i=>requests[i].status==="fulfilled"?requests[i].value:null;
-    if(val(0)?.error)throw val(0).error;if(val(1)?.error)throw val(1).error;
-    if(countFollowers)countFollowers.textContent=String(val(0)?.count??0);
-    if(countFollowing)countFollowing.textContent=String(val(1)?.count??0);
-    if(countPosts)countPosts.textContent=String(val(2)?.count??0);
-    const following=Boolean(val(4)?.data);
-    if(followButton){followButton.textContent=following?"Takip ediliyor":"Takip et";followButton.classList.toggle("btn-secondary",following);followButton.classList.toggle("btn-primary",!following);}
-    const rows=val(3)?.data||[];
-    if(postsHost){postsHost.innerHTML=rows.length?rows.map(post=>`<article class="public-profile-post"><time>${esc(formatDate(post.created_at))}</time><p>${esc(post.content)}</p>${post.image_url&&/^https:\/\//i.test(post.image_url)?`<img src="${esc(post.image_url)}" alt="Gönderi görseli" loading="lazy" referrerpolicy="no-referrer">`:""}</article>`).join(""):'<div class="empty-state">Bu oyuncu henüz gönderi paylaşmamış.</div>';}
+    if(!isCurrent())return;
+    const failed=requests.find(result=>result.status==="rejected");
+    if(failed)throw failed.reason;
+    const values=requests.map(result=>result.value);
+    const queryError=values.find(value=>value?.error)?.error;
+    if(queryError)throw queryError;
+    if(countFollowers)countFollowers.textContent=String(values[0]?.count??0);
+    if(countFollowing)countFollowing.textContent=String(values[1]?.count??0);
+    if(countPosts)countPosts.textContent=String(values[2]?.count??0);
+    const following=Boolean(values[4]?.data);
+    if(followButton){
+      followButton.textContent=following?"Takip ediliyor":"Takip et";
+      followButton.classList.toggle("btn-secondary",following);
+      followButton.classList.toggle("btn-primary",!following);
+    }
+    const rows=values[3]?.data||[];
+    if(postsHost){
+      postsHost.innerHTML=rows.length
+        ?rows.map(post=>`<article class="public-profile-post"><time>${esc(formatDate(post.created_at))}</time><p>${esc(post.content)}</p>${post.image_url&&/^https:\/\//i.test(post.image_url)?`<img src="${esc(post.image_url)}" alt="Gönderi görseli" loading="lazy" referrerpolicy="no-referrer">`:""}</article>`).join("")
+        :'<div class="empty-state">Bu oyuncu henüz gönderi paylaşmamış.</div>';
+    }
     if(info)info.textContent="Profil güncel";
-  }catch(error){if(postsHost)postsHost.innerHTML='<div class="empty-state">Profil ayrıntıları yüklenemedi. Supabase migration dosyalarını kontrol et.</div>';if(info)info.textContent=friendlyAppError(error,"Profil ayrıntıları yüklenemedi.");}
+  }catch(error){
+    if(!isCurrent())return;
+    if(postsHost)postsHost.innerHTML='<div class="empty-state">Profil ayrıntıları yüklenemedi. Bağlantını veya Supabase migration kurulumunu kontrol et.</div>';
+    if(info)info.textContent=friendlyAppError(error,"Profil ayrıntıları yüklenemedi.");
+  }
 }
 document.getElementById("public-profile-follow")?.addEventListener("click",async event=>{
-  const player=currentPublicProfile;if(!player?.id)return;
+  const player=currentPublicProfile;
+  if(!player?.id)return;
   if(!window.MortaLeague?.session?.user){window.MortaLeague?.openAuth();return;}
-  const button=event.currentTarget;button.disabled=true;button.textContent="Güncelleniyor…";
-  try{await window.MortaSocial?.toggleFollowById?.(player.id);await loadPublicProfileDetails(player);}
-  catch(error){const info=document.getElementById("public-profile-social-status");if(info)info.textContent=friendlyAppError(error,"Takip durumu güncellenemedi. Tekrar dene.");}
-  finally{button.disabled=false;}
+  const toggleFollow=window.MortaSocial?.toggleFollowById;
+  const button=event.currentTarget;
+  button.disabled=true;button.textContent="Güncelleniyor…";
+  try{
+    if(typeof toggleFollow!=="function")throw new Error("Takip sistemi şu anda kullanılamıyor.");
+    await toggleFollow(player.id);
+    if(currentPublicProfile?.id===player.id)await loadPublicProfileDetails(player);
+  }catch(error){
+    if(currentPublicProfile?.id===player.id){
+      const info=document.getElementById("public-profile-social-status");
+      if(info)info.textContent=friendlyAppError(error,"Takip durumu güncellenemedi. Tekrar dene.");
+    }
+  }finally{
+    if(button.isConnected&&currentPublicProfile?.id===player.id)button.disabled=false;
+  }
 });
-window.addEventListener("ml:follow-change",event=>{if(currentPublicProfile?.id===event.detail?.targetId)loadPublicProfileDetails(currentPublicProfile);if(document.getElementById("page-players")?.classList.contains("active"))renderPlayers();});
-function closePublicProfile(){const modal=document.getElementById("public-profile-backdrop");if(modal)modal.hidden=true;document.body.style.overflow="";currentPublicProfile=null;}
-// Close the profile immediately on any navigation attempt (including gated pages).
-window.addEventListener("ml:page-intent",()=>{const modal=document.getElementById("public-profile-backdrop");if(modal&&!modal.hidden)closePublicProfile();});
-document.getElementById("public-profile-close")?.addEventListener("click",closePublicProfile);
-document.getElementById("public-profile-backdrop")?.addEventListener("click",e=>{if(e.target===e.currentTarget)closePublicProfile();});
+window.addEventListener("ml:follow-change",event=>{
+  if(currentPublicProfile?.id===event.detail?.targetId)loadPublicProfileDetails(currentPublicProfile);
+  if(document.getElementById("page-players")?.classList.contains("active"))renderPlayers();
+});
+function closePublicProfile({restoreFocus=true}={}){
+  const modal=document.getElementById("public-profile-backdrop");
+  if(!modal||modal.hidden)return;
+  modal.hidden=true;
+  document.body.classList.remove("public-profile-open");
+  publicProfileRequestSeq++;
+  currentPublicProfile=null;
+  document.body.style.overflow=publicProfileBodyOverflow??"";
+  document.documentElement.style.overflow=publicProfileHtmlOverflow??"";
+  publicProfileBodyOverflow=null;
+  publicProfileHtmlOverflow=null;
+  if(Number.isFinite(publicProfileScrollY))window.scrollTo({top:publicProfileScrollY,behavior:"auto"});
+  if(restoreFocus&&publicProfileReturnFocus?.isConnected)publicProfileReturnFocus.focus({preventScroll:true});
+  publicProfileReturnFocus=null;
+}
+// Keep chat state and the visible panel in sync when navigating or opening a profile.
+function closeMortaBotPanel(){
+  const panel=document.getElementById("mortabot-panel");
+  const launcher=document.getElementById("mortabot-launcher");
+  if(panel&&!panel.hidden){
+    const closeButton=document.getElementById("mortabot-close");
+    if(closeButton)closeButton.click();
+    if(!panel.hidden)panel.hidden=true;
+  }
+  if(launcher)launcher.setAttribute("aria-expanded","false");
+}
+// Navigation intent closes the profile and MortaBot, even for gated pages.
+window.addEventListener("ml:page-intent",()=>{
+  closePublicProfile({restoreFocus:false});
+  closeMortaBotPanel();
+});
+document.getElementById("public-profile-close")?.addEventListener("click",()=>closePublicProfile());
+document.getElementById("public-profile-backdrop")?.addEventListener("click",event=>{
+  if(event.target===event.currentTarget)closePublicProfile();
+});
 
 async function loadAnnouncements(force=false){
   const host=document.getElementById("home-announcements-list");if(!host)return;
@@ -491,7 +606,23 @@ window.addEventListener("ml:auth-state",()=>{
   if(document.getElementById("page-admin")?.classList.contains("active"))loadAdminDashboard();
   if(document.getElementById("page-players")?.classList.contains("active"))loadPlayers();
 });
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePublicProfile();closeAdminEdit();}});
+document.addEventListener("keydown",event=>{
+  const modal=document.getElementById("public-profile-backdrop");
+  if(modal&&!modal.hidden){
+    if(event.key==="Escape"){
+      event.preventDefault();event.stopPropagation();closePublicProfile();return;
+    }
+    if(event.key==="Tab"){
+      const focusable=[...modal.querySelectorAll('button:not([disabled]):not([hidden]),a[href],input:not([disabled]),textarea:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])')]
+        .filter(element=>element.getClientRects().length>0);
+      if(!focusable.length){event.preventDefault();modal.querySelector('[role="dialog"]')?.focus();return;}
+      const first=focusable[0],last=focusable[focusable.length-1];
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+    }
+  }
+  if(event.key==="Escape")closeAdminEdit();
+});
 
 /* Ambient particle field: capped DPR and particle count for smooth everyday devices. */
 (() => {

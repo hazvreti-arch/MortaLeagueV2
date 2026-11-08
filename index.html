@@ -7,20 +7,21 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MortaLeague">
-<link rel="manifest" href="manifest.webmanifest?v=ml-mobile-ai-refresh-20261025-02">
-<link rel="apple-touch-icon" href="icon-192.png?v=ml-mobile-ai-refresh-20261025-02">
+<link rel="manifest" href="manifest.webmanifest?v=ml-mobile-quality-audit-20261108-01">
+<link rel="apple-touch-icon" href="icon-192.png?v=ml-mobile-quality-audit-20261108-01">
 <meta name="description" content="MortaLeague futbol topluluğu: oyuncu profilleri, sistem kuralları, özel mesajlar ve futbol içerikleri.">
 <meta property="og:title" content="MortaLeague — Futbol Evreni">
 <meta property="og:description" content="Oyuncu profilleri, futbol kuralları ve MortaLeague topluluğu tek yerde.">
 <meta property="og:type" content="website">
-<link rel="icon" type="image/svg+xml" href="favicon.svg?v=ml-mobile-ai-refresh-20261025-02">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=ml-mobile-quality-audit-20261108-01">
 <title>MortaLeague — Futbol Evreni</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=ml-mobile-ai-refresh-20261025-02">
+<link rel="stylesheet" href="style.css?v=ml-mobile-quality-audit-20261108-01">
 </head>
 <body>
+<a class="skip-link" href="#main-content">İçeriğe geç</a>
 <div class="ambient" aria-hidden="true"></div>
 <canvas id="particle-canvas" aria-hidden="true"></canvas>
 <div class="ambient-sweep" aria-hidden="true"></div>
@@ -31,18 +32,18 @@
    <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8 21 12l-9 9.2L3 12 12 2.8Z" fill="#D9A5FF" stroke="#F0DAFF" stroke-width="1.1"/><path d="m12 6.5 5.4 5.5-5.4 5.5L6.6 12 12 6.5Z" fill="#9A4BCA"/></svg></span>
    <span><span class="brand-name">MORTALEAGUE</span></span>
   </a>
-  <nav class="nav" aria-label="Ana gezinme"><button class="active" data-page="home">Ana Sayfa</button><button data-page="systems">Sistemler</button><button data-page="players">Oyuncular</button><button data-page="community">Topluluk <span class="nav-unread" id="social-nav-unread" hidden>0</span></button><button data-page="messages">Mesajlar <span class="nav-unread" id="dm-nav-unread" hidden>0</span></button><button class="mobile-auth-nav" type="button" data-auth-open>Giriş Yap</button></nav>
+  <nav class="nav" aria-label="Ana gezinme"><button class="active" type="button" data-page="home">Ana Sayfa</button><button type="button" data-page="systems">Sistemler</button><button type="button" data-page="players">Oyuncular</button><button type="button" data-page="community">Topluluk <span class="nav-unread" id="social-nav-unread" hidden>0</span></button><button type="button" data-page="messages">Mesajlar <span class="nav-unread" id="dm-nav-unread" hidden>0</span></button><button class="mobile-auth-nav" type="button" data-auth-open>Giriş Yap</button></nav>
   <div class="header-cta"><button class="btn btn-primary account-btn" id="account-trigger" type="button" data-auth-open><span class="account-glyph" aria-hidden="true">↗</span><span id="account-trigger-label">Giriş Yap</span></button></div>
  </div>
 </header>
-<main>
+<main id="main-content" tabindex="-1">
 <section class="page active" id="page-home">
  <div class="hero">
   <div class="hero-copy">
    <h1 class="hero-title"><span>OYUNUN</span><span class="gradient">KARANLIK</span><span>YÜZÜ.</span></h1>
    <p class="hero-description">Oyuncular, sistemler ve futbol topluluğu. Tek yerde.</p>
    <div class="hero-install-row"><button class="btn btn-secondary hero-install-button" id="pwa-install-cta" type="button" hidden aria-label="MortaLeague uygulamasını yükle"><span class="install-app-glyph" aria-hidden="true">↓</span><span>Uygulamayı yükle</span><span class="install-app-arrow" aria-hidden="true">↗</span></button></div>
-   <div class="hero-actions" id="hero-actions" hidden><button class="btn btn-primary" id="hero-auth-cta" data-auth-open hidden>Hesap Oluştur <span aria-hidden="true">↗</span></button></div>
+   <div class="hero-actions" id="hero-actions" hidden><button class="btn btn-primary" type="button" id="hero-auth-cta" data-auth-open hidden>Hesap Oluştur <span aria-hidden="true">↗</span></button></div>
   </div>
   <div class="hero-art" aria-label="MORTALEAGUE M arması">
    <div class="orbit"></div><div class="orbit-glow"></div>
@@ -203,7 +204,7 @@
 </div>
 
 <div class="public-profile-backdrop" id="public-profile-backdrop" hidden>
- <section class="public-profile-dialog public-player-profile" role="dialog" aria-modal="true" aria-labelledby="public-profile-name">
+ <section class="public-profile-dialog public-player-profile" role="dialog" aria-modal="true" aria-labelledby="public-profile-name" tabindex="-1">
   <button type="button" class="system-detail-close" id="public-profile-close" aria-label="Profili kapat">×</button>
   <div class="public-profile-cover" id="public-profile-cover" aria-hidden="true"></div>
   <div class="public-profile-header"><span class="public-profile-avatar" id="public-profile-avatar">ML</span><div class="public-profile-title"><h2 id="public-profile-name">Oyuncu adı</h2><p id="public-profile-username">@oyuncu</p></div></div>
@@ -258,13 +259,13 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=ml-mobile-ai-refresh-20261025-02"></script>
-<script src="app.js?v=ml-mobile-ai-refresh-20261025-02"></script>
-<script src="mortabot.js?v=ml-mobile-ai-refresh-20261025-02" defer></script>
-<script src="auth.js?v=ml-mobile-ai-refresh-20261025-02"></script>
-<script src="messages.js?v=ml-mobile-ai-refresh-20261025-02"></script>
-<script src="social.js?v=ml-mobile-ai-refresh-20261025-02"></script>
-<script src="visual-polish.js?v=ml-mobile-ai-refresh-20261025-02"></script>
-<script src="pwa.js?v=ml-mobile-ai-refresh-20261025-02" defer></script>
+<script src="config.js?v=ml-mobile-quality-audit-20261108-01"></script>
+<script src="app.js?v=ml-mobile-quality-audit-20261108-01"></script>
+<script src="mortabot.js?v=ml-mobile-quality-audit-20261108-01" defer></script>
+<script src="auth.js?v=ml-mobile-quality-audit-20261108-01"></script>
+<script src="messages.js?v=ml-mobile-quality-audit-20261108-01"></script>
+<script src="social.js?v=ml-mobile-quality-audit-20261108-01"></script>
+<script src="visual-polish.js?v=ml-mobile-quality-audit-20261108-01"></script>
+<script src="pwa.js?v=ml-mobile-quality-audit-20261108-01" defer></script>
 </body>
 </html>

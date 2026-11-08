@@ -1703,3 +1703,111 @@ input, select, textarea { min-width: 0; }
   outline: 3px solid #d9a7ff !important;
   outline-offset: 2px !important;
 }
+
+
+/* MORTALEAGUE MOBILE QUALITY AUDIT — 2026-11-08
+   Final rules intentionally override older patch layers above. */
+.skip-link {
+  position: fixed; left: 12px; top: 12px; z-index: 5000;
+  padding: 10px 14px; border: 1px solid #a56ac3; border-radius: 10px;
+  background: #160c20; color: #fff; transform: translateY(-160%);
+}
+.skip-link:focus { transform: translateY(0); }
+
+.public-profile-backdrop {
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+.public-profile-dialog {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+}
+.public-player-profile #public-profile-close {
+  position: sticky !important;
+  inset-block-start: max(8px, env(safe-area-inset-top)) !important;
+  inset-inline-start: auto !important;
+  z-index: 100000 !important;
+  display: grid !important;
+  place-items: center !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  margin: 8px 8px -52px auto !important;
+  padding: 0 !important;
+  border: 1px solid #c58aee !important;
+  border-radius: 12px !important;
+  background: #160b20 !important;
+  color: #fff !important;
+  font: 400 28px/1 Arial, sans-serif !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  box-shadow: 0 5px 18px #000b !important;
+}
+.public-player-profile #public-profile-close:focus-visible {
+  outline: 3px solid #e2b9ff !important; outline-offset: 3px !important;
+}
+
+@media (max-width: 700px) {
+  /* Single-column lists keep text and actions legible on phone screens. */
+  .systems-grid, .players-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+  .system-card { min-height: 0 !important; padding: 14px !important; }
+  .system-card h3 { font-size: 14px !important; line-height: 1.45 !important; }
+  .system-card p { font-size: 12px !important; line-height: 1.65 !important; }
+  .system-card .system-detail-button { min-height: 42px !important; font-size: 11px !important; }
+  .player-card {
+    grid-template-columns: 52px minmax(0, 1fr) !important;
+    gap: 11px !important; padding: 13px !important;
+  }
+  .player-card .player-bio { font-size: 12px !important; line-height: 1.65 !important; }
+  .player-card-actions { gap: 8px !important; }
+  .player-card-actions > button {
+    min-height: 42px !important; padding: 0 10px !important;
+    font-size: 11px !important; touch-action: manipulation;
+  }
+  .site-header > .header-inner > .nav > button,
+  .site-header > .header-inner > .nav > .mobile-auth-nav {
+    min-height: 44px !important; padding-inline: 11px !important;
+    font-size: 11.5px !important; touch-action: pan-x;
+  }
+  .community-tabs button { min-height: 44px !important; font-size: 11px !important; }
+  .social-filter-tabs button { min-height: 40px !important; font-size: 11px !important; }
+  .social-post-actions button, .social-follow-button { min-height: 40px !important; }
+  .public-profile-backdrop {
+    align-items: center !important;
+    padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom)) !important;
+  }
+  .public-player-profile {
+    width: 100% !important; max-width: 560px !important;
+    max-height: calc(100dvh - 20px) !important;
+  }
+  .public-player-profile .public-profile-cover { height: 116px !important; }
+  .public-player-profile .public-profile-header { padding: 15px 16px 12px !important; }
+  .public-profile-stats { padding-inline: 16px !important; }
+  #public-profile-social-status { margin-inline: 16px !important; }
+  .mbot-panel { max-width: calc(100vw - 16px) !important; }
+}
+
+@media (max-width: 380px) {
+  .site-header > .header-inner > .nav > button,
+  .site-header > .header-inner > .nav > .mobile-auth-nav {
+    min-height: 44px !important; padding-inline: 10px !important;
+    font-size: 11px !important;
+  }
+  .player-card-actions { flex-wrap: wrap !important; }
+  .player-card-actions > button { flex: 1 1 auto; }
+  .public-player-profile .public-profile-stats strong { font-size: 14px !important; }
+  .mbot-launcher { min-height: 44px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none !important; }
+}
+
+body.public-profile-open .mbot-root { visibility: hidden !important; pointer-events: none !important; }

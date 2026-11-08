@@ -1,18 +1,18 @@
 /* MortaLeague PWA shell cache. Supabase/API responses are deliberately never cached. */
-const CACHE_NAME = "mortaleague-quality-20261108-21-mobile-quality-audit";
+const CACHE_NAME = "mortaleague-quality-20261108-22-system-modal-scrollfix";
 const SHELL_ASSETS = [
   "/", "/index.html", "/offline.html",
-  "/style.css?v=ml-mobile-quality-audit-20261108-01",
-  "/config.js?v=ml-mobile-quality-audit-20261108-01",
-  "/app.js?v=ml-mobile-quality-audit-20261108-01",
-  "/mortabot.js?v=ml-mobile-quality-audit-20261108-01",
-  "/auth.js?v=ml-mobile-quality-audit-20261108-01",
-  "/messages.js?v=ml-mobile-quality-audit-20261108-01",
-  "/social.js?v=ml-mobile-quality-audit-20261108-01",
-  "/visual-polish.js?v=ml-mobile-quality-audit-20261108-01",
-  "/pwa.js?v=ml-mobile-quality-audit-20261108-01",
-  "/manifest.webmanifest?v=ml-mobile-quality-audit-20261108-01",
-  "/favicon.svg?v=ml-mobile-quality-audit-20261108-01",
+  "/style.css?v=ml-system-modal-scrollfix-20261108-02",
+  "/config.js?v=ml-system-modal-scrollfix-20261108-02",
+  "/app.js?v=ml-system-modal-scrollfix-20261108-02",
+  "/mortabot.js?v=ml-system-modal-scrollfix-20261108-02",
+  "/auth.js?v=ml-system-modal-scrollfix-20261108-02",
+  "/messages.js?v=ml-system-modal-scrollfix-20261108-02",
+  "/social.js?v=ml-system-modal-scrollfix-20261108-02",
+  "/visual-polish.js?v=ml-system-modal-scrollfix-20261108-02",
+  "/pwa.js?v=ml-system-modal-scrollfix-20261108-02",
+  "/manifest.webmanifest?v=ml-system-modal-scrollfix-20261108-02",
+  "/favicon.svg?v=ml-system-modal-scrollfix-20261108-02",
   "/icon-192.png", "/icon-512.png"
 ];
 self.addEventListener("install", event => {

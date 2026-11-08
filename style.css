@@ -1811,3 +1811,46 @@ input, select, textarea { min-width: 0; }
 }
 
 body.public-profile-open .mbot-root { visibility: hidden !important; pointer-events: none !important; }
+
+
+/* SYSTEM DETAIL MODAL — mobile viewport + scroll reset companion fix */
+.system-detail-backdrop {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.system-detail-dialog {
+  min-height: 0;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+}
+@media (max-width: 700px) {
+  .system-detail-backdrop {
+    align-items: flex-start !important;
+    justify-content: center !important;
+    padding: max(12px, env(safe-area-inset-top)) 10px max(16px, env(safe-area-inset-bottom)) !important;
+  }
+  .system-detail-dialog {
+    width: 100% !important;
+    max-width: 680px !important;
+    max-height: calc(100dvh - max(12px, env(safe-area-inset-top)) - max(16px, env(safe-area-inset-bottom))) !important;
+    margin: 0 auto !important;
+    padding: 22px 18px 24px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .system-detail-close {
+    position: sticky !important;
+    top: 0 !important;
+    float: right !important;
+    z-index: 5 !important;
+    margin: -6px -4px 6px 10px !important;
+  }
+  .system-detail-title { max-width: 100% !important; }
+}
+@media (max-width: 380px) {
+  .system-detail-dialog { padding: 18px 14px 20px !important; }
+}

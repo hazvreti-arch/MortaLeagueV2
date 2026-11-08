@@ -147,6 +147,8 @@ document.getElementById("system-search")?.addEventListener("input",e=>renderSyst
 const systemBackdrop=document.getElementById("system-detail-backdrop");
 const systemClose=document.getElementById("system-detail-close");
 let systemPreviousFocus=null;
+let systemPreviousBodyOverflow=null;
+const systemDialog=systemBackdrop.querySelector(".system-detail-dialog");
 function openSystemDetail(index){
   const s=systems[index];
   if(!s)return;
@@ -157,14 +159,19 @@ function openSystemDetail(index){
   document.getElementById("system-detail-purpose").textContent=s.purpose;
   document.getElementById("system-detail-list").innerHTML=s.items.map(item=>`<li>${item}</li>`).join("");
   document.getElementById("system-detail-note").textContent=s.note;
+  // A reused dialog keeps its previous scroll offset unless it is reset.
+  // Reset both scroll containers so every system opens from its heading.
+  if(systemDialog)systemDialog.scrollTop=0;
+  systemBackdrop.scrollTop=0;
+  systemPreviousBodyOverflow=document.body.style.overflow;
   systemBackdrop.hidden=false;
   document.body.style.overflow="hidden";
-  systemClose.focus();
+  requestAnimationFrame(()=>{ if(systemDialog)systemDialog.scrollTop=0; systemClose.focus({preventScroll:true}); });
 }
 function closeSystemDetail(){
   systemBackdrop.hidden=true;
-  document.body.style.overflow="";
-  if(systemPreviousFocus && typeof systemPreviousFocus.focus==="function")systemPreviousFocus.focus();
+  document.body.style.overflow=systemPreviousBodyOverflow ?? "";
+  if(systemPreviousFocus && typeof systemPreviousFocus.focus==="function")systemPreviousFocus.focus({preventScroll:true});
 }
 systemGrid.addEventListener("click",e=>{const btn=e.target.closest("[data-system-detail]");if(btn)openSystemDetail(Number(btn.dataset.systemDetail));});
 systemClose.addEventListener("click",closeSystemDetail);
